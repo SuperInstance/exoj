@@ -1,0 +1,183 @@
+{
+  "verdicts": {
+    "R1_open_through_exploration": true,
+    "R2_exploration_soft_only": true,
+    "R3_program_fired": true,
+    "R4_single_local_observation": true,
+    "R5_projections_clean": true,
+    "R6_reload_verified": true
+  },
+  "pick": {
+    "name": "cross_instance",
+    "q": -3,
+    "r": 2,
+    "delta": 0.5220606403062589,
+    "gamma": 0.20217113101234035
+  },
+  "candidates": [
+    {
+      "name": "cross_instance",
+      "q": -3,
+      "r": 2,
+      "delta": 0.5220606403062589,
+      "gamma": 0.20217113101234035
+    },
+    {
+      "name": "provenance_coupled",
+      "q": 0,
+      "r": 0,
+      "delta": 0.5135427991794453,
+      "gamma": 0.10930498227073616
+    },
+    {
+      "name": "admission_coupled",
+      "q": 3,
+      "r": -2,
+      "delta": 0.49533730369123313,
+      "gamma": 0.16306900862293938
+    }
+  ],
+  "stages": {
+    "seeds": {
+      "γ": 0.2357142857142857,
+      "η": 0.7642857142857142,
+      "Δ": 0.4685714285714286,
+      "Σ": 1,
+      "Σ_normed": 1,
+      "max_cell_Σ": 1,
+      "active": 7,
+      "zone": 1,
+      "prob_open": 1,
+      "deformations": 7,
+      "observations": 0,
+      "observers": [
+        "agent",
+        "auditor",
+        "secondary"
+      ],
+      "policy": "ledger",
+      "chain_tip": "d913f55440f396189a70396b10a25cf33fc0d75c62b29d13b3e45591a06f78cc",
+      "norms_fired": 0,
+      "refusals": 0
+    },
+    "exploration": {
+      "γ": 0.21284565083432255,
+      "η": 0.7871543491656775,
+      "Δ": 0.5141960819941052,
+      "Σ": 1,
+      "Σ_normed": 1,
+      "max_cell_Σ": 1,
+      "active": 13,
+      "zone": 1,
+      "prob_open": 1,
+      "deformations": 31,
+      "observations": 0,
+      "observers": [
+        "agent",
+        "auditor",
+        "secondary"
+      ],
+      "policy": "ledger",
+      "chain_tip": "d6bc2ace61bd9e18b9b75b98ba32305b7b79a480d4831a8e1f9caae0ade174bd",
+      "norms_fired": 0,
+      "refusals": 0
+    },
+    "program": {
+      "γ": 0.20835667577472808,
+      "η": 0.7916433242252718,
+      "Δ": 0.5131820761373834,
+      "Σ": 0.9999999999999999,
+      "Σ_normed": 0.9999999999999999,
+      "max_cell_Σ": 1,
+      "active": 14,
+      "zone": 1,
+      "prob_open": 1,
+      "deformations": 35,
+      "observations": 0,
+      "observers": [
+        "agent",
+        "auditor",
+        "secondary"
+      ],
+      "policy": "ledger",
+      "chain_tip": "d662b8cc9b76d7b2625d9a0a5227e749c65737b74fb9289c17e819a41981562e",
+      "norms_fired": 0,
+      "refusals": 0
+    },
+    "refract": {
+      "γ": 0.19856209130288707,
+      "η": 0.8014379086971128,
+      "Δ": 0.5140343166202104,
+      "Σ": 0.9999999999999999,
+      "Σ_normed": 0.9999999999999999,
+      "max_cell_Σ": 1,
+      "active": 16,
+      "zone": 1,
+      "prob_open": 1,
+      "deformations": 37,
+      "observations": 0,
+      "observers": [
+        "agent",
+        "auditor",
+        "secondary"
+      ],
+      "policy": "ledger",
+      "chain_tip": "89913c8040ae790d768b3c85ec2a68fd814011a84fa0e6b59df8b018fa4b83ef",
+      "norms_fired": 0,
+      "refusals": 0
+    },
+    "observed": {
+      "γ": 0.19856209130288707,
+      "η": 0.8014379086971128,
+      "Δ": 0.5140367766010693,
+      "Σ": 0.9999999999999999,
+      "Σ_normed": 0.9999999999999999,
+      "max_cell_Σ": 1,
+      "active": 16,
+      "zone": 1,
+      "prob_open": 0.9375,
+      "deformations": 37,
+      "observations": 1,
+      "observers": [
+        "agent",
+        "auditor",
+        "secondary"
+      ],
+      "policy": "ledger",
+      "chain_tip": "0865e1d5b0734c294b75230be659898a6bba9b86d07219a80e2e7d09487bd823",
+      "norms_fired": 0,
+      "refusals": 0
+    },
+    "final": {
+      "γ": 0.19826747489349317,
+      "η": 0.8017325251065067,
+      "Δ": 0.5144987277581468,
+      "Σ": 0.9999999999999999,
+      "Σ_normed": 0.9999999999999999,
+      "max_cell_Σ": 1.0000000000000002,
+      "active": 17,
+      "zone": 1,
+      "prob_open": 0.9411764705882353,
+      "deformations": 39,
+      "observations": 1,
+      "observers": [
+        "agent",
+        "auditor",
+        "secondary"
+      ],
+      "policy": "ledger",
+      "chain_tip": "dd98c143bec24d31b331e1774b839b96d3b3e7fdcdabdba3124c7808b31def62",
+      "norms_fired": 0,
+      "refusals": 0
+    }
+  },
+  "artifact": "/home/z/my-project/download/exoj/experiments/outputs/e40_scratch.json",
+  "field_chain_tip": "dd98c143bec24d31b331e1774b839b96d3b3e7fdcdabdba3124c7808b31def62",
+  "receipts_chain_tip": "2efa58c8000b669d6df2a9d3e3d382fc4e6d5f62d472b9e2da5614e53ab27c23",
+  "receipt_links": 6,
+  "projector_projections": {
+    "agent": 0.9411764705882353,
+    "auditor": 0.9411764705882353,
+    "secondary": 0.9411764705882353
+  }
+}

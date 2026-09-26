@@ -1,0 +1,637 @@
+{
+  "format": "exoj-shell-v1",
+  "name": "ex0-p8",
+  "radius": 4,
+  "policy": "refuse",
+  "seq": 13,
+  "sense": {
+    "γ": 0.11066666666666668,
+    "η": 0.8893333333333334,
+    "Δ": 0.5022000000000001,
+    "Σ": 1,
+    "Σ_normed": 1,
+    "max_cell_Σ": 1.0000000000000002,
+    "active": 6,
+    "zone": 1,
+    "prob_open": 0.8333333333333334,
+    "deformations": 10,
+    "observations": 1,
+    "observers": [
+      "agent"
+    ],
+    "policy": "refuse",
+    "chain_tip": "2e2dea3f0aecc9b7cfe7e793bbbc831ff98585ef02e37db3834261d4fc222b77",
+    "norms_fired": 0,
+    "refusals": 1
+  },
+  "quilt": [
+    {
+      "q": 0,
+      "r": -1,
+      "γ": 0.12,
+      "η": 0.88,
+      "Δ": 0.516,
+      "str": 0.3,
+      "prob": 1,
+      "frags": [
+        "89a8f226"
+      ],
+      "programs": [],
+      "touched": 1
+    },
+    {
+      "q": 0,
+      "r": 0,
+      "γ": 0.136,
+      "η": 0.864,
+      "Δ": 0.4648,
+      "str": 0.25,
+      "prob": 1,
+      "frags": [
+        "17dcb4d0",
+        "90a3e84a",
+        "d671712f",
+        "64400022"
+      ],
+      "programs": [
+        {
+          "id": "p8",
+          "kind": "every",
+          "period": 4,
+          "next": 12,
+          "action": "refresh"
+        }
+      ],
+      "touched": 4
+    },
+    {
+      "q": 1,
+      "r": -1,
+      "γ": 0.168,
+      "η": 0.832,
+      "Δ": 0.4904,
+      "str": 0.3,
+      "prob": 1,
+      "frags": [
+        "48445781",
+        "f56dae06"
+      ],
+      "programs": [],
+      "touched": 2
+    },
+    {
+      "q": 1,
+      "r": 0,
+      "γ": 0.06,
+      "η": 0.94,
+      "Δ": 0.532,
+      "str": 0.15,
+      "prob": 1,
+      "frags": [
+        "0c6e5b16"
+      ],
+      "programs": [],
+      "touched": 1
+    },
+    {
+      "q": 2,
+      "r": -1,
+      "γ": 0.08,
+      "η": 0.92,
+      "Δ": 0.51,
+      "str": 0.2,
+      "prob": 0,
+      "frags": [
+        "e2018652"
+      ],
+      "programs": [],
+      "touched": 1
+    },
+    {
+      "q": 2,
+      "r": 0,
+      "γ": 0.1,
+      "η": 0.9,
+      "Δ": 0.5,
+      "str": 0.25,
+      "prob": 1,
+      "frags": [
+        "2d1bd3b8"
+      ],
+      "programs": [],
+      "touched": 1
+    }
+  ],
+  "cells_raw": [
+    {
+      "q": 0,
+      "r": -1,
+      "gamma": 0.12000000000000002,
+      "eta": 0.8799999999999999,
+      "delta": 0.516,
+      "strength": 0.30000000000000004,
+      "frags": [
+        "89a8f226"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 0,
+      "r": 0,
+      "gamma": 0.136,
+      "eta": 0.8640000000000002,
+      "delta": 0.4648,
+      "strength": 0.25,
+      "frags": [
+        "17dcb4d0",
+        "90a3e84a",
+        "d671712f",
+        "64400022"
+      ],
+      "programs": [
+        {
+          "id": "p8",
+          "kind": "every",
+          "period": 4,
+          "next": 12,
+          "action": "refresh"
+        }
+      ],
+      "touched": 4,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 1,
+      "r": -1,
+      "gamma": 0.16800000000000004,
+      "eta": 0.8319999999999999,
+      "delta": 0.4904,
+      "strength": 0.30000000000000004,
+      "frags": [
+        "48445781",
+        "f56dae06"
+      ],
+      "programs": [],
+      "touched": 2,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 1,
+      "r": 0,
+      "gamma": 0.06,
+      "eta": 0.94,
+      "delta": 0.532,
+      "strength": 0.15,
+      "frags": [
+        "0c6e5b16"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 2,
+      "r": -1,
+      "gamma": 0.08000000000000002,
+      "eta": 0.9199999999999999,
+      "delta": 0.51,
+      "strength": 0.2,
+      "frags": [
+        "e2018652"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 0,
+      "delta_override": 0.51,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 2,
+      "r": 0,
+      "gamma": 0.1,
+      "eta": 0.9,
+      "delta": 0.5,
+      "strength": 0.25,
+      "frags": [
+        "2d1bd3b8"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    }
+  ],
+  "deformations": [
+    {
+      "kind": "deform",
+      "seq": 1,
+      "q": 0,
+      "r": 0,
+      "γ": 0.15,
+      "η": 0.85,
+      "Δ": 0.42,
+      "alpha": 0.4,
+      "tag": "poc8",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "ee41e628297c2212a92c48aceed4fdbc17d3281a190057872db145aca478dddd"
+    },
+    {
+      "kind": "deform",
+      "seq": 2,
+      "q": 1,
+      "r": -1,
+      "γ": 0.2,
+      "η": 0.7999999999999999,
+      "Δ": 0.45999999999999996,
+      "alpha": 0.4,
+      "tag": "poc8",
+      "backend": "jepa",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "bc987a561d201c1c88e74aa9a28bb55ded82d7336bc2c3ab68a3ce5d3934581b"
+    },
+    {
+      "kind": "deform",
+      "seq": 3,
+      "q": 2,
+      "r": 0,
+      "γ": 0.25,
+      "η": 0.75,
+      "Δ": 0.5,
+      "alpha": 0.4,
+      "tag": "poc8",
+      "backend": "quantum-inspired",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "19d09fa13b0993b83882874d01ce61d8fb0e62b64f4bf7fc86dbd025b27e869f"
+    },
+    {
+      "kind": "deform",
+      "seq": 4,
+      "q": 0,
+      "r": -1,
+      "γ": 0.30000000000000004,
+      "η": 0.7,
+      "Δ": 0.54,
+      "alpha": 0.4,
+      "tag": "poc8",
+      "backend": "cellular-llm",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "62db28edf5e9d84b871c9bef14b5e5d4dd7b9362eb791f685a3a7a2aab1d00ad"
+    },
+    {
+      "kind": "deform",
+      "seq": 5,
+      "q": 1,
+      "r": 0,
+      "γ": 0.15,
+      "η": 0.85,
+      "Δ": 0.58,
+      "alpha": 0.4,
+      "tag": "poc8",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "76e8f4a1d9259000392ab6ff5fa7511e93a57658276da3fb4874bee9e754f832"
+    },
+    {
+      "kind": "deform",
+      "seq": 6,
+      "q": 2,
+      "r": -1,
+      "γ": 0.2,
+      "η": 0.7999999999999999,
+      "Δ": 0.42,
+      "alpha": 0.4,
+      "tag": "poc8",
+      "backend": "jepa",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "cb3bc735846213923aad60a53ab827a1b390b200681552f32b46ded6eea37bee"
+    },
+    {
+      "kind": "deform",
+      "seq": 7,
+      "q": 0,
+      "r": 0,
+      "γ": 0.25,
+      "η": 0.75,
+      "Δ": 0.45999999999999996,
+      "alpha": 0.4,
+      "tag": "poc8",
+      "backend": "quantum-inspired",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "e66050f4f6ff9925b0f7e5984d80e1355c6570b2c950c559acdd9a19837e61f3"
+    },
+    {
+      "kind": "deform",
+      "seq": 8,
+      "q": 1,
+      "r": -1,
+      "γ": 0.30000000000000004,
+      "η": 0.7,
+      "Δ": 0.5,
+      "alpha": 0.4,
+      "tag": "poc8",
+      "backend": "cellular-llm",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "ec61d24dffd42bd77e6a231667982c8f77a467946d83a4fef15c94f935367e0b"
+    },
+    {
+      "kind": "deform",
+      "seq": 12,
+      "q": 0,
+      "r": 0,
+      "γ": 0.136,
+      "η": 0.864,
+      "Δ": 0.4648,
+      "alpha": 0.2,
+      "tag": "program:p8",
+      "backend": "program",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "24e927fcca00b42493096c7b33d39927fd18a97a3f601f293cb54e9beeecc4c8"
+    },
+    {
+      "kind": "deform",
+      "seq": 13,
+      "q": 0,
+      "r": 0,
+      "γ": 0.136,
+      "η": 0.8640000000000001,
+      "Δ": 0.4648,
+      "alpha": 0.2,
+      "tag": "program:p8",
+      "backend": "program",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "2e2dea3f0aecc9b7cfe7e793bbbc831ff98585ef02e37db3834261d4fc222b77"
+    }
+  ],
+  "observations": [
+    {
+      "kind": "observe",
+      "seq": 10,
+      "q": 2,
+      "r": -1,
+      "definite_Δ": 0.51,
+      "prev_prob": 1,
+      "row_hash": "220fa4c5441c117a3a1dc06a00eb7efdf4f51869ce8904c7680d4a2ec8199801"
+    }
+  ],
+  "observers": {
+    "agent": {
+      "seq": 0,
+      "wall": 1790458601360
+    }
+  },
+  "stats": {
+    "norms_fired": 0,
+    "shaved_mass": 0,
+    "collateral_mutations": 0,
+    "collateral_mass": 0,
+    "refusals": 1,
+    "refused_mass": 1.35
+  },
+  "chain": [
+    {
+      "kind": "attend",
+      "seq": 0,
+      "observer": "agent",
+      "prev": "EXOJ-GENESIS",
+      "row_hash": "3781420d5591bc770cb504ea1a10ba951db0873147754dcf6db99ea76bb980b8"
+    },
+    {
+      "kind": "deform",
+      "seq": 1,
+      "q": 0,
+      "r": 0,
+      "γ": 0.15,
+      "η": 0.85,
+      "Δ": 0.42,
+      "alpha": 0.4,
+      "tag": "poc8",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "ee41e628297c2212a92c48aceed4fdbc17d3281a190057872db145aca478dddd"
+    },
+    {
+      "kind": "deform",
+      "seq": 2,
+      "q": 1,
+      "r": -1,
+      "γ": 0.2,
+      "η": 0.7999999999999999,
+      "Δ": 0.45999999999999996,
+      "alpha": 0.4,
+      "tag": "poc8",
+      "backend": "jepa",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "bc987a561d201c1c88e74aa9a28bb55ded82d7336bc2c3ab68a3ce5d3934581b"
+    },
+    {
+      "kind": "deform",
+      "seq": 3,
+      "q": 2,
+      "r": 0,
+      "γ": 0.25,
+      "η": 0.75,
+      "Δ": 0.5,
+      "alpha": 0.4,
+      "tag": "poc8",
+      "backend": "quantum-inspired",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "19d09fa13b0993b83882874d01ce61d8fb0e62b64f4bf7fc86dbd025b27e869f"
+    },
+    {
+      "kind": "deform",
+      "seq": 4,
+      "q": 0,
+      "r": -1,
+      "γ": 0.30000000000000004,
+      "η": 0.7,
+      "Δ": 0.54,
+      "alpha": 0.4,
+      "tag": "poc8",
+      "backend": "cellular-llm",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "62db28edf5e9d84b871c9bef14b5e5d4dd7b9362eb791f685a3a7a2aab1d00ad"
+    },
+    {
+      "kind": "deform",
+      "seq": 5,
+      "q": 1,
+      "r": 0,
+      "γ": 0.15,
+      "η": 0.85,
+      "Δ": 0.58,
+      "alpha": 0.4,
+      "tag": "poc8",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "76e8f4a1d9259000392ab6ff5fa7511e93a57658276da3fb4874bee9e754f832"
+    },
+    {
+      "kind": "deform",
+      "seq": 6,
+      "q": 2,
+      "r": -1,
+      "γ": 0.2,
+      "η": 0.7999999999999999,
+      "Δ": 0.42,
+      "alpha": 0.4,
+      "tag": "poc8",
+      "backend": "jepa",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "cb3bc735846213923aad60a53ab827a1b390b200681552f32b46ded6eea37bee"
+    },
+    {
+      "kind": "deform",
+      "seq": 7,
+      "q": 0,
+      "r": 0,
+      "γ": 0.25,
+      "η": 0.75,
+      "Δ": 0.45999999999999996,
+      "alpha": 0.4,
+      "tag": "poc8",
+      "backend": "quantum-inspired",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "e66050f4f6ff9925b0f7e5984d80e1355c6570b2c950c559acdd9a19837e61f3"
+    },
+    {
+      "kind": "deform",
+      "seq": 8,
+      "q": 1,
+      "r": -1,
+      "γ": 0.30000000000000004,
+      "η": 0.7,
+      "Δ": 0.5,
+      "alpha": 0.4,
+      "tag": "poc8",
+      "backend": "cellular-llm",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "ec61d24dffd42bd77e6a231667982c8f77a467946d83a4fef15c94f935367e0b"
+    },
+    {
+      "kind": "refuse",
+      "seq": 9,
+      "q": 0,
+      "r": 0,
+      "γ": 0.95,
+      "η": 0.4,
+      "Δ": 0.5,
+      "alpha": 0.4,
+      "tag": "poc8-attack",
+      "backend": "classical",
+      "program": null,
+      "would_be_Σ": 1.1400000000000001,
+      "boundary": 1,
+      "note": "write refused at the boundary; ledger unchanged; refusal counted",
+      "row_hash": "1da905cd733fd8a78581c42100ee150f41d063e810d5dd1c2f9d5095765dcbc1"
+    },
+    {
+      "kind": "observe",
+      "seq": 10,
+      "q": 2,
+      "r": -1,
+      "definite_Δ": 0.51,
+      "prev_prob": 1,
+      "row_hash": "220fa4c5441c117a3a1dc06a00eb7efdf4f51869ce8904c7680d4a2ec8199801"
+    },
+    {
+      "kind": "program_attach",
+      "seq": 11,
+      "q": 0,
+      "r": 0,
+      "program": "p8",
+      "spec": {
+        "id": "p8",
+        "kind": "every",
+        "period": 4,
+        "next": 4,
+        "action": "refresh"
+      },
+      "row_hash": "b7b3a4212b778ee1cfc1188421c98e014c5f68e8468fb27ffbe2121506f28346"
+    },
+    {
+      "kind": "deform",
+      "seq": 12,
+      "q": 0,
+      "r": 0,
+      "γ": 0.136,
+      "η": 0.864,
+      "Δ": 0.4648,
+      "alpha": 0.2,
+      "tag": "program:p8",
+      "backend": "program",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "24e927fcca00b42493096c7b33d39927fd18a97a3f601f293cb54e9beeecc4c8"
+    },
+    {
+      "kind": "deform",
+      "seq": 13,
+      "q": 0,
+      "r": 0,
+      "γ": 0.136,
+      "η": 0.8640000000000001,
+      "Δ": 0.4648,
+      "alpha": 0.2,
+      "tag": "program:p8",
+      "backend": "program",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "2e2dea3f0aecc9b7cfe7e793bbbc831ff98585ef02e37db3834261d4fc222b77"
+    }
+  ],
+  "chain_tip": "2e2dea3f0aecc9b7cfe7e793bbbc831ff98585ef02e37db3834261d4fc222b77"
+}

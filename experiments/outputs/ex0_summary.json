@@ -1,0 +1,136 @@
+{
+  "verdicts": {
+    "p1": true,
+    "p2": true,
+    "p3": true,
+    "p4": true,
+    "p5": true,
+    "p6": true,
+    "p7": true,
+    "p8": true
+  },
+  "all_pass": true,
+  "results": {
+    "p1": {
+      "sigma": 1,
+      "max_cell_sigma": 1,
+      "active": 4,
+      "deformations": 10
+    },
+    "p2": {
+      "zone": 0.6666666666666666,
+      "seed_claim": 0.667,
+      "target": 0.6666666666666666,
+      "active": 6
+    },
+    "p3": {
+      "prob_open_before": 1,
+      "prob_open_after": 0.6666666666666666,
+      "target_prob": 0,
+      "neighbour_prob": 1,
+      "distant_prob": 1,
+      "neighbour_delta_unchanged": 0.5
+    },
+    "p4": {
+      "observers": [
+        "alpha",
+        "beta",
+        "gamma"
+      ],
+      "sigma_before": 0.9999999999999999,
+      "sigma_after": 0.9999999999999999,
+      "prob_open_before": 1,
+      "prob_open_after": 1,
+      "chain_rows_added_by_attend": 3
+    },
+    "p5": {
+      "backends": {
+        "classical": {
+          "n": 25,
+          "in_band": 25,
+          "conserved": 25,
+          "d_min": 0.40630579041317105,
+          "d_max": 0.5878459332976491,
+          "max_g_plus_eta_deviation": 0
+        },
+        "jepa": {
+          "n": 25,
+          "in_band": 25,
+          "conserved": 25,
+          "d_min": 0.40393450373765677,
+          "d_max": 0.5991276672091268,
+          "max_g_plus_eta_deviation": 0
+        },
+        "quantum-inspired": {
+          "n": 25,
+          "in_band": 25,
+          "conserved": 25,
+          "d_min": 0.500088770711848,
+          "d_max": 0.5996821520997366,
+          "max_g_plus_eta_deviation": 0
+        },
+        "cellular-llm": {
+          "n": 25,
+          "in_band": 25,
+          "conserved": 25,
+          "d_min": 0.40041391091980044,
+          "d_max": 0.5993559571448714,
+          "max_g_plus_eta_deviation": 0
+        }
+      },
+      "total_in_band": 100,
+      "total_emissions": 100
+    },
+    "p6": {
+      "format": "exoj-projection-v1",
+      "has_sense": true,
+      "recent_deformations": 12,
+      "observations_listed": 1,
+      "note_present": true,
+      "chain_rows_appended": 0,
+      "sigma_before": 0.9999999999999998,
+      "sigma_after": 0.9999999999999998,
+      "prob_open_before": 0.9166666666666666,
+      "prob_open_after": 0.9166666666666666
+    },
+    "p7": {
+      "every_fired_at": [
+        3,
+        6,
+        9
+      ],
+      "at_fired_at": [
+        5
+      ],
+      "chained_program_deforms": 4
+    },
+    "p8": {
+      "links": 14,
+      "kinds": {
+        "attend": 1,
+        "deform": 10,
+        "refuse": 1,
+        "observe": 1,
+        "program_attach": 1
+      },
+      "verify_in_memory": {
+        "ok": true,
+        "links": 14,
+        "tip": "2e2dea3f0aecc9b7cfe7e793bbbc831ff98585ef02e37db3834261d4fc222b77"
+      },
+      "verify_from_file": {
+        "ok": true,
+        "links": 14,
+        "tip": "2e2dea3f0aecc9b7cfe7e793bbbc831ff98585ef02e37db3834261d4fc222b77"
+      },
+      "refusals": 1,
+      "tip_hash": "2e2dea3f0aecc9b7cfe7e793bbbc831ff98585ef02e37db3834261d4fc222b77"
+    }
+  },
+  "chain": {
+    "links": 4,
+    "ok": true,
+    "verify_from_file": true,
+    "tip": "7c2a6341828c3506eef1c7e21dd8766246f2b6a5745f4b01e64ba5f71d3c5792"
+  }
+}
