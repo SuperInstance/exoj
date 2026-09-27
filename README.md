@@ -172,7 +172,8 @@ Live session on ExoJ:
 8. Saved donnable state.  
 9. Reloaded and verified invariants (conservation, open probability, single observation, 3 observers).
 
-**Final state:** γ=0.107 η=0.893 Σ=1.0 Δ=0.497 zone=1.0 prob_open=0.917 deformations=16 observations=1
+**Final state:** γ=0.1983 η=0.8017 Σ=1.0 Δ=0.5145 zone=1.0 prob_open=0.9412 deformations=39 observations=1
+*(pinned to artifact of record: experiments/outputs/e40_scratch.json; earlier numbers in this README narrate earlier runs)*
 
 Working parts assembled and used as the real system. ExoJ functions as external vectorized scratch-paper: chain-of-probabilities, non-collapsing until deliberate observation, multi-observer, auditable, reloadable.
 
