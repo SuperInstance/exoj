@@ -1,0 +1,88 @@
+{
+  "verdicts": {
+    "R1": true,
+    "R2": true,
+    "R3": true,
+    "R4": true,
+    "R5": true
+  },
+  "run_mode": "live",
+  "budget": {
+    "live_answers": 10,
+    "cap_total": 10,
+    "budget_left": 0,
+    "attempts": 10,
+    "mode": "live",
+    "latency_ms": {
+      "n": 10,
+      "mean": 247,
+      "p50": 241,
+      "p95": 318,
+      "max": 318
+    },
+    "cache_entries": 11,
+    "journal_rows": 11
+  },
+  "parity": {
+    "ledger_offline": {
+      "invariant": "replay divergence <= 1e-12",
+      "value": 0,
+      "ok": true
+    },
+    "ledger_live": {
+      "invariant": "replay divergence <= 1e-12",
+      "value": 0,
+      "ok": true
+    },
+    "refuse_offline": {
+      "invariant": "max cell Σ <= 1+1e-9 AND replay divergence <= 1e-12",
+      "max_cell_Σ": 1,
+      "replay": 0,
+      "refusals": 1,
+      "attack_refused": true,
+      "ok": true
+    },
+    "refuse_live": {
+      "invariant": "max cell Σ <= 1+1e-9 AND replay divergence <= 1e-12",
+      "max_cell_Σ": 1,
+      "replay": 0,
+      "refusals": 1,
+      "attack_refused": true,
+      "ok": true
+    }
+  },
+  "reload": {
+    "offline-ledger": {
+      "ok": true,
+      "links": 17,
+      "sense_active": 9
+    },
+    "offline-refuse": {
+      "ok": true,
+      "links": 17,
+      "sense_active": 9
+    },
+    "live-ledger": {
+      "ok": true,
+      "links": 17,
+      "sense_active": 9
+    },
+    "live-refuse": {
+      "ok": true,
+      "links": 17,
+      "sense_active": 9
+    }
+  },
+  "digests": {
+    "offlineLedger": "8d11195d39de88fe4652c4ff89893e7ebae19019a64cdf3b7f5801001039d8aa",
+    "offlineRefuse": "a15fecb64c2d9bf38dd1f45d57e501a0fa4705fc2f5f83bd530430f604dd4f52",
+    "liveLedger": "11868e8097f778ce542a74985c15d95b39430b17eebcf1be1055245921b79fdb",
+    "liveRefuse": "304ff5ec09652d66d69b3277e100bee9e758f8afff461b9c799b384b61dcf42b",
+    "replayEqual": true
+  },
+  "receipts": {
+    "links": 13,
+    "ok": true,
+    "tip": "3322c777688b05431569c81d582cf02d9a2a10722416b3e5b4d3c2edb0c360c8"
+  }
+}

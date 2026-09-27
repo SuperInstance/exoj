@@ -1,0 +1,809 @@
+{
+  "format": "exoj-shell-v1",
+  "name": "offline-refuse",
+  "radius": 4,
+  "policy": "refuse",
+  "seq": 15,
+  "sense": {
+    "γ": 0.11474240000000001,
+    "η": 0.8852575999999999,
+    "Δ": 0.4958905777777778,
+    "Σ": 0.9999999999999999,
+    "Σ_normed": 0.9999999999999999,
+    "max_cell_Σ": 1,
+    "active": 9,
+    "zone": 1,
+    "prob_open": 0.8888888888888888,
+    "deformations": 12,
+    "observations": 1,
+    "observers": [
+      "agent",
+      "auditor"
+    ],
+    "policy": "refuse",
+    "chain_tip": "905e63bc7021a4f712ba19ee0f8fa034520971ad45981827bf1c6f9e325b58de",
+    "norms_fired": 0,
+    "refusals": 1
+  },
+  "quilt": [
+    {
+      "q": -2,
+      "r": 1,
+      "γ": 0.136,
+      "η": 0.864,
+      "Δ": 0.476,
+      "str": 0.34,
+      "prob": 1,
+      "frags": [
+        "f6d1eeae"
+      ],
+      "programs": [],
+      "touched": 1
+    },
+    {
+      "q": -1,
+      "r": -2,
+      "γ": 0.12,
+      "η": 0.88,
+      "Δ": 0.46,
+      "str": 0.3,
+      "prob": 1,
+      "frags": [
+        "e7cd5b27"
+      ],
+      "programs": [],
+      "touched": 1
+    },
+    {
+      "q": -1,
+      "r": 1,
+      "γ": 0.1198,
+      "η": 0.8802,
+      "Δ": 0.5329,
+      "str": 0.2995,
+      "prob": 0,
+      "frags": [
+        "2e9c0d40"
+      ],
+      "programs": [],
+      "touched": 1
+    },
+    {
+      "q": 0,
+      "r": 0,
+      "γ": 0.1269,
+      "η": 0.8731,
+      "Δ": 0.531,
+      "str": 0.2573,
+      "prob": 1,
+      "frags": [
+        "113a6515",
+        "67fbfb35"
+      ],
+      "programs": [],
+      "touched": 2
+    },
+    {
+      "q": 0,
+      "r": 1,
+      "γ": 0.124,
+      "η": 0.876,
+      "Δ": 0.4972,
+      "str": 0.31,
+      "prob": 1,
+      "frags": [
+        "7204063d"
+      ],
+      "programs": [],
+      "touched": 1
+    },
+    {
+      "q": 1,
+      "r": -1,
+      "γ": 0.0766,
+      "η": 0.9234,
+      "Δ": 0.5108,
+      "str": 0.1916,
+      "prob": 1,
+      "frags": [
+        "bdccf025"
+      ],
+      "programs": [],
+      "touched": 1
+    },
+    {
+      "q": 1,
+      "r": 0,
+      "γ": 0.06,
+      "η": 0.94,
+      "Δ": 0.5,
+      "str": 0.15,
+      "prob": 1,
+      "frags": [
+        "3f52ccc2",
+        "badec9d0",
+        "82e4afd2"
+      ],
+      "programs": [
+        {
+          "id": "viability",
+          "kind": "every",
+          "period": 2,
+          "next": 6,
+          "action": "refresh"
+        }
+      ],
+      "touched": 3
+    },
+    {
+      "q": 1,
+      "r": 2,
+      "γ": 0.152,
+      "η": 0.848,
+      "Δ": 0.468,
+      "str": 0.38,
+      "prob": 1,
+      "frags": [
+        "0f0828e1"
+      ],
+      "programs": [],
+      "touched": 1
+    },
+    {
+      "q": 2,
+      "r": 0,
+      "γ": 0.1173,
+      "η": 0.8827,
+      "Δ": 0.4871,
+      "str": 0.2932,
+      "prob": 1,
+      "frags": [
+        "a1e11fc2"
+      ],
+      "programs": [],
+      "touched": 1
+    }
+  ],
+  "cells_raw": [
+    {
+      "q": -2,
+      "r": 1,
+      "gamma": 0.136,
+      "eta": 0.8639999999999999,
+      "delta": 0.476,
+      "strength": 0.34,
+      "frags": [
+        "f6d1eeae"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": -1,
+      "r": -2,
+      "gamma": 0.12,
+      "eta": 0.8799999999999999,
+      "delta": 0.46,
+      "strength": 0.3,
+      "frags": [
+        "e7cd5b27"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": -1,
+      "r": 1,
+      "gamma": 0.1198148,
+      "eta": 0.8801851999999999,
+      "delta": 0.5329,
+      "strength": 0.299537,
+      "frags": [
+        "2e9c0d40"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 0,
+      "delta_override": 0.5329,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 0,
+      "r": 0,
+      "gamma": 0.1269352,
+      "eta": 0.8730648,
+      "delta": 0.5310268,
+      "strength": 0.257338,
+      "frags": [
+        "113a6515",
+        "67fbfb35"
+      ],
+      "programs": [],
+      "touched": 2,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 0,
+      "r": 1,
+      "gamma": 0.12401519999999999,
+      "eta": 0.8759847999999999,
+      "delta": 0.4972108,
+      "strength": 0.310038,
+      "frags": [
+        "7204063d"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 1,
+      "r": -1,
+      "gamma": 0.07664560000000001,
+      "eta": 0.9233544,
+      "delta": 0.5107672,
+      "strength": 0.191614,
+      "frags": [
+        "bdccf025"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 1,
+      "r": 0,
+      "gamma": 0.06,
+      "eta": 0.94,
+      "delta": 0.5,
+      "strength": 0.15,
+      "frags": [
+        "3f52ccc2",
+        "badec9d0",
+        "82e4afd2"
+      ],
+      "programs": [
+        {
+          "id": "viability",
+          "kind": "every",
+          "period": 2,
+          "next": 6,
+          "action": "refresh"
+        }
+      ],
+      "touched": 3,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 1,
+      "r": 2,
+      "gamma": 0.15200000000000002,
+      "eta": 0.848,
+      "delta": 0.46799999999999997,
+      "strength": 0.38,
+      "frags": [
+        "0f0828e1"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 2,
+      "r": 0,
+      "gamma": 0.11727080000000001,
+      "eta": 0.8827292,
+      "delta": 0.4871104,
+      "strength": 0.293177,
+      "frags": [
+        "a1e11fc2"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    }
+  ],
+  "deformations": [
+    {
+      "kind": "deform",
+      "seq": 1,
+      "q": 1,
+      "r": 2,
+      "γ": 0.38,
+      "η": 0.62,
+      "Δ": 0.42,
+      "alpha": 0.4,
+      "tag": "seed:align_cosine_E40",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "16f7fcee2a332621b70f77b82c548a4ac6111385e9b8c88e6f67e4d9e674b4e6"
+    },
+    {
+      "kind": "deform",
+      "seq": 2,
+      "q": -2,
+      "r": 1,
+      "γ": 0.34,
+      "η": 0.6599999999999999,
+      "Δ": 0.44,
+      "alpha": 0.4,
+      "tag": "seed:variance_ratio_E39",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "b7c36b8d3929915a2845d51180adbe2036ee900b1e8c0a99b334726a179ece3b"
+    },
+    {
+      "kind": "deform",
+      "seq": 3,
+      "q": -1,
+      "r": -2,
+      "γ": 0.3,
+      "η": 0.7,
+      "Δ": 0.4,
+      "alpha": 0.4,
+      "tag": "seed:cascade_cotoxicity",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "23d062f0f9482f0c973457c3e1fc9caa0ddd1d46becbaf6aaf42d0930dfbf49c"
+    },
+    {
+      "kind": "deform",
+      "seq": 4,
+      "q": 0,
+      "r": 0,
+      "γ": 0.1,
+      "η": 0.9,
+      "Δ": 0.52,
+      "alpha": 0.4,
+      "tag": "seed:provenance_coupled",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "3a731753588f671b99edbfec00eb13564a1b00351bac33e9f2f1bdb89906aabb"
+    },
+    {
+      "kind": "deform",
+      "seq": 5,
+      "q": 0,
+      "r": 0,
+      "γ": 0.257338,
+      "η": 0.742662,
+      "Δ": 0.565567,
+      "alpha": 0.4,
+      "tag": "gated",
+      "backend": "classical-sim",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "5aa37eb5c13b67a35f627887f19822e2b6029265441256852ed3b5bcb2047cd9"
+    },
+    {
+      "kind": "deform",
+      "seq": 6,
+      "q": 1,
+      "r": -1,
+      "γ": 0.191614,
+      "η": 0.808386,
+      "Δ": 0.526918,
+      "alpha": 0.4,
+      "tag": "gated",
+      "backend": "classical-sim",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "ef6d57090b5d2af69080fd67d805ab95d4a6f81297cd56f3e294e7ab09ad9eaf"
+    },
+    {
+      "kind": "deform",
+      "seq": 7,
+      "q": -1,
+      "r": 1,
+      "γ": 0.299537,
+      "η": 0.700463,
+      "Δ": 0.582366,
+      "alpha": 0.4,
+      "tag": "gated",
+      "backend": "classical-sim",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "a554e31ebc7cffd1a4cd4ca1cf7e9dd4902b6cab2e3dc54be891768fb15e1cf7"
+    },
+    {
+      "kind": "deform",
+      "seq": 8,
+      "q": 2,
+      "r": 0,
+      "γ": 0.293177,
+      "η": 0.706823,
+      "Δ": 0.467776,
+      "alpha": 0.4,
+      "tag": "gated",
+      "backend": "classical-sim",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "5094754d10a771d27a14d67b68ce52b14c3ea2981437a6ca9d1cc1e350f2da8f"
+    },
+    {
+      "kind": "deform",
+      "seq": 9,
+      "q": 1,
+      "r": 0,
+      "γ": 0.15,
+      "η": 0.85,
+      "Δ": 0.5,
+      "alpha": 0.4,
+      "tag": "bridge",
+      "backend": "cellular-llm",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "5fc2a388820ea4ac25a81d623cd75d682d5f4266a23e12ba82f20ffc86877887"
+    },
+    {
+      "kind": "deform",
+      "seq": 11,
+      "q": 1,
+      "r": 0,
+      "γ": 0.06,
+      "η": 0.94,
+      "Δ": 0.5,
+      "alpha": 0.2,
+      "tag": "program:viability",
+      "backend": "program",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "c2745aaf5d5bc3412139d0ca73e432ded31df47245c9bec6eb9bfa19a7f1cb60"
+    },
+    {
+      "kind": "deform",
+      "seq": 12,
+      "q": 1,
+      "r": 0,
+      "γ": 0.06,
+      "η": 0.94,
+      "Δ": 0.5,
+      "alpha": 0.2,
+      "tag": "program:viability",
+      "backend": "program",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "d6442580ae0a53486952131edb0bdd44bc8acf2fe7bb2d1c7f5bc18fba302e11"
+    },
+    {
+      "kind": "deform",
+      "seq": 13,
+      "q": 0,
+      "r": 1,
+      "γ": 0.310038,
+      "η": 0.689962,
+      "Δ": 0.493027,
+      "alpha": 0.4,
+      "tag": "synthesis",
+      "backend": "classical-sim",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "a712c962a502f0b705cd03c3cda7c4ffa4705c935eb242f0dbfa56ab513e6dd5"
+    }
+  ],
+  "observations": [
+    {
+      "kind": "observe",
+      "seq": 15,
+      "q": -1,
+      "r": 1,
+      "definite_Δ": 0.5329,
+      "prev_prob": 1,
+      "row_hash": "905e63bc7021a4f712ba19ee0f8fa034520971ad45981827bf1c6f9e325b58de"
+    }
+  ],
+  "observers": {
+    "agent": {
+      "seq": 0,
+      "wall": 1790481018444
+    },
+    "auditor": {
+      "seq": 0,
+      "wall": 1790481018444
+    }
+  },
+  "stats": {
+    "norms_fired": 0,
+    "shaved_mass": 0,
+    "collateral_mutations": 0,
+    "collateral_mass": 0,
+    "refusals": 1,
+    "refused_mass": 1.4
+  },
+  "chain": [
+    {
+      "kind": "attend",
+      "seq": 0,
+      "observer": "agent",
+      "prev": "EXOJ-GENESIS",
+      "row_hash": "3781420d5591bc770cb504ea1a10ba951db0873147754dcf6db99ea76bb980b8"
+    },
+    {
+      "kind": "attend",
+      "seq": 0,
+      "observer": "auditor",
+      "prev": "3781420d5591bc770cb504ea1a10ba951db0873147754dcf6db99ea76bb980b8",
+      "row_hash": "f03bac8f10eddb8386f50c8225aeb9a55af911de0e0cc00c2379a2f2f6cd5163"
+    },
+    {
+      "kind": "deform",
+      "seq": 1,
+      "q": 1,
+      "r": 2,
+      "γ": 0.38,
+      "η": 0.62,
+      "Δ": 0.42,
+      "alpha": 0.4,
+      "tag": "seed:align_cosine_E40",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "16f7fcee2a332621b70f77b82c548a4ac6111385e9b8c88e6f67e4d9e674b4e6"
+    },
+    {
+      "kind": "deform",
+      "seq": 2,
+      "q": -2,
+      "r": 1,
+      "γ": 0.34,
+      "η": 0.6599999999999999,
+      "Δ": 0.44,
+      "alpha": 0.4,
+      "tag": "seed:variance_ratio_E39",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "b7c36b8d3929915a2845d51180adbe2036ee900b1e8c0a99b334726a179ece3b"
+    },
+    {
+      "kind": "deform",
+      "seq": 3,
+      "q": -1,
+      "r": -2,
+      "γ": 0.3,
+      "η": 0.7,
+      "Δ": 0.4,
+      "alpha": 0.4,
+      "tag": "seed:cascade_cotoxicity",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "23d062f0f9482f0c973457c3e1fc9caa0ddd1d46becbaf6aaf42d0930dfbf49c"
+    },
+    {
+      "kind": "deform",
+      "seq": 4,
+      "q": 0,
+      "r": 0,
+      "γ": 0.1,
+      "η": 0.9,
+      "Δ": 0.52,
+      "alpha": 0.4,
+      "tag": "seed:provenance_coupled",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "3a731753588f671b99edbfec00eb13564a1b00351bac33e9f2f1bdb89906aabb"
+    },
+    {
+      "kind": "deform",
+      "seq": 5,
+      "q": 0,
+      "r": 0,
+      "γ": 0.257338,
+      "η": 0.742662,
+      "Δ": 0.565567,
+      "alpha": 0.4,
+      "tag": "gated",
+      "backend": "classical-sim",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "5aa37eb5c13b67a35f627887f19822e2b6029265441256852ed3b5bcb2047cd9"
+    },
+    {
+      "kind": "deform",
+      "seq": 6,
+      "q": 1,
+      "r": -1,
+      "γ": 0.191614,
+      "η": 0.808386,
+      "Δ": 0.526918,
+      "alpha": 0.4,
+      "tag": "gated",
+      "backend": "classical-sim",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "ef6d57090b5d2af69080fd67d805ab95d4a6f81297cd56f3e294e7ab09ad9eaf"
+    },
+    {
+      "kind": "deform",
+      "seq": 7,
+      "q": -1,
+      "r": 1,
+      "γ": 0.299537,
+      "η": 0.700463,
+      "Δ": 0.582366,
+      "alpha": 0.4,
+      "tag": "gated",
+      "backend": "classical-sim",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "a554e31ebc7cffd1a4cd4ca1cf7e9dd4902b6cab2e3dc54be891768fb15e1cf7"
+    },
+    {
+      "kind": "deform",
+      "seq": 8,
+      "q": 2,
+      "r": 0,
+      "γ": 0.293177,
+      "η": 0.706823,
+      "Δ": 0.467776,
+      "alpha": 0.4,
+      "tag": "gated",
+      "backend": "classical-sim",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "5094754d10a771d27a14d67b68ce52b14c3ea2981437a6ca9d1cc1e350f2da8f"
+    },
+    {
+      "kind": "deform",
+      "seq": 9,
+      "q": 1,
+      "r": 0,
+      "γ": 0.15,
+      "η": 0.85,
+      "Δ": 0.5,
+      "alpha": 0.4,
+      "tag": "bridge",
+      "backend": "cellular-llm",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "5fc2a388820ea4ac25a81d623cd75d682d5f4266a23e12ba82f20ffc86877887"
+    },
+    {
+      "kind": "program_attach",
+      "seq": 10,
+      "q": 1,
+      "r": 0,
+      "program": "viability",
+      "spec": {
+        "id": "viability",
+        "kind": "every",
+        "period": 2,
+        "next": 2,
+        "action": "refresh"
+      },
+      "row_hash": "4109c1f25e7b930c4d5d53b895d34b4300e80207f5ce469cda088150908ce0a2"
+    },
+    {
+      "kind": "deform",
+      "seq": 11,
+      "q": 1,
+      "r": 0,
+      "γ": 0.06,
+      "η": 0.94,
+      "Δ": 0.5,
+      "alpha": 0.2,
+      "tag": "program:viability",
+      "backend": "program",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "c2745aaf5d5bc3412139d0ca73e432ded31df47245c9bec6eb9bfa19a7f1cb60"
+    },
+    {
+      "kind": "deform",
+      "seq": 12,
+      "q": 1,
+      "r": 0,
+      "γ": 0.06,
+      "η": 0.94,
+      "Δ": 0.5,
+      "alpha": 0.2,
+      "tag": "program:viability",
+      "backend": "program",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "d6442580ae0a53486952131edb0bdd44bc8acf2fe7bb2d1c7f5bc18fba302e11"
+    },
+    {
+      "kind": "deform",
+      "seq": 13,
+      "q": 0,
+      "r": 1,
+      "γ": 0.310038,
+      "η": 0.689962,
+      "Δ": 0.493027,
+      "alpha": 0.4,
+      "tag": "synthesis",
+      "backend": "classical-sim",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "a712c962a502f0b705cd03c3cda7c4ffa4705c935eb242f0dbfa56ab513e6dd5"
+    },
+    {
+      "kind": "refuse",
+      "seq": 14,
+      "q": 0,
+      "r": 0,
+      "γ": 0.9,
+      "η": 0.5,
+      "Δ": 0.5,
+      "alpha": 0.4,
+      "tag": "attack",
+      "backend": "classical",
+      "program": null,
+      "would_be_Σ": 1.1600000000000001,
+      "boundary": 1,
+      "note": "write refused at the boundary; ledger unchanged; refusal counted",
+      "row_hash": "4fdea9e3c770015c1c17aba1cdddcbd5f9860a6c79aeec0e059c08f082ee9533"
+    },
+    {
+      "kind": "observe",
+      "seq": 15,
+      "q": -1,
+      "r": 1,
+      "definite_Δ": 0.5329,
+      "prev_prob": 1,
+      "row_hash": "905e63bc7021a4f712ba19ee0f8fa034520971ad45981827bf1c6f9e325b58de"
+    }
+  ],
+  "chain_tip": "905e63bc7021a4f712ba19ee0f8fa034520971ad45981827bf1c6f9e325b58de"
+}

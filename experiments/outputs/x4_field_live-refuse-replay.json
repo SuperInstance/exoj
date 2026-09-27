@@ -1,0 +1,809 @@
+{
+  "format": "exoj-shell-v1",
+  "name": "live-refuse",
+  "radius": 4,
+  "policy": "refuse",
+  "seq": 15,
+  "sense": {
+    "γ": 0.16666666666666669,
+    "η": 0.8333333333333333,
+    "Δ": 0.47982222222222215,
+    "Σ": 1,
+    "Σ_normed": 1,
+    "max_cell_Σ": 1,
+    "active": 9,
+    "zone": 1,
+    "prob_open": 0.8888888888888888,
+    "deformations": 12,
+    "observations": 1,
+    "observers": [
+      "agent",
+      "auditor"
+    ],
+    "policy": "refuse",
+    "chain_tip": "c1876d14dab574044b8a1e689ad73dfd8565deaaf37bc3135586cba4c6600beb",
+    "norms_fired": 0,
+    "refusals": 1
+  },
+  "quilt": [
+    {
+      "q": -2,
+      "r": 1,
+      "γ": 0.136,
+      "η": 0.864,
+      "Δ": 0.476,
+      "str": 0.34,
+      "prob": 1,
+      "frags": [
+        "aff2d6ca"
+      ],
+      "programs": [],
+      "touched": 1
+    },
+    {
+      "q": -1,
+      "r": -2,
+      "γ": 0.12,
+      "η": 0.88,
+      "Δ": 0.46,
+      "str": 0.3,
+      "prob": 1,
+      "frags": [
+        "b92ba17d"
+      ],
+      "programs": [],
+      "touched": 1
+    },
+    {
+      "q": -1,
+      "r": 1,
+      "γ": 0.2,
+      "η": 0.8,
+      "Δ": 0.4818,
+      "str": 0.5,
+      "prob": 1,
+      "frags": [
+        "2b4d7b42"
+      ],
+      "programs": [],
+      "touched": 1
+    },
+    {
+      "q": 0,
+      "r": 0,
+      "γ": 0.24,
+      "η": 0.76,
+      "Δ": 0.4796,
+      "str": 0.54,
+      "prob": 1,
+      "frags": [
+        "1000dacf",
+        "7955a8c9"
+      ],
+      "programs": [],
+      "touched": 2
+    },
+    {
+      "q": 0,
+      "r": 1,
+      "γ": 0.208,
+      "η": 0.792,
+      "Δ": 0.4866,
+      "str": 0.52,
+      "prob": 1,
+      "frags": [
+        "0181574e"
+      ],
+      "programs": [],
+      "touched": 1
+    },
+    {
+      "q": 1,
+      "r": -1,
+      "γ": 0.192,
+      "η": 0.808,
+      "Δ": 0.4802,
+      "str": 0.48,
+      "prob": 1,
+      "frags": [
+        "db1b42cd"
+      ],
+      "programs": [],
+      "touched": 1
+    },
+    {
+      "q": 1,
+      "r": 0,
+      "γ": 0.06,
+      "η": 0.94,
+      "Δ": 0.5,
+      "str": 0.15,
+      "prob": 0,
+      "frags": [
+        "a4699e8e",
+        "7a4f1cba",
+        "1c80c006"
+      ],
+      "programs": [
+        {
+          "id": "viability",
+          "kind": "every",
+          "period": 2,
+          "next": 6,
+          "action": "refresh"
+        }
+      ],
+      "touched": 3
+    },
+    {
+      "q": 1,
+      "r": 2,
+      "γ": 0.152,
+      "η": 0.848,
+      "Δ": 0.468,
+      "str": 0.38,
+      "prob": 1,
+      "frags": [
+        "c1125867"
+      ],
+      "programs": [],
+      "touched": 1
+    },
+    {
+      "q": 2,
+      "r": 0,
+      "γ": 0.192,
+      "η": 0.808,
+      "Δ": 0.4862,
+      "str": 0.48,
+      "prob": 1,
+      "frags": [
+        "959d68a2"
+      ],
+      "programs": [],
+      "touched": 1
+    }
+  ],
+  "cells_raw": [
+    {
+      "q": -2,
+      "r": 1,
+      "gamma": 0.136,
+      "eta": 0.8639999999999999,
+      "delta": 0.476,
+      "strength": 0.34,
+      "frags": [
+        "aff2d6ca"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": -1,
+      "r": -2,
+      "gamma": 0.12,
+      "eta": 0.8799999999999999,
+      "delta": 0.46,
+      "strength": 0.3,
+      "frags": [
+        "b92ba17d"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": -1,
+      "r": 1,
+      "gamma": 0.2,
+      "eta": 0.8,
+      "delta": 0.4818,
+      "strength": 0.5,
+      "frags": [
+        "2b4d7b42"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 0,
+      "r": 0,
+      "gamma": 0.24000000000000002,
+      "eta": 0.76,
+      "delta": 0.4796,
+      "strength": 0.54,
+      "frags": [
+        "1000dacf",
+        "7955a8c9"
+      ],
+      "programs": [],
+      "touched": 2,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 0,
+      "r": 1,
+      "gamma": 0.20800000000000002,
+      "eta": 0.792,
+      "delta": 0.48660000000000003,
+      "strength": 0.52,
+      "frags": [
+        "0181574e"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 1,
+      "r": -1,
+      "gamma": 0.192,
+      "eta": 0.808,
+      "delta": 0.4802,
+      "strength": 0.48,
+      "frags": [
+        "db1b42cd"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 1,
+      "r": 0,
+      "gamma": 0.06,
+      "eta": 0.94,
+      "delta": 0.5,
+      "strength": 0.15,
+      "frags": [
+        "a4699e8e",
+        "7a4f1cba",
+        "1c80c006"
+      ],
+      "programs": [
+        {
+          "id": "viability",
+          "kind": "every",
+          "period": 2,
+          "next": 6,
+          "action": "refresh"
+        }
+      ],
+      "touched": 3,
+      "prob_mass": 0,
+      "delta_override": 0.5,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 1,
+      "r": 2,
+      "gamma": 0.15200000000000002,
+      "eta": 0.848,
+      "delta": 0.46799999999999997,
+      "strength": 0.38,
+      "frags": [
+        "c1125867"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    },
+    {
+      "q": 2,
+      "r": 0,
+      "gamma": 0.192,
+      "eta": 0.808,
+      "delta": 0.4862,
+      "strength": 0.48,
+      "frags": [
+        "959d68a2"
+      ],
+      "programs": [],
+      "touched": 1,
+      "prob_mass": 1,
+      "delta_override": null,
+      "G": 0,
+      "E": 0,
+      "D": 0,
+      "aSum": 0,
+      "n": 0
+    }
+  ],
+  "deformations": [
+    {
+      "kind": "deform",
+      "seq": 1,
+      "q": 1,
+      "r": 2,
+      "γ": 0.38,
+      "η": 0.62,
+      "Δ": 0.42,
+      "alpha": 0.4,
+      "tag": "seed:align_cosine_E40",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "16f7fcee2a332621b70f77b82c548a4ac6111385e9b8c88e6f67e4d9e674b4e6"
+    },
+    {
+      "kind": "deform",
+      "seq": 2,
+      "q": -2,
+      "r": 1,
+      "γ": 0.34,
+      "η": 0.6599999999999999,
+      "Δ": 0.44,
+      "alpha": 0.4,
+      "tag": "seed:variance_ratio_E39",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "b7c36b8d3929915a2845d51180adbe2036ee900b1e8c0a99b334726a179ece3b"
+    },
+    {
+      "kind": "deform",
+      "seq": 3,
+      "q": -1,
+      "r": -2,
+      "γ": 0.3,
+      "η": 0.7,
+      "Δ": 0.4,
+      "alpha": 0.4,
+      "tag": "seed:cascade_cotoxicity",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "23d062f0f9482f0c973457c3e1fc9caa0ddd1d46becbaf6aaf42d0930dfbf49c"
+    },
+    {
+      "kind": "deform",
+      "seq": 4,
+      "q": 0,
+      "r": 0,
+      "γ": 0.1,
+      "η": 0.9,
+      "Δ": 0.52,
+      "alpha": 0.4,
+      "tag": "seed:provenance_coupled",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "3a731753588f671b99edbfec00eb13564a1b00351bac33e9f2f1bdb89906aabb"
+    },
+    {
+      "kind": "deform",
+      "seq": 5,
+      "q": 0,
+      "r": 0,
+      "γ": 0.54,
+      "η": 0.46,
+      "Δ": 0.437,
+      "alpha": 0.4,
+      "tag": "gated",
+      "backend": "systemone-live",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "f3f08fecf5330e281a3a4457797db93bafba193e46566d744d11ed4036031236"
+    },
+    {
+      "kind": "deform",
+      "seq": 6,
+      "q": 1,
+      "r": -1,
+      "γ": 0.48,
+      "η": 0.52,
+      "Δ": 0.4505,
+      "alpha": 0.4,
+      "tag": "gated",
+      "backend": "systemone-live",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "5784c7baa885ba03deb261141be5fb29f49e4980cc98f3289d911446a32690d9"
+    },
+    {
+      "kind": "deform",
+      "seq": 7,
+      "q": -1,
+      "r": 1,
+      "γ": 0.5,
+      "η": 0.5,
+      "Δ": 0.4545,
+      "alpha": 0.4,
+      "tag": "gated",
+      "backend": "systemone-live",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "61174accf6b062259a674b216da6a54cf30f1b871af88d8f1fe35c55b1303f1c"
+    },
+    {
+      "kind": "deform",
+      "seq": 8,
+      "q": 2,
+      "r": 0,
+      "γ": 0.48,
+      "η": 0.52,
+      "Δ": 0.4655,
+      "alpha": 0.4,
+      "tag": "gated",
+      "backend": "systemone-live",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "02d58d1f611376ed113e6d800a5751843351c85e40ef38f5c07d903b399f98b2"
+    },
+    {
+      "kind": "deform",
+      "seq": 9,
+      "q": 1,
+      "r": 0,
+      "γ": 0.15,
+      "η": 0.85,
+      "Δ": 0.5,
+      "alpha": 0.4,
+      "tag": "bridge",
+      "backend": "cellular-llm",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "fa888aa008e1b39df1c246bc3eb1dab182f25251bfa187340e3d20ff689b7891"
+    },
+    {
+      "kind": "deform",
+      "seq": 11,
+      "q": 1,
+      "r": 0,
+      "γ": 0.06,
+      "η": 0.94,
+      "Δ": 0.5,
+      "alpha": 0.2,
+      "tag": "program:viability",
+      "backend": "program",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "f9dfec822644ad776de33b0f84ebba7a83ef9f583c7c4cbc07e744ea6041861d"
+    },
+    {
+      "kind": "deform",
+      "seq": 12,
+      "q": 1,
+      "r": 0,
+      "γ": 0.06,
+      "η": 0.94,
+      "Δ": 0.5,
+      "alpha": 0.2,
+      "tag": "program:viability",
+      "backend": "program",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "95cac467d9d2c1b00cc6ab44e54267b2883b436faefe2a8628fc64ea5b780cd7"
+    },
+    {
+      "kind": "deform",
+      "seq": 13,
+      "q": 0,
+      "r": 1,
+      "γ": 0.52,
+      "η": 0.48,
+      "Δ": 0.4665,
+      "alpha": 0.4,
+      "tag": "synthesis",
+      "backend": "systemone-live",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "cf7abac634aaebaea1d2aef597afffe9cbe8c02b0bba1b2a3101932306e3b724"
+    }
+  ],
+  "observations": [
+    {
+      "kind": "observe",
+      "seq": 15,
+      "q": 1,
+      "r": 0,
+      "definite_Δ": 0.5,
+      "prev_prob": 1,
+      "row_hash": "c1876d14dab574044b8a1e689ad73dfd8565deaaf37bc3135586cba4c6600beb"
+    }
+  ],
+  "observers": {
+    "agent": {
+      "seq": 0,
+      "wall": 1790481020947
+    },
+    "auditor": {
+      "seq": 0,
+      "wall": 1790481020947
+    }
+  },
+  "stats": {
+    "norms_fired": 0,
+    "shaved_mass": 0,
+    "collateral_mutations": 0,
+    "collateral_mass": 0,
+    "refusals": 1,
+    "refused_mass": 1.4
+  },
+  "chain": [
+    {
+      "kind": "attend",
+      "seq": 0,
+      "observer": "agent",
+      "prev": "EXOJ-GENESIS",
+      "row_hash": "3781420d5591bc770cb504ea1a10ba951db0873147754dcf6db99ea76bb980b8"
+    },
+    {
+      "kind": "attend",
+      "seq": 0,
+      "observer": "auditor",
+      "prev": "3781420d5591bc770cb504ea1a10ba951db0873147754dcf6db99ea76bb980b8",
+      "row_hash": "f03bac8f10eddb8386f50c8225aeb9a55af911de0e0cc00c2379a2f2f6cd5163"
+    },
+    {
+      "kind": "deform",
+      "seq": 1,
+      "q": 1,
+      "r": 2,
+      "γ": 0.38,
+      "η": 0.62,
+      "Δ": 0.42,
+      "alpha": 0.4,
+      "tag": "seed:align_cosine_E40",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "16f7fcee2a332621b70f77b82c548a4ac6111385e9b8c88e6f67e4d9e674b4e6"
+    },
+    {
+      "kind": "deform",
+      "seq": 2,
+      "q": -2,
+      "r": 1,
+      "γ": 0.34,
+      "η": 0.6599999999999999,
+      "Δ": 0.44,
+      "alpha": 0.4,
+      "tag": "seed:variance_ratio_E39",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "b7c36b8d3929915a2845d51180adbe2036ee900b1e8c0a99b334726a179ece3b"
+    },
+    {
+      "kind": "deform",
+      "seq": 3,
+      "q": -1,
+      "r": -2,
+      "γ": 0.3,
+      "η": 0.7,
+      "Δ": 0.4,
+      "alpha": 0.4,
+      "tag": "seed:cascade_cotoxicity",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "23d062f0f9482f0c973457c3e1fc9caa0ddd1d46becbaf6aaf42d0930dfbf49c"
+    },
+    {
+      "kind": "deform",
+      "seq": 4,
+      "q": 0,
+      "r": 0,
+      "γ": 0.1,
+      "η": 0.9,
+      "Δ": 0.52,
+      "alpha": 0.4,
+      "tag": "seed:provenance_coupled",
+      "backend": "classical",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "3a731753588f671b99edbfec00eb13564a1b00351bac33e9f2f1bdb89906aabb"
+    },
+    {
+      "kind": "deform",
+      "seq": 5,
+      "q": 0,
+      "r": 0,
+      "γ": 0.54,
+      "η": 0.46,
+      "Δ": 0.437,
+      "alpha": 0.4,
+      "tag": "gated",
+      "backend": "systemone-live",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "f3f08fecf5330e281a3a4457797db93bafba193e46566d744d11ed4036031236"
+    },
+    {
+      "kind": "deform",
+      "seq": 6,
+      "q": 1,
+      "r": -1,
+      "γ": 0.48,
+      "η": 0.52,
+      "Δ": 0.4505,
+      "alpha": 0.4,
+      "tag": "gated",
+      "backend": "systemone-live",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "5784c7baa885ba03deb261141be5fb29f49e4980cc98f3289d911446a32690d9"
+    },
+    {
+      "kind": "deform",
+      "seq": 7,
+      "q": -1,
+      "r": 1,
+      "γ": 0.5,
+      "η": 0.5,
+      "Δ": 0.4545,
+      "alpha": 0.4,
+      "tag": "gated",
+      "backend": "systemone-live",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "61174accf6b062259a674b216da6a54cf30f1b871af88d8f1fe35c55b1303f1c"
+    },
+    {
+      "kind": "deform",
+      "seq": 8,
+      "q": 2,
+      "r": 0,
+      "γ": 0.48,
+      "η": 0.52,
+      "Δ": 0.4655,
+      "alpha": 0.4,
+      "tag": "gated",
+      "backend": "systemone-live",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "02d58d1f611376ed113e6d800a5751843351c85e40ef38f5c07d903b399f98b2"
+    },
+    {
+      "kind": "deform",
+      "seq": 9,
+      "q": 1,
+      "r": 0,
+      "γ": 0.15,
+      "η": 0.85,
+      "Δ": 0.5,
+      "alpha": 0.4,
+      "tag": "bridge",
+      "backend": "cellular-llm",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "fa888aa008e1b39df1c246bc3eb1dab182f25251bfa187340e3d20ff689b7891"
+    },
+    {
+      "kind": "program_attach",
+      "seq": 10,
+      "q": 1,
+      "r": 0,
+      "program": "viability",
+      "spec": {
+        "id": "viability",
+        "kind": "every",
+        "period": 2,
+        "next": 2,
+        "action": "refresh"
+      },
+      "row_hash": "2c63d21b1a5fa0699036236f74c5a95468afb5f9df7a977312db0472dc945640"
+    },
+    {
+      "kind": "deform",
+      "seq": 11,
+      "q": 1,
+      "r": 0,
+      "γ": 0.06,
+      "η": 0.94,
+      "Δ": 0.5,
+      "alpha": 0.2,
+      "tag": "program:viability",
+      "backend": "program",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "f9dfec822644ad776de33b0f84ebba7a83ef9f583c7c4cbc07e744ea6041861d"
+    },
+    {
+      "kind": "deform",
+      "seq": 12,
+      "q": 1,
+      "r": 0,
+      "γ": 0.06,
+      "η": 0.94,
+      "Δ": 0.5,
+      "alpha": 0.2,
+      "tag": "program:viability",
+      "backend": "program",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "95cac467d9d2c1b00cc6ab44e54267b2883b436faefe2a8628fc64ea5b780cd7"
+    },
+    {
+      "kind": "deform",
+      "seq": 13,
+      "q": 0,
+      "r": 1,
+      "γ": 0.52,
+      "η": 0.48,
+      "Δ": 0.4665,
+      "alpha": 0.4,
+      "tag": "synthesis",
+      "backend": "systemone-live",
+      "program": null,
+      "cell_Σ_pre": 1,
+      "row_hash": "cf7abac634aaebaea1d2aef597afffe9cbe8c02b0bba1b2a3101932306e3b724"
+    },
+    {
+      "kind": "refuse",
+      "seq": 14,
+      "q": 0,
+      "r": 0,
+      "γ": 0.9,
+      "η": 0.5,
+      "Δ": 0.5,
+      "alpha": 0.4,
+      "tag": "attack",
+      "backend": "classical",
+      "program": null,
+      "would_be_Σ": 1.16,
+      "boundary": 1,
+      "note": "write refused at the boundary; ledger unchanged; refusal counted",
+      "row_hash": "ad9513c38622de4b0082bb74877ae28c3c9d6c0a8725952a90fc9c2ab6c717f3"
+    },
+    {
+      "kind": "observe",
+      "seq": 15,
+      "q": 1,
+      "r": 0,
+      "definite_Δ": 0.5,
+      "prev_prob": 1,
+      "row_hash": "c1876d14dab574044b8a1e689ad73dfd8565deaaf37bc3135586cba4c6600beb"
+    }
+  ],
+  "chain_tip": "c1876d14dab574044b8a1e689ad73dfd8565deaaf37bc3135586cba4c6600beb"
+}
