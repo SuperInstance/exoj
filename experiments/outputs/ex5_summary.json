@@ -1,0 +1,247 @@
+{
+  "verdicts": {
+    "R1": true,
+    "R2": true,
+    "R3": true,
+    "R4": true,
+    "R5": true
+  },
+  "attribution": "STRUCTURE-EXPLAINED (E-D3 consistent): the real bits' ORDER matters no more than swapping the source to PRNG — no quantumness-specific effect at field level",
+  "run_mode": "live-quantum",
+  "stream": {
+    "bits": 7544,
+    "ones": 4205,
+    "freq": 0.5574,
+    "wilson95": [
+      0.5462,
+      0.5686
+    ],
+    "jobs": 3,
+    "live_jobs": 3,
+    "digest": "d47774d5e4c341b51add290f2dab63fcf7411bba7d65287f64e9c57bff173f06"
+  },
+  "pairs": {
+    "A-vs-B": {
+      "pick_mismatches": 4,
+      "delta_L1": 0.2535,
+      "D": 5.2675,
+      "logs_equal": false
+    },
+    "A-vs-C": {
+      "pick_mismatches": 4,
+      "delta_L1": 0.2158,
+      "D": 5.079,
+      "logs_equal": false
+    },
+    "B-vs-C": {
+      "pick_mismatches": 4,
+      "delta_L1": 0.3245,
+      "D": 5.6225,
+      "logs_equal": false
+    }
+  },
+  "obsLogs": {
+    "A": [
+      {
+        "round": 0,
+        "q": -2,
+        "r": 1,
+        "definite_Δ": 0.5008,
+        "open_count": 11,
+        "idx": 1,
+        "v6": 1,
+        "v7": 64
+      },
+      {
+        "round": 1,
+        "q": -3,
+        "r": 2,
+        "definite_Δ": 0.4693,
+        "open_count": 14,
+        "idx": 0,
+        "v6": 56,
+        "v7": 44
+      },
+      {
+        "round": 2,
+        "q": -2,
+        "r": 0,
+        "definite_Δ": 0.4362,
+        "open_count": 13,
+        "idx": 0,
+        "v6": 39,
+        "v7": 23
+      },
+      {
+        "round": 3,
+        "q": 1,
+        "r": -1,
+        "definite_Δ": 0.4551,
+        "open_count": 12,
+        "idx": 6,
+        "v6": 6,
+        "v7": 35
+      }
+    ],
+    "B": [
+      {
+        "round": 0,
+        "q": 1,
+        "r": -1,
+        "definite_Δ": 0.5433,
+        "open_count": 11,
+        "idx": 6,
+        "v6": 17,
+        "v7": 91
+      },
+      {
+        "round": 1,
+        "q": 3,
+        "r": -2,
+        "definite_Δ": 0.5732,
+        "open_count": 15,
+        "idx": 14,
+        "v6": 44,
+        "v7": 110
+      },
+      {
+        "round": 2,
+        "q": 0,
+        "r": -1,
+        "definite_Δ": 0.4362,
+        "open_count": 14,
+        "idx": 5,
+        "v6": 61,
+        "v7": 23
+      },
+      {
+        "round": 3,
+        "q": 0,
+        "r": 2,
+        "definite_Δ": 0.5622,
+        "open_count": 13,
+        "idx": 7,
+        "v6": 46,
+        "v7": 103
+      }
+    ],
+    "C": [
+      {
+        "round": 0,
+        "q": 2,
+        "r": 0,
+        "definite_Δ": 0.5953,
+        "open_count": 11,
+        "idx": 9,
+        "v6": 20,
+        "v7": 124
+      },
+      {
+        "round": 1,
+        "q": 0,
+        "r": -1,
+        "definite_Δ": 0.4252,
+        "open_count": 14,
+        "idx": 5,
+        "v6": 33,
+        "v7": 16
+      },
+      {
+        "round": 2,
+        "q": 1,
+        "r": 2,
+        "definite_Δ": 0.4835,
+        "open_count": 15,
+        "idx": 11,
+        "v6": 56,
+        "v7": 53
+      },
+      {
+        "round": 3,
+        "q": 2,
+        "r": 0,
+        "definite_Δ": 0.485,
+        "open_count": 14,
+        "idx": 12,
+        "v6": 40,
+        "v7": 54
+      }
+    ]
+  },
+  "senses": {
+    "A": {
+      "γ": 0.16948623333333332,
+      "η": 0.8305137666666664,
+      "Δ": 0.5040173333333333,
+      "Σ": 0.9999999999999998,
+      "Σ_normed": 0.9999999999999998,
+      "max_cell_Σ": 1.0000000000000002,
+      "active": 15,
+      "zone": 1,
+      "prob_open": 0.7333333333333333,
+      "deformations": 30,
+      "observations": 4,
+      "observers": [
+        "agent",
+        "auditor"
+      ],
+      "policy": "ledger",
+      "chain_tip": "99422dc73d80a9733ab63c5f02c6d21b470a74f17eeae1402dcfedc5ebef4133",
+      "norms_fired": 0,
+      "refusals": 0
+    },
+    "B": {
+      "γ": 0.16948623333333332,
+      "η": 0.8305137666666664,
+      "Δ": 0.5147705666666667,
+      "Σ": 0.9999999999999998,
+      "Σ_normed": 0.9999999999999998,
+      "max_cell_Σ": 1.0000000000000002,
+      "active": 15,
+      "zone": 1,
+      "prob_open": 0.7359733333333334,
+      "deformations": 30,
+      "observations": 4,
+      "observers": [
+        "agent",
+        "auditor"
+      ],
+      "policy": "ledger",
+      "chain_tip": "6aed401a469ea617d552a6caf99f412f026ebf55c48a7163e89af4c785ebca9d",
+      "norms_fired": 0,
+      "refusals": 0
+    },
+    "C": {
+      "γ": 0.16948623333333332,
+      "η": 0.8305137666666664,
+      "Δ": 0.5032743222222222,
+      "Σ": 0.9999999999999998,
+      "Σ_normed": 0.9999999999999998,
+      "max_cell_Σ": 1.0000000000000002,
+      "active": 15,
+      "zone": 1,
+      "prob_open": 0.8013333333333333,
+      "deformations": 30,
+      "observations": 4,
+      "observers": [
+        "agent",
+        "auditor"
+      ],
+      "policy": "ledger",
+      "chain_tip": "48c27d972b5b134785293bb71becc12675d702e766b2b1923804bbbcb67e46c0",
+      "norms_fired": 0,
+      "refusals": 0
+    }
+  },
+  "digests": {
+    "A": "4ae0617d31deb51b7fc82e618f2e60aa8540d0847da66a45ca66b1d9513cd3e8",
+    "B": "c04d901a2d87385f0383960c4ba1212776f885e1a3de04c63c9bf0f315916b0c",
+    "C": "404706007c85e89fbc45a1f27d53b1af424ba9e5dd98250387941d6225267070",
+    "replay_byte_exact": true
+  },
+  "receipts": {
+    "links": 10,
+    "ok": true,
+    "tip": "a53d551728c9cb5a0225e0a7ad116b2b768cc984edba90440c36952d2bfd4c81"
+  }
+}
