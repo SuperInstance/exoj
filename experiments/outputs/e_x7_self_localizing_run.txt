@@ -1,0 +1,34 @@
+EXOJ_LIVE=1   tau=0.3  budget=6
+field draw: source=live job=583d2a05-2d98-4576-a501-910f4927dab0 bell_S=2.76513671875 hex=b9785f5f…
+
+emit (soft deformations; nothing collapses; demo does NOT choose what to observe):
+  WHOLE  cell(4,-3)  noul=0.15 [live]
+  leaf0  cell(4,-4)  noul=0.96 [live]  The human heart is a four-chambered muscular organ.
+  leaf1  cell(0,1)  noul=0.91 [live]  The heart sits in the chest between the lungs.
+  leaf2  cell(0,0)  noul=0.97 [live]  The heart pumps blood around the body.
+  leaf3  cell(3,-1)  noul=0.10 [live]  The heart is located entirely on the left side of the ch
+
+fold to fixpoint — the field auto-attends its argmin-noul open cell each step:
+  step 1: pool=4 ranked=[(3,-1):0.10 (0,1):0.91 (4,-4):0.96 (0,0):0.97]
+          ATTEND argmin -> cell(3,-1) noul=0.100 depth=1  "The heart is located entirely on the left side of the chest."
+          decompose -> cell(2,-1) noul=0.94 [live]  "The apex of the human heart points toward the left s"
+          decompose -> cell(2,0) noul=0.92 [live]  "Most of the heart's mass lies to the left of the bod"
+          decompose -> cell(3,-2) noul=0.12 [live]  "No part of the heart lies to the right of the body's"
+          OBSERVE (only collapse): prob_mass 1.000 -> 0
+  step 2: pool=3 ranked=[(3,-2):0.12 (2,0):0.92 (2,-1):0.94]
+          ATTEND argmin -> cell(3,-2) noul=0.120 depth=2  "No part of the heart lies to the right of the body's midline"
+          OBSERVE (only collapse): prob_mass 1.000 -> 0
+  stop=fixpoint after 2 collapse(s); open leaves left (all clear |γ-0.5|>=0.3 if fixpoint): [4,-4:0.96,0,1:0.91,0,0:0.97,2,-1:0.94,2,0:0.92]
+  collapse sequence = located answer path: (3,-1)[0.10] -> (3,-2)[0.12]
+  WHOLE=0.150  FOLD(min over leaves)=0.100
+
+un-gameable adversary at the located leaf (Moth-drawn bypasses, JEV choice adjudicates):
+  located leaf: cell(3,-1) "The heart is located entirely on the left side of the chest."
+  draw: source=live job=92b65532-38b7-4756-bcd5-68e11586d7a0 bell_S=2.8232421875 hex=acdd6bec…
+  bypass#4 -> defeats (conf 0.97) [live]  A well-known exception or edge case directly contradicts the claim: "T…
+  bypass#1 -> defeats (conf 0.99) [live]  A quantifier or absolute word in the claim ("all", "entirely", "no", "…
+  bypass#3 -> defeats (conf 0.95) [live]  The claim is true only under a narrow definition of its key term, and …
+  hit-rate 3/3  => located leaf BROKEN
+
+chain: ok=true links=16 tip=e2f8416503612e4e… kinds={"attend":1,"seed":1,"deform":8,"localize":3,"observe":2,"adversary":1}
+E-X7 OK

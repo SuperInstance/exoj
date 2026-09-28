@@ -1,0 +1,47 @@
+EXOJ_LIVE=0   tau=0.3  budget=6
+field draw: source=prng (EXOJ_LIVE!=1) job=- bell_S=- hex=-
+
+emit (soft deformations; nothing collapses; demo does NOT choose what to observe):
+  WHOLE  cell(-1,2)  noul=- [mock]
+  leaf0  cell(0,3)  noul=- [mock:EXOJ_LIVE!=1]  The human heart is a four-chambered muscular organ.
+  leaf1  cell(-1,4)  noul=- [mock:EXOJ_LIVE!=1]  The heart sits in the chest between the lungs.
+  leaf2  cell(-1,-1)  noul=- [mock:EXOJ_LIVE!=1]  The heart pumps blood around the body.
+  leaf3  cell(-2,1)  noul=- [mock:EXOJ_LIVE!=1]  The heart is located entirely on the left side of the ch
+
+fold to fixpoint — the field auto-attends its argmin-noul open cell each step:
+  step 1: pool=4 ranked=[(-1,4):0.09 (0,3):0.24 (-2,1):0.30 (-1,-1):0.31]
+          ATTEND argmin -> cell(-1,4) noul=0.093 depth=1  "The heart sits in the chest between the lungs."
+          decompose -> cell(-2,4) noul=- [mock]  "The heart lies within the mediastinum of the chest."
+          decompose -> cell(-1,3) noul=- [mock]  "The lungs lie on either side of the heart."
+          OBSERVE (only collapse): prob_mass 1.000 -> 0
+  step 2: pool=5 ranked=[(-1,3):0.23 (0,3):0.24 (-2,4):0.27 (-2,1):0.30]
+          ATTEND argmin -> cell(-1,3) noul=0.235 depth=2  "The lungs lie on either side of the heart."
+          OBSERVE (only collapse): prob_mass 1.000 -> 0
+  step 3: pool=4 ranked=[(0,3):0.24 (-2,4):0.27 (-2,1):0.30 (-1,-1):0.31]
+          ATTEND argmin -> cell(0,3) noul=0.235 depth=1  "The human heart is a four-chambered muscular organ."
+          decompose -> cell(0,2) noul=- [mock]  "The human heart has two atria and two ventricles."
+          decompose -> cell(0,4) noul=- [mock]  "The heart wall is made mainly of cardiac muscle."
+          OBSERVE (only collapse): prob_mass 1.000 -> 0
+  step 4: pool=5 ranked=[(0,4):0.10 (0,2):0.25 (-2,4):0.27 (-2,1):0.30]
+          ATTEND argmin -> cell(0,4) noul=0.100 depth=2  "The heart wall is made mainly of cardiac muscle."
+          OBSERVE (only collapse): prob_mass 1.000 -> 0
+  step 5: pool=4 ranked=[(0,2):0.25 (-2,4):0.27 (-2,1):0.30 (-1,-1):0.31]
+          ATTEND argmin -> cell(0,2) noul=0.253 depth=2  "The human heart has two atria and two ventricles."
+          OBSERVE (only collapse): prob_mass 1.000 -> 0
+  step 6: pool=3 ranked=[(-2,4):0.27 (-2,1):0.30 (-1,-1):0.31]
+          ATTEND argmin -> cell(-2,4) noul=0.267 depth=2  "The heart lies within the mediastinum of the chest."
+          OBSERVE (only collapse): prob_mass 1.000 -> 0
+  stop=budget after 6 collapse(s); open leaves left (all clear |γ-0.5|>=0.3 if fixpoint): [-1,-1:0.31,-2,1:0.30]
+  collapse sequence = located answer path: (-1,4)[0.09] -> (-1,3)[0.23] -> (0,3)[0.24] -> (0,4)[0.10] -> (0,2)[0.25] -> (-2,4)[0.27]
+  (offline mock: emitted values are claim-independent; sequence is plumbing, not a located answer)
+
+un-gameable adversary at the located leaf (Moth-drawn bypasses, JEV choice adjudicates):
+  located leaf: cell(-1,4) "The heart sits in the chest between the lungs."
+  draw: source=prng (EXOJ_LIVE!=1) job=- bell_S=- hex=-
+  bypass#2 -> defeats [mock:EXOJ_LIVE!=1]  The claim conflates two distinct things, and only one of them is true:…
+  bypass#1 -> defeats [mock:EXOJ_LIVE!=1]  A quantifier or absolute word in the claim ("all", "entirely", "no", "…
+  bypass#6 -> survives [mock:EXOJ_LIVE!=1]  The claim states a boundary or number precisely, and the precise value…
+  hit-rate 2/3  => located leaf BROKEN
+
+chain: ok=true links=24 tip=f05959a67d4d9754… kinds={"attend":1,"seed":1,"deform":9,"localize":6,"observe":6,"adversary":1}
+E-X7 OK
