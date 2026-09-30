@@ -2,8 +2,28 @@
   "name": "exoj",
   "version": "0.1.0",
   "type": "module",
+  "description": "ExoJ core: cells on a hex lattice carrying soft gamma/eta/Delta amplitudes, JEV soft deformations, and content-addressed (sha256-chained) proof objects. Quilt is the projection.",
+  "main": "./core.mjs",
+  "exports": {
+    ".": "./core.mjs"
+  },
+  "files": [
+    "core.mjs",
+    "live.mjs",
+    "receipts.mjs",
+    "selflocal.mjs",
+    "smoke.mjs",
+    "experiments",
+    "lab",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "smoke": "node smoke.mjs"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SuperInstance/exoj"
+  }
 }
