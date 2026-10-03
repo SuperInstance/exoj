@@ -16,12 +16,15 @@
 // DIALECT RESTRICTION (cross-language hash parity — CRITICAL): body and cell
 // carry strings, integers, booleans, null, arrays, and nested objects ONLY.
 // NO FLOATS anywhere: JS JSON.stringify and Python json.dumps format floats
-// differently (0.5 vs 0.5, but 1e21, trailing precision, repr strategies), so
-// a single float would break cross-repo verification. Strings are restricted
-// to printable ASCII for the same reason (JS does not \u-escape non-ASCII,
-// Python's ensure_ascii does). Numbers must be safe integers. Envelopes carry
-// table_hash (hex), counts, verdicts, named drifts — NOT raw float vectors.
-// The guard is enforced fail-closed at BOTH emit and verify (E_SXC_FIELD).
+// differently (repr strategies, exponent thresholds), so a single float would
+// break cross-repo verification. Numbers must be safe integers. Strings are
+// emitted RAW (non-ASCII included): JS JSON.stringify and Python
+// json.dumps(..., ensure_ascii=False) both emit raw UTF-8 — cross-language
+// hash parity with the cocapn mirror (wave-69 lane 69-4) is confirmed against
+// its genesis fixture, and pinned as a regression in lab/gan.test.mjs.
+// Envelopes carry table_hash (hex), counts, verdicts, named drifts — NOT raw
+// float vectors. The guard is enforced fail-closed at BOTH emit and verify
+// (E_SXC_FIELD).
 //
 // Verify order is fail-closed and pre-registered:
 //   1. field lattice   → E_SXC_FIELD
@@ -49,10 +52,7 @@ const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArr
 function guardDialect(value, path, errs) {
   if (value === null) return;
   const t = typeof value;
-  if (t === 'string') {
-    if (!/^[\x20-\x7E]*$/.test(value)) errs.push(`${path}: non-ASCII string (cross-language parity)`);
-    return;
-  }
+  if (t === 'string') return; // raw UTF-8 is parity-safe (see header)
   if (t === 'boolean') return;
   if (t === 'number') {
     if (!Number.isSafeInteger(value)) errs.push(`${path}: float/unsafe number (floats are forbidden in sxc1)`);
