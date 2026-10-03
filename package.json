@@ -16,10 +16,16 @@
     "experiments",
     "lab",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "spec",
+    "tools",
+    "gan",
+    "ANTI-ENTROPY-LOG.md"
   ],
   "scripts": {
-    "smoke": "node smoke.mjs"
+    "smoke": "node smoke.mjs",
+    "test": "node --test lab/*.test.mjs",
+    "gate": "node tools/spec_gate.mjs"
   },
   "license": "MIT",
   "repository": {

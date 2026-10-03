@@ -7,4 +7,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
-      - run: node smoke.mjs
+      - name: Spec gate (specification-first)
+        run: node tools/spec_gate.mjs
+      - name: Unit batteries (lab/*.test.mjs)
+        run: npm test
+      - name: Smoke
+        run: node smoke.mjs
