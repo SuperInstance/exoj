@@ -1,0 +1,105 @@
+{
+  "spec_sha": "9bf3eb905f9d2c8444f5be2f04aa4d7cef61cbe64dc1948efca5b4d6395e9c84",
+  "die_seed": "3d42b161151ebeb2f4d4cfe0b74e2e874535623279f5e721c972e1c9dff05707",
+  "initial_table_hash": "59fedd501e79a7654ccb2c37e48f18d3452cbf181f1f3a7a7718a3735cd56121",
+  "final_table_hash": "4c8ef9c177e83e9424e19f24daeadab58b1856ed5fc9938542d28aae7088da5f",
+  "steps": [
+    {
+      "nonce": "demo-0",
+      "proximity": "0.999992",
+      "touched": 2,
+      "step_hash": "8296387090fc6ee036e3eabd472431f290c50cd4c0b4cc2cf38270c6f551093d",
+      "verdict": "COMPILED",
+      "codes": [],
+      "entered_pipeline": true
+    },
+    {
+      "nonce": "demo-1",
+      "proximity": "0.999992",
+      "touched": 3,
+      "step_hash": "914704265402dc280dc71e16aa027734b02989cf8d2a4b668c664a9c6c472a77",
+      "verdict": "COMPILED",
+      "codes": [],
+      "entered_pipeline": true
+    },
+    {
+      "nonce": "demo-2",
+      "proximity": "0.999992",
+      "touched": 3,
+      "step_hash": "78491adf5a8e018259f5fd81af222c853e9e09ba9c8c83bbf707a50cac5b58c6",
+      "verdict": "COMPILED",
+      "codes": [],
+      "entered_pipeline": true
+    },
+    {
+      "nonce": "demo-3",
+      "proximity": "0.999994",
+      "touched": 1,
+      "step_hash": "a0c2344916ac5934b2647ae74a2fa683464f45439fc520b2439c7eb91e52b3ab",
+      "verdict": "COMPILED",
+      "codes": [],
+      "entered_pipeline": true
+    },
+    {
+      "nonce": "demo-4",
+      "proximity": "0.999994",
+      "touched": 1,
+      "step_hash": "4c8ef9c177e83e9424e19f24daeadab58b1856ed5fc9938542d28aae7088da5f",
+      "verdict": "COMPILED",
+      "codes": [],
+      "entered_pipeline": true
+    }
+  ],
+  "die_receipts": [
+    {
+      "nonce": "demo-die",
+      "roll": 6,
+      "raw": "87eda6effe150afd53cccecd87895c690cd8479872af0b500c9fa325066aee9d",
+      "drift": "floor-lift",
+      "crossed_boundary": false,
+      "proximity": "1.000000",
+      "verdict": "INDETERMINATE",
+      "codes": [
+        "E_CONSERVATION",
+        "E_HOMOGENISED"
+      ],
+      "entered_pipeline": false
+    }
+  ],
+  "final_verdict": "COMPILED",
+  "scars": {
+    "count": 2,
+    "tip": "fd4f49b1c8f074683b3e7a846998d3bdbb8f55c50d02275889c97978d83f5697",
+    "verified": true,
+    "kinds": [
+      "E_CONSERVATION",
+      "E_HOMOGENISED"
+    ]
+  },
+  "envelope": {
+    "v": "sxc1",
+    "seq": 1,
+    "cell": {
+      "id": "exoj-cell01-generator",
+      "kind": "generator",
+      "repo": "@superinstance/exoj",
+      "topology": "unit-table"
+    },
+    "body": {
+      "demo": "w69-bridge3",
+      "step_count": 5,
+      "die_rolls": 1,
+      "final_table_hash": "4c8ef9c177e83e9424e19f24daeadab58b1856ed5fc9938542d28aae7088da5f",
+      "final_verdict": "COMPILED",
+      "boundary_crossed": false,
+      "scar_count": 2
+    },
+    "seal": {
+      "spec_sha": "9bf3eb905f9d2c8444f5be2f04aa4d7cef61cbe64dc1948efca5b4d6395e9c84",
+      "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+      "die_seed": "3d42b161151ebeb2f4d4cfe0b74e2e874535623279f5e721c972e1c9dff05707",
+      "id": "0c35e363c215945a175d83d158e49f50cab99de712f0b4e9927f41584abe562c"
+    }
+  },
+  "envelope_verified": true
+}

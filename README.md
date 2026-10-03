@@ -505,3 +505,29 @@ Run: `python3 exoj_dogfood.py`
 - [ ] Turn the charter's question into one experiment with named arms.
 - [ ] Receipt the decision rules.
 - [ ] Run, write outputs/, verify the chain, commit.
+
+## Wave-69 — Bridge 3: the Unit Table GAN
+
+The adversarial pair that keeps the field honest, on the dynamic vector table
+(`gan/`): **Cell 01 (Generator)** is the moth — it nudges the lightest row and a
+hash-chosen subset of its neighbours toward a scaled-down copy of the densest
+row's direction, inside the amplitude budget, and rescales the touched rows'
+masses (conserving total mass: SPEC I1). **Cell 02 (Validator)** is
+specification-first: it re-derives proximity, conservation and dispersion and
+answers only `COMPILED | INDETERMINATE` with named codes — the generator's
+output never enters the pipeline when `compileRefused` is true.
+
+Constants are pre-registered, not knobs (provenance: quilt-murmur
+e40_summary.json): `MOTH_PROXIMITY = 0.798` (a2 = 0.798023), `MOTH_AMPLITUDE =
+0.49` (min = -0.493824 / rho = 0.495421), `SENSOR_LAG_MS = 3`,
+`DEADLOCK_STEPS = 12`. Verdicts fail closed: `E_CONSERVATION`, `E_BOUNDARY`,
+`E_HOMOGENISED`, `E_SXC_SPEC` (+ the sxc1 codes below). Deadlock or sensor lag
+fires the deterministic d20 (`gan/die.mjs` — same seed ⇒ same roll ⇒ same named
+drift, every roll receipted); a die-driven drift may cross the proximity
+boundary but is then scarred, not refused. Scars (`gan/scars.mjs`) are an
+append-only sha256 chain that survives any table rewind (I6: scars describe
+history, not state). State exchange uses `sxc1` envelopes (`gan/envelope.mjs`,
+I7): fail-closed on `E_SXC_FIELD / E_SXC_SEQ / E_SXC_PREV / E_SXC_HASH /
+E_SXC_SPEC`, float-free bodies for JS↔Python hash parity. Pathway: exoj emits →
+cocapn (Python mirror) verifies → quilt-dba stitches. Demo receipt:
+`node gan/demo.mjs` → `experiments/outputs/w69_bridge3_demo.json`.
