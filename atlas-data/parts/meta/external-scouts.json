@@ -1,0 +1,292 @@
+{
+  "work": "external-scouts",
+  "family": "meta",
+  "repo_path": "/home/z/my-project/jev-garden/scouts/raw",
+  "head": "d05e1d9",
+  "smoke": {
+    "cmd": "node -e \"JSON.parse each file in jev-garden/scouts/raw/*.json\"",
+    "verdict": "PASS",
+    "notes": "All 5 raw scout JSONs parse: V-JEPA_2_JEPA_world_mode.json (4 results), test-time_training_layer.json (7), knowledge_distillation_L.json (7), hyperdimensional_computi.json (8), continual_learning_from_.json (5, all junk — receipted below). This is an IDEAS-corpus work: the decomposed objects are research abstracts, not code, so no runtime smoke exists beyond receipt integrity."
+  },
+  "essence": "out-of-superinstance research moorings: five raw web-search receipts the garden synthesized into design justifications — one channel returned junk and was receipted, not hidden",
+  "ideas": [
+    {
+      "id": "external-scouts-I1",
+      "name": "latent prediction is the world-model mainstream",
+      "statement": "The JEPA line is confirmed as the frontier: V-JEPA 2 physics-guided video embeddings, ThinkJEPA (latent world models + VLM reasoning), Human-JEPA built from V-JEPA 2.1 by anchored forecasting — so the garden's Task A (next-receipt latent prediction) and quilt-jepa are on the mainstream line, not an off-grid bet.",
+      "parts": ["external-scouts-P01", "external-scouts-P02", "external-scouts-P03", "external-scouts-P04", "external-scouts-P05"]
+    },
+    {
+      "id": "external-scouts-I2",
+      "name": "test-time training legitimizes idle-time compile",
+      "statement": "TTT-E2E retrains at inference via meta-learning and Buffer layers adapt at inference while the backbone stays frozen — so the garden's weaver (idle-time compile instead of in-forward gradient steps) is 'TTA at the system level', a training regime rather than a compromise; the weave artifact IS the compiled adaptation.",
+      "parts": ["external-scouts-P06", "external-scouts-P07", "external-scouts-P08"]
+    },
+    {
+      "id": "external-scouts-I3",
+      "name": "escalation distillation as the practical living loop",
+      "statement": "Teacher-to-student distillation (Qwen3-VL-235B to 2B; LLM agents distilled into small retrieval-backed models) is the pattern behind the escalation organ: judge locally (0.056ms), escalate the uncertain to a hosted JEV (283ms, receipted), distill at idle into the local weave — the garden owns that loop end-to-end with usage receipts.",
+      "parts": ["external-scouts-P09", "external-scouts-P10", "external-scouts-P11"]
+    },
+    {
+      "id": "external-scouts-I4",
+      "name": "HDC/VSA as the gradient-free representation answer",
+      "statement": "Hyperdimensional computing represents information as high-dim hypervectors with bundling/binding ops and no backprop — the established science for 'embedding without gradient orthodoxy'; the garden's qthe arm is a QTHE-flavored HDC substrate, and THDC justifies training-free prototype growth as a first-class method (priced honestly: P-G1(b) PASS, then lost the bake-off to the hashed head).",
+      "parts": ["external-scouts-P12", "external-scouts-P13", "external-scouts-P14"]
+    },
+    {
+      "id": "external-scouts-I5",
+      "name": "the dud channel and the novel part",
+      "statement": "The continual-learning query returned pure junk (a Toyota production-system PPT, Philippine history, RuneScape gloves, SVN commit diffs) — the second failure of that channel on production-ML phrasing — receipted rather than deleted; consequently growth-from-usage has NO external anchor and is the part the garden builds novel, with pre-registered claims instead of citations.",
+      "parts": ["external-scouts-P15", "external-scouts-P16", "external-scouts-P17"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "external-scouts-P01",
+      "layer": 0,
+      "name": "raw-search-receipt substrate",
+      "essence": "Every scout query archives its raw JSON result dump (url, name, snippet, host, rank, date) under scouts/raw/ before any synthesis — the senses keep receipts, so synthesis can be audited against what the search actually returned.",
+      "inputs": ["web search results"],
+      "outputs": ["scouts/raw/*.json"],
+      "gate": "raw receipts are archived before synthesis is written",
+      "gate_kind": "seal",
+      "failure_mode": "synthesizing from memory with no auditable receipt of what was seen",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/raw/ (5 files); scout report header 'Raw search receipts: scouts/raw/*.json (5 queries...)'"
+    },
+    {
+      "part_id": "external-scouts-P02",
+      "layer": 4,
+      "name": "hit-to-garden mapping rows",
+      "essence": "The scout report is a table where each external line names exactly what it gives the garden (HDC -> 'THDC justifies training-free prototype growth'; TTT -> 'the garden's weaver = TTA at the system level'; JEPA -> 'Task A IS next-receipt latent prediction') — import with a stated use, never import for prestige.",
+      "inputs": ["raw hits"],
+      "outputs": ["one garden-use row per research line"],
+      "gate": "a hit enters synthesis only with a named 'what it gives the garden'",
+      "gate_kind": "admission",
+      "failure_mode": "citation theater — collecting papers with no design consequence",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/2026-09-28-living-jev-research.md 'What the outside world says' table"
+    },
+    {
+      "part_id": "external-scouts-P03",
+      "layer": 1,
+      "name": "V-JEPA 2 lineage claims",
+      "essence": "Human-JEPA 'built from the released V-JEPA 2.1 (Mur-Labadia et al., 2026) by anchored forecasting with two changes and one omission' (arxiv, Aug 2026); LeCun/AMI Labs JEPA with '1.5-6x training efficiency' (zylos.ai); ThinkJEPA latent world models + large VLM reasoning (github, Mar 2026); V-JEPA 2 'dual loss combining diffusion and physics regression' (emergentmind).",
+      "inputs": ["search hits"],
+      "outputs": ["a live, dated research lineage"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "treating marketing snippets as paper-grade evidence (these are REPORTED-grade hits)",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/raw/V-JEPA_2_JEPA_world_mode.json ranks 0-3 (snippets as archived)"
+    },
+    {
+      "part_id": "external-scouts-P04",
+      "layer": 2,
+      "name": "borrowed: mainstream-line confirmation",
+      "essence": "What the fleet took: confirmation that predict-in-embedding-space is the world-model mainstream — 'the garden's Task A IS next-receipt latent prediction; quilt-jepa (our repo) is the cell-mesh cousin.' Borrowed as orientation, not origin.",
+      "inputs": ["JEPA lineage claims"],
+      "outputs": ["design justification for Task A + quilt-jepa"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "claiming novelty where the frontier already agrees (or originality where it already converged)",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/2026-09-28-living-jev-research.md JEPA row"
+    },
+    {
+      "part_id": "external-scouts-P05",
+      "layer": 2,
+      "name": "unexplored: JEPA at cell tempo",
+      "essence": "What remains untouched: no fleet cell predicts in embedding space at cell tempo, and the ensemble/memory-prior hypothesis is unpaid — three honest FAILs say the current soil 'saturates too easily for memory-priors to pay' (P-G2d queued).",
+      "inputs": ["current garden capabilities"],
+      "outputs": ["queued harder-world test (P-G2d)"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "declaring parity with V-JEPA without a hard-world test",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/2026-09-28-living-jev-research.md 'Where we are ahead / behind' (three honest FAILs, P-G2d queued)"
+    },
+    {
+      "part_id": "external-scouts-P06",
+      "layer": 1,
+      "name": "TTT lineage claims",
+      "essence": "TTT-E2E 'retrains model... at inference time' via meta-learning ('the model learns how to learn from input provided at inference time', charonhub); Buffer layers: 'a lightweight parallel module that adapts at inference while keeping the backbone frozen' (openreview, cited by 7); 'TTT with KV binding... is commonly interpreted as a form of online meta-learning' (alphaxiv).",
+      "inputs": ["search hits"],
+      "outputs": ["the living-model research line"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "conflating TTT layers with full-model retraining",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/raw/test-time_training_layer.json ranks 1, 2, 4"
+    },
+    {
+      "part_id": "external-scouts-P07",
+      "layer": 2,
+      "name": "borrowed: idle-compile as regime",
+      "essence": "What the fleet took: TTT/TTA 'legitimizes idle-time compilation as a training regime, not a compromise. The weave artifact = the compiled adaptation' — the garden's watch->deform->observe->idle-compile loop is the system-level analogue of a buffer layer.",
+      "inputs": ["TTT claims"],
+      "outputs": ["justification for the weaver's idle-compile stage"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "apologizing for idle-compile as second-class training",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/2026-09-28-living-jev-research.md TTT row + synthesis point 2"
+    },
+    {
+      "part_id": "external-scouts-P08",
+      "layer": 2,
+      "name": "unexplored: in-forward vs amortized",
+      "essence": "What remains untouched: the garden never does gradient steps in the serving path — the untested claim is whether idle-amortized compilation matches in-forward adaptation on the garden's receipt stream, and at what cadence compile should re-run.",
+      "inputs": ["weave compile cadence"],
+      "outputs": ["open amortization question"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "assuming equivalence without a queued experiment",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/2026-09-28-living-jev-research.md TTT row ('same amortization goal' — equivalence asserted, not measured)"
+    },
+    {
+      "part_id": "external-scouts-P09",
+      "layer": 1,
+      "name": "distillation lineage claims",
+      "essence": "Teacher->student at scale: 'Teacher = large model (Qwen3-VL-235B-A22B); Student = small model (Qwen3-VL-2B)' (dev.to); 'Distilling LLM Agent into Small Models with Retrieval' toward on-device small language agents (openreview, cited by 44); knowledge graphs as 'structured, auditable repositories... verification signals' (ssrn).",
+      "inputs": ["search hits"],
+      "outputs": ["the small-validator research line"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "distilling into students with no auditable verification signal",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/raw/knowledge_distillation_L.json ranks 1, 3, 5"
+    },
+    {
+      "part_id": "external-scouts-P10",
+      "layer": 2,
+      "name": "borrowed: the escalation organ",
+      "essence": "What the fleet took: 'The teacher->student pattern behind the escalation organ: hosted JEV labels escalate; idle compile distills into the local weave. The garden implements the loop with usage receipts (pricing-first)' — local judgment 0.056ms vs escalated 283ms, both receipted.",
+      "inputs": ["distillation claims"],
+      "outputs": ["escalation organ: local judge -> hosted labeler -> idle distill"],
+      "gate": "every escalation carries a usage receipt (pricing-first)",
+      "gate_kind": "budget",
+      "failure_mode": "unmetered escalation to the hosted teacher",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/2026-09-28-living-jev-research.md distillation row + synthesis point 3 (0.056ms / 283ms figures)"
+    },
+    {
+      "part_id": "external-scouts-P11",
+      "layer": 2,
+      "name": "unexplored: second-generation distill",
+      "essence": "What remains untouched: distillation quality against the garden's hashed-head baseline is unresolved (the qthe arm lost the bake-off), and no student-of-the-student (second-generation) distill has been measured on the receipt stream.",
+      "inputs": ["bake-off results"],
+      "outputs": ["open distillation-quality question"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "assuming the distilled student beats the cheap head it lost to",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/2026-09-28-living-jev-research.md synthesis point 1 ('lost to the hashed head — the honest bake-off verdict')"
+    },
+    {
+      "part_id": "external-scouts-P12",
+      "layer": 1,
+      "name": "HDC lineage claims",
+      "essence": "THDC: 'Hyperdimensional computing (HDC) offers lightweight learning for energy-constrained devices by encoding data into high-dimensional vectors' (arxiv 2602.00116, Jan 2026); ACM survey on HDC/VSA; 'HD/VSA do not rely on backpropagation' (hd-computing.com); IBM NeuroVSA: 'information is superposed... Learning is incremental and fast'.",
+      "inputs": ["search hits"],
+      "outputs": ["the gradient-free representation line"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "overselling HDC as a general replacement for neural nets",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/raw/hyperdimensional_computi.json ranks 0, 2, 3, 5"
+    },
+    {
+      "part_id": "external-scouts-P13",
+      "layer": 2,
+      "name": "borrowed: qthe as QTHE-flavored HDC",
+      "essence": "What the fleet took: 'The garden's qthe arm is a QTHE-flavored HDC substrate; THDC justifies training-free prototype growth as a first-class method, not a hack' — growth by accumulation instead of gradient descent, exactly what a receipt-fed living model can do at quilt tempo.",
+      "inputs": ["HDC claims"],
+      "outputs": ["justification for qthe's accumulate-don't-train representation"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "treating gradient-free growth as a hack needing apology",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/2026-09-28-living-jev-research.md HDC row + synthesis point 1"
+    },
+    {
+      "part_id": "external-scouts-P14",
+      "layer": 2,
+      "name": "unexplored: VSA-native receipt features",
+      "essence": "What remains untouched: the garden's 16-dim 'native' fingerprint is hand-rolled, not VSA-native — bundling/binding ops are not yet applied to receipt-chain features, so the structural index does not yet use the machinery it cites.",
+      "inputs": ["receipt chain structure"],
+      "outputs": ["open VSA-feature question"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "citing VSA while indexing with ad-hoc fingerprints",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/2026-09-28-living-jev-research.md HDC row; tidepool README 'native is an optional 16-number domain fingerprint' (si-fleet) shows the hand-rolled state"
+    },
+    {
+      "part_id": "external-scouts-P15",
+      "layer": 4,
+      "name": "the junk channel receipt",
+      "essence": "continual_learning_from_.json archived 5 results and none are about continual learning: a Toyota production-system slide deck, a 2009 SVN dictionary diff, de Morga's 'History of the Philippine Islands', OSRS Swift-gloves, a RichFaces commit — the query phrasing failed, second time on that channel, and the junk is kept as a receipt.",
+      "inputs": ["continual-learning query"],
+      "outputs": ["a receipted dud, not a silent gap"],
+      "gate": "junk results are receipted and named in the report, never silently dropped",
+      "gate_kind": "seal",
+      "failure_mode": "query-phrasing drift poisoning the scout lane invisibly (exactly what receipting prevents)",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/raw/continual_learning_from_.json (5 junk results as read); scout report header 'the continual-learning phrasing returned junk — receipted, 2nd time that channel is weak'"
+    },
+    {
+      "part_id": "external-scouts-P16",
+      "layer": 2,
+      "name": "borrowed: nothing — the novel part",
+      "essence": "The consequence of the dud: 'Growth-from-usage: (junk receipted) — No crisp external reference found — this is the part we're building novel, with pre-registered claims instead of citations' — the only garden pillar whose justification is prospective rather than borrowed.",
+      "inputs": ["empty external anchor"],
+      "outputs": ["pre-registered novelty claim (P-G1(b) style)"],
+      "gate": "an unanchored pillar must carry pre-registered claims, not borrowed citations",
+      "gate_kind": "precondition",
+      "failure_mode": "backfilling fake citations for the novel part",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/2026-09-28-living-jev-research.md growth-from-usage row"
+    },
+    {
+      "part_id": "external-scouts-P17",
+      "layer": 3,
+      "name": "the honest ahead/behind interface",
+      "essence": "The scout report ends with an ahead/behind section stated plainly: ahead on provenance-grade training data (the growth journal IS the field, hash-chained), determinism crown (P-G5 byte-identical cross-substrate), judgment lifecycle law; behind on scale ('1418 rows is a windowsill, not a greenhouse') and on the ensemble hypothesis (three honest FAILs).",
+      "inputs": ["synthesis + bake-off history"],
+      "outputs": ["a self-assessment a stranger can check"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "scout reports that only flatter the design they serve",
+      "elementary": true,
+      "evidence": "jev-garden/scouts/2026-09-28-living-jev-research.md 'Where we are ahead / behind (honest)' section"
+    }
+  ],
+  "sheet": {
+    "name": "external-scouts-as-cells",
+    "cells": [
+      { "id": "raw.receipts", "kind": "io", "expr": "5 archived JSON dumps, unedited", "deps": [], "maps_to_part": "external-scouts-P01" },
+      { "id": "synthesis.table", "kind": "formula", "expr": "hit -> what it gives the garden", "deps": ["raw.receipts"], "maps_to_part": "external-scouts-P02" },
+      { "id": "jepa.line", "kind": "sensor", "expr": "V-JEPA 2 / ThinkJEPA / Human-JEPA hits", "deps": ["raw.receipts"], "maps_to_part": "external-scouts-P03" },
+      { "id": "ttt.line", "kind": "sensor", "expr": "TTT-E2E / buffer layers / KV-binding hits", "deps": ["raw.receipts"], "maps_to_part": "external-scouts-P06" },
+      { "id": "distill.line", "kind": "sensor", "expr": "teacher->student, small-model agents hits", "deps": ["raw.receipts"], "maps_to_part": "external-scouts-P09" },
+      { "id": "hdc.line", "kind": "sensor", "expr": "THDC / VSA survey / NeuroVSA hits", "deps": ["raw.receipts"], "maps_to_part": "external-scouts-P12" },
+      { "id": "continual.dud", "kind": "value", "expr": "5 junk results, receipted not deleted", "deps": ["raw.receipts"], "maps_to_part": "external-scouts-P15" },
+      { "id": "borrow.mainstream", "kind": "router", "expr": "Task A + quilt-jepa confirmed on-line", "deps": ["jepa.line", "synthesis.table"], "maps_to_part": "external-scouts-P04" },
+      { "id": "borrow.idlecompile", "kind": "program", "expr": "weaver = TTA at system level", "deps": ["ttt.line", "synthesis.table"], "maps_to_part": "external-scouts-P07" },
+      { "id": "borrow.escalation", "kind": "api", "expr": "local 0.056ms -> hosted 283ms -> idle distill, receipted", "deps": ["distill.line", "synthesis.table"], "maps_to_part": "external-scouts-P10" },
+      { "id": "borrow.qthe", "kind": "formula", "expr": "qthe = QTHE-flavored HDC; growth by accumulation", "deps": ["hdc.line", "synthesis.table"], "maps_to_part": "external-scouts-P13" },
+      { "id": "novel.growth", "kind": "ai", "expr": "growth-from-usage: pre-registered claims, no citations", "deps": ["continual.dud"], "maps_to_part": "external-scouts-P16" },
+      { "id": "ahead.behind", "kind": "listener", "expr": "windowsill-not-greenhouse self-report", "deps": ["synthesis.table"], "maps_to_part": "external-scouts-P17" }
+    ]
+  },
+  "layer_logic": {
+    "0": "substrate = unedited raw search receipts archived before synthesis — the scout lane's chain of custody",
+    "1": "mechanism = four research lines (JEPA, TTT, distillation, HDC) read as dated hit lists and mapped row-by-row onto garden design",
+    "2": "policy = a hit must name what it gives the garden; borrowed vs unexplored is stated per line; an unanchored pillar must be pre-registered, not cited",
+    "3": "interface = the ahead/behind self-report — the garden's honest face toward the frontier",
+    "4": "evidence = the junk channel kept as a receipt (5 named duds), proving the lane receipts failures as carefully as hits"
+  }
+}

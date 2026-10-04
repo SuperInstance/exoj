@@ -1,0 +1,300 @@
+{
+  "work": "quilt-jepa",
+  "family": "substrate",
+  "repo_path": "/home/z/my-project/quilt-jepa",
+  "head": "a47762a",
+  "smoke": {
+    "cmd": "node verify.mjs",
+    "verdict": "PASS (chain + seals)",
+    "notes": "Repo's own fail-closed verifier, read-only: 'OK chain 7 rows, tip 09e84771c690..., claims 3/6, registration seal verified' exit 0. Honest negatives: (1) `node run.mjs` was NOT executed in-repo because it writeFileSync's receipts/run.json (run.mjs:211) and this lane must not modify a studied repo; instead core/world.js + core/jepa.js + core/mesh.js were dog-fooded in a /tmp scratch harness: world determinism across twin seeds PASS, JEPA loss 0.01112 -> 0.00777 over 120 trainSteps on the trivial world PASS, mesh energy total drift 0.0 over 10 steps PASS, variance non-increasing PASS (my first harness run had a self-inflicted warm-up-tick asymmetry, disclosed and fixed). (2) The README's headline 3/6 is run 1 of 10; verdict-v10 records 22/28 with DOSE10/SAT10/DIP10 honest FAILs."
+  },
+  "essence": "Tiny JEPA world model in a cell mesh: per-cell latents, EMA targets, conservation-law surprise diffusion, ten rounds of pre-registered claims.",
+  "ideas": [
+    {
+      "id": "quilt-jepa-I1",
+      "name": "The grid IS the latent space",
+      "statement": "Each of the 16x16 cells holds its own 4-dim latent; a per-cell context encoder Wc and predictor Wp learn to predict the cell's own latent future against an EMA target encoder (tau, stop-gradient) — no pixel reconstruction anywhere.",
+      "parts": ["quilt-jepa-P03", "quilt-jepa-P04", "quilt-jepa-P05", "quilt-jepa-P06", "quilt-jepa-P07"]
+    },
+    {
+      "id": "quilt-jepa-I2",
+      "name": "Conservation-law surprise mesh",
+      "statement": "A double-buffered Perona-Malik anisotropic diffusion (lambda=0.2 <= 0.25 stability bound) moves prediction-surprise across the mesh as pairwise symmetric exchange: energy is never minted nor destroyed and variance contracts.",
+      "parts": ["quilt-jepa-P09", "quilt-jepa-P10", "quilt-jepa-P11", "quilt-jepa-P12"]
+    },
+    {
+      "id": "quilt-jepa-I3",
+      "name": "Determinism as the foundation of every claim",
+      "statement": "The world is xorshift32-seeded with no Math.random, so twin runs are byte-identical; every experiment is registered and sealed BEFORE the run, the run re-verifies the seal at startup fail-closed, and a stone chain + verifier make tampering loud.",
+      "parts": ["quilt-jepa-P01", "quilt-jepa-P13", "quilt-jepa-P14", "quilt-jepa-P15"]
+    },
+    {
+      "id": "quilt-jepa-I4",
+      "name": "Bit-exact claim re-binding across the depth ladder",
+      "statement": "Rounds 4..10 form a ladder where every carried metric must re-bind bit-exactly (run4 29/29, run5 92/92, cross-round metric shas) while only new claims are measured fresh — concentration statistics, not global means (design law (b)) — and honest FAILs (DOSE10, SAT10, DIP10) are carried as verdicts, not hidden.",
+      "parts": ["quilt-jepa-P16", "quilt-jepa-P17", "quilt-jepa-P18"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "quilt-jepa-P01",
+      "layer": 0,
+      "name": "xorshift32 deterministic seed",
+      "essence": "The only randomness source: a 32-bit xorshift generator; seed 0 is coerced to the golden-ratio constant so seed space is total.",
+      "inputs": ["u32 seed"],
+      "outputs": ["deterministic [0,1) stream"],
+      "gate": "no Math.random anywhere in core (determinism claim P4 PASS)",
+      "gate_kind": "invariant",
+      "failure_mode": "any hidden nondeterminism voids every byte-exact cross-round binding",
+      "elementary": true,
+      "evidence": "core/world.js:6-15"
+    },
+    {
+      "part_id": "quilt-jepa-P02",
+      "layer": 0,
+      "name": "wave + ball observation field",
+      "essence": "A 16x16 luminance field from two phased sinusoids plus a 2x2 ball bump clipped to 1 — the entire observable universe of the world model.",
+      "inputs": ["world state (phases, freq, ball)"],
+      "outputs": ["Float32Array 256 luminances in [0,1]"],
+      "gate": "values are projections in [0,1] (v*0.5+0.5, min(1, ...))",
+      "gate_kind": "invariant",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "core/world.js:39-56"
+    },
+    {
+      "part_id": "quilt-jepa-P03",
+      "layer": 0,
+      "name": "per-cell 4-dim features",
+      "essence": "The local observable: [luminance, right-diff, down-diff, luminance-0.5] — the features each cell's encoder reads.",
+      "inputs": ["obs", "cell index i"],
+      "outputs": ["4-vector f"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "core/jepa.js:16-23"
+    },
+    {
+      "part_id": "quilt-jepa-P04",
+      "layer": 1,
+      "name": "per-cell context encoder Wc",
+      "essence": "One 4x4 matrix per cell (Float32Array CELLS*16), xorshift-seeded at scale 0.5; encode maps features to the cell's latent.",
+      "inputs": ["obs features per cell"],
+      "outputs": ["context latents z (CELLS x 4)"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "core/jepa.js:34-47, 48-56"
+    },
+    {
+      "part_id": "quilt-jepa-P05",
+      "layer": 1,
+      "name": "per-cell predictor Wp",
+      "essence": "One 4x4 matrix per cell predicting the next latent from the current context latent — the JEPA's learned dynamics.",
+      "inputs": ["z_ctx"],
+      "outputs": ["z_pred"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "core/jepa.js:66-73"
+    },
+    {
+      "part_id": "quilt-jepa-P06",
+      "layer": 1,
+      "name": "EMA target encoder Wt (stop-gradient)",
+      "essence": "Wt = tau*Wt + (1-tau)*Wc with tau=0.999 (later pace-aware), providing the stable target the encoder chases — the law that prevents representation collapse.",
+      "inputs": ["Wc", "tau"],
+      "outputs": ["Wt target latents"],
+      "gate": "stationarity drift < 0.01 (claim R2v4 PASS, drift 2.640e-3)",
+      "gate_kind": "postcondition",
+      "failure_mode": "an unstable target would let the encoder chase itself into collapse",
+      "elementary": true,
+      "evidence": "core/jepa.js:39-46, 110-113"
+    },
+    {
+      "part_id": "quilt-jepa-P07",
+      "layer": 1,
+      "name": "clipped-SGD trainStep",
+      "essence": "One hand-derived step: gradient 2*(zPred - zTgt)/N clipped to [-1,1], backprop through Wp then Wc, returns the loss — plain readable autodiff by hand.",
+      "inputs": ["obs_t", "obs_t+1"],
+      "outputs": ["updated Wc, Wp", "scalar loss L"],
+      "gate": "learning-sanity ratio 0.34923 == run4 pin, re-bound bit-exact through round 10",
+      "gate_kind": "postcondition",
+      "failure_mode": "P1_learning honestly FAILED on the easy world (ratio 0.948) in run 1 — kept as the verdict",
+      "elementary": true,
+      "evidence": "core/jepa.js:80-115"
+    },
+    {
+      "part_id": "quilt-jepa-P08",
+      "layer": 1,
+      "name": "deterministic corruption probe",
+      "essence": "corruptWc flips the sign of a seeded fraction of Wc weights — the fault-injection lever for the zero-self-repair and cure-arm experiments.",
+      "inputs": ["fraction", "seed"],
+      "outputs": ["corrupted Wc", "count flipped"],
+      "gate": "P6_zero_self_repair honestly FAILed in run 1 (jump_ratio 0.979) — the fault was permanent, receipted as design law paid for",
+      "gate_kind": "postcondition",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "core/jepa.js:123-130; receipts/run.json verdicts"
+    },
+    {
+      "part_id": "quilt-jepa-P09",
+      "layer": 0,
+      "name": "stride-4 mesh cells",
+      "essence": "The mesh substrate: per-cell Float32 stride 4 [luminance, angle, gradient magnitude, latent/surprise energy], double-buffered with an active-side flag.",
+      "inputs": ["obs", "energy"],
+      "outputs": ["two n*4 buffers"],
+      "gate": "lambda = 0.2 <= 0.25 stability bound",
+      "gate_kind": "invariant",
+      "failure_mode": "lambda above 0.25 would make diffusion diverge",
+      "elementary": true,
+      "evidence": "core/mesh.js:1-17"
+    },
+    {
+      "part_id": "quilt-jepa-P10",
+      "layer": 1,
+      "name": "Perona-Malik diffusion step",
+      "essence": "One pass on channel 3: each cell exchanges energy with 4 neighbors scaled by conductance exp(-((mc-nb)^2)/kappaSq) — flow pools in flat regions and stalls at edges.",
+      "inputs": ["src buffer"],
+      "outputs": ["dst buffer (buffers swapped)"],
+      "gate": "total energy conserved to 1.2e-8 relative (P5 PASS; my scratch rerun measured 0.0 over 10 steps)",
+      "gate_kind": "conservation",
+      "failure_mode": "any asymmetry in the pairwise exchange would mint or destroy energy",
+      "elementary": true,
+      "evidence": "core/mesh.js:33-55"
+    },
+    {
+      "part_id": "quilt-jepa-P11",
+      "layer": 1,
+      "name": "variance contraction readout",
+      "essence": "totals() folds the active buffer into {total, mean, variance}; the registered law requires variance non-increasing under diffusion.",
+      "inputs": ["active buffer"],
+      "outputs": ["{total, mean, variance}"],
+      "gate": "p5_variance_non_increasing true (receipts/run.json)",
+      "gate_kind": "postcondition",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "core/mesh.js:56-64"
+    },
+    {
+      "part_id": "quilt-jepa-P12",
+      "layer": 2,
+      "name": "surprise sampling policy",
+      "essence": "surprise(sampleIdx) is mean |energy| over chosen cells — upgraded across rounds to percentile-z concentration statistics rather than global means (design law (b): diluted mean-surprise was the root cause of run-1's anomaly FAIL).",
+      "inputs": ["energy channel", "sample indices"],
+      "outputs": ["scalar surprise / z-concentration"],
+      "gate": "R3v4 z-conc 3.5407 > 3.0 (PASS, carried)",
+      "gate_kind": "postcondition",
+      "failure_mode": "global mean-surprise diluted the anomaly signal — the honest FAIL that forced law (b)",
+      "elementary": true,
+      "evidence": "core/mesh.js:65-70; README.md:26-28"
+    },
+    {
+      "part_id": "quilt-jepa-P13",
+      "layer": 4,
+      "name": "registration seal (masked self-sha + mtime)",
+      "essence": "Claims are sealed into registration.json BEFORE runs: the file hashes itself with its own sha field masked; the verifier recomputes and also binds the file mtime within 2s.",
+      "inputs": ["registration.json bytes", "stat mtime"],
+      "outputs": ["seal verdict"],
+      "gate": "masked self-sha recomputes exactly AND |mtime - sealed| <= 2000ms else fail-closed",
+      "gate_kind": "seal",
+      "failure_mode": "file mutated after seal -> 'FAIL registration self-sha mismatch (file mutated after seal)'",
+      "elementary": true,
+      "evidence": "verify.mjs:32-43"
+    },
+    {
+      "part_id": "quilt-jepa-P14",
+      "layer": 4,
+      "name": "stone chain walk from GENESIS",
+      "essence": "Every receipt row hashes as sha(prev : canonical{i,id,type,payload} : id); the verifier re-derives the whole chain from the JEPA-GENESIS-1 constant and demands the tip match.",
+      "inputs": ["receipts/run.json"],
+      "outputs": ["chain verdict + tip"],
+      "gate": "every row re-hashes to its pin, links parent-correct, tip equal; exit 0 only if everything re-hashes",
+      "gate_kind": "postcondition",
+      "failure_mode": "'FAIL hash mismatch at row N' names the tampered row",
+      "elementary": true,
+      "evidence": "verify.mjs:12-30"
+    },
+    {
+      "part_id": "quilt-jepa-P15",
+      "layer": 2,
+      "name": "fail-closed startup seal re-verification",
+      "essence": "The run itself re-verifies the registration seal at startup and refuses to execute otherwise; the verdict is recorded in the receipt (seal_verified_at_startup).",
+      "inputs": ["registration-v10.json at run time"],
+      "outputs": ["refusal or execution"],
+      "gate": "seal verified at startup, else the run refuses",
+      "gate_kind": "admission",
+      "failure_mode": "running against a mutated registration would decouple claims from measurements",
+      "elementary": true,
+      "evidence": "run10.mjs:24-26; verdict-v10.md:3-5"
+    },
+    {
+      "part_id": "quilt-jepa-P16",
+      "layer": 4,
+      "name": "bit-exact cross-round re-binding",
+      "essence": "Every round 4..9 metric must reproduce its round's receipt bit-exactly at sha level (run4 29/29, run5 92/92, design6/run6..run9 identities); the R4 twin executions are byte-identical (sha_round10_run1 == run2).",
+      "inputs": ["carried receipts", "fresh execution"],
+      "outputs": ["re-bound shas in the R4 row"],
+      "gate": "any sha mismatch fails the run — the operating point (lr 0.3, tau 0.99998, K4, amp, seed) is UNCHANGED or the round is void",
+      "gate_kind": "postcondition",
+      "failure_mode": "a core arithmetic change would break ten rounds of pinned shas",
+      "elementary": true,
+      "evidence": "run10.mjs:2-19; verdict-v10.md:26-28"
+    },
+    {
+      "part_id": "quilt-jepa-P17",
+      "layer": 4,
+      "name": "honest-FAIL verdicts carried forward",
+      "essence": "DOSE10, SAT10, DIP10 are scored FAIL on pre-priced branches; the round-8 MECH FAIL and round-9 CURE9/DIP9 FAILs carry — 22/28 with the failures in the scorecard, not footnotes.",
+      "inputs": ["claim scorecard rules"],
+      "outputs": ["verdict fields (28 keys, 22 true)"],
+      "gate": "claims_passed reported as measured, never rounded up",
+      "gate_kind": "postcondition",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "verdict-v10.md:25-31"
+    },
+    {
+      "part_id": "quilt-jepa-P18",
+      "layer": 3,
+      "name": "browser demo labeled DESIGN-ONLY",
+      "essence": "demo/index.html is a WebGPU/WGSL visualization of the same architecture, explicitly never executed headless and never cited as evidence — the interface/artifact boundary is receipted in the README.",
+      "inputs": ["architecture design"],
+      "outputs": ["browser visualization"],
+      "gate": "DESIGN/DEMO ONLY — no headless execution claim",
+      "gate_kind": "admission",
+      "failure_mode": "citing the demo as a verified result would be LARP",
+      "elementary": true,
+      "evidence": "README.md:22"
+    }
+  ],
+  "sheet": {
+    "name": "quilt-jepa-as-cells",
+    "cells": [
+      {"id": "obs", "kind": "value", "expr": "wave(x,y,t)*0.5+0.5 + ball bump (clipped)", "deps": ["world.t"], "maps_to_part": "quilt-jepa-P02"},
+      {"id": "feat", "kind": "formula", "expr": "[l, r-l, d-l, l-0.5] per cell", "deps": ["obs"], "maps_to_part": "quilt-jepa-P03"},
+      {"id": "z_ctx", "kind": "formula", "expr": "Wc[c] * feat", "deps": ["feat"], "maps_to_part": "quilt-jepa-P04"},
+      {"id": "z_pred", "kind": "formula", "expr": "Wp[c] * z_ctx", "deps": ["z_ctx"], "maps_to_part": "quilt-jepa-P05"},
+      {"id": "z_tgt", "kind": "formula", "expr": "Wt[c] * feat(t+1)", "deps": ["feat", "Wt"], "maps_to_part": "quilt-jepa-P06"},
+      {"id": "ema", "kind": "formula", "expr": "Wt <- 0.999*Wt + 0.001*Wc", "deps": ["z_pred", "z_tgt"], "maps_to_part": "quilt-jepa-P06"},
+      {"id": "loss", "kind": "formula", "expr": "mean((z_pred - z_tgt)^2), grads clipped [-1,1]", "deps": ["z_pred", "z_tgt"], "maps_to_part": "quilt-jepa-P07"},
+      {"id": "energy", "kind": "value", "expr": "channel-3 per mesh cell", "deps": ["obs"], "maps_to_part": "quilt-jepa-P09"},
+      {"id": "flux", "kind": "formula", "expr": "sum_i lambda * exp(-((mc-ni)^2)/kappaSq) * (e_i - e)", "deps": ["energy"], "maps_to_part": "quilt-jepa-P10"},
+      {"id": "totals", "kind": "sensor", "expr": "{total, variance} over active buffer; variance non-increasing", "deps": ["flux"], "maps_to_part": "quilt-jepa-P11"},
+      {"id": "surprise_z", "kind": "formula", "expr": "percentile-z concentration over sampled cells", "deps": ["totals"], "maps_to_part": "quilt-jepa-P12"},
+      {"id": "seal", "kind": "listener", "expr": "re-verify registration masked-sha + mtime at startup; refuse otherwise", "deps": [], "maps_to_part": "quilt-jepa-P13"},
+      {"id": "chain", "kind": "io", "expr": "append receipt row; tip = sha(prev:body:id)", "deps": ["loss", "surprise_z"], "maps_to_part": "quilt-jepa-P14"},
+      {"id": "verdict", "kind": "sensor", "expr": "scorecard over claims; honest FAILs carried", "deps": ["chain"], "maps_to_part": "quilt-jepa-P17"}
+    ]
+  },
+  "layer_logic": {
+    "0": "The substrate is a 16x16 lattice of per-cell 4-dim Float32 latents plus a stride-4 mesh [luminance, angle, gradient, energy] — the grid itself is the latent space.",
+    "1": "The mechanism is encode->predict->diff against an EMA target per cell, and a double-buffered Perona-Malik exchange that moves surprise energy conservatively across the mesh.",
+    "2": "The policy is the pre-registered claim rule set: sealed predictions before runs, percentile-z statistics instead of global means, dose-ordering decision laws, and fail-closed seal re-verification at startup.",
+    "3": "The interface is run.mjs/verify.mjs (CLI in, JSON receipts out), registration/seal tools, and a browser demo explicitly fenced off as DESIGN-ONLY.",
+    "4": "The evidence is stone chains verified from genesis, masked self-sha + mtime seals, twin-run byte-identical receipts, ten rounds of bit-exact metric re-binding, and honest FAILs (3/6 in run 1; DOSE10/SAT10/DIP10 in round 10) kept in the scorecard."
+  }
+}

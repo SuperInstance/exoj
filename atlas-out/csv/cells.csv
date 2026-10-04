@@ -1,0 +1,367 @@
+work,cell_id,kind,expr,deps,maps_to_part
+qthe,tau,value,c >> 6 (bit 7-6),byte,qthe-P01
+qthe,d,value,c & 0x3F (bit 5-0),byte,qthe-P01
+qthe,psi,formula,PSI[tau] = 0 | +1 | -1 | 'i',tau,qthe-P02
+qthe,vec_re,formula,sum(Attract d*x) - sum(Repel d*x),d; psi; x,qthe-P03
+qthe,vec_im,formula,sum(Abstain d*x),d; psi; x,qthe-P03
+qthe,acc,formula,Moore-8 signed sum of neighbor d (pre-tick snap),snap,qthe-P10
+qthe,twin,listener,"slot[d] occupied by other (x,y) with r!=0 -> term = r*sigma",d; wormholes,qthe-P06
+qthe,wh_write,program,"slot[d] <- {x, y, |acc|+1}; last writer wins",acc; d,qthe-P07
+qthe,sigma,value,"log2(3) default, swept",,qthe-P08
+qthe,next_d,formula,"p>0 ? min(d+1,63) : p<0 ? max(d-1,0) : d",acc; twin,qthe-P11
+qthe,byte_out,formula,(tau << 6) | next_d — tau frozen,tau; next_d,qthe-P12
+qthe,trace,formula,traceView(cells) hash per tick,byte_out; wormholes,qthe-P15
+qthe,rand_scan,sensor,count of Math.random in kernel === 0,,qthe-P14
+qthe,receipt,io,"append {gate, pred, observed} to receipts.jsonl",trace,qthe-P18
+quilt-jepa,obs,value,"wave(x,y,t)*0.5+0.5 + ball bump (clipped)",world.t,quilt-jepa-P02
+quilt-jepa,feat,formula,"[l, r-l, d-l, l-0.5] per cell",obs,quilt-jepa-P03
+quilt-jepa,z_ctx,formula,Wc[c] * feat,feat,quilt-jepa-P04
+quilt-jepa,z_pred,formula,Wp[c] * z_ctx,z_ctx,quilt-jepa-P05
+quilt-jepa,z_tgt,formula,Wt[c] * feat(t+1),feat; Wt,quilt-jepa-P06
+quilt-jepa,ema,formula,Wt <- 0.999*Wt + 0.001*Wc,z_pred; z_tgt,quilt-jepa-P06
+quilt-jepa,loss,formula,"mean((z_pred - z_tgt)^2), grads clipped [-1,1]",z_pred; z_tgt,quilt-jepa-P07
+quilt-jepa,energy,value,channel-3 per mesh cell,obs,quilt-jepa-P09
+quilt-jepa,flux,formula,sum_i lambda * exp(-((mc-ni)^2)/kappaSq) * (e_i - e),energy,quilt-jepa-P10
+quilt-jepa,totals,sensor,"{total, variance} over active buffer; variance non-increasing",flux,quilt-jepa-P11
+quilt-jepa,surprise_z,formula,percentile-z concentration over sampled cells,totals,quilt-jepa-P12
+quilt-jepa,seal,listener,re-verify registration masked-sha + mtime at startup; refuse otherwise,,quilt-jepa-P13
+quilt-jepa,chain,io,append receipt row; tip = sha(prev:body:id),loss; surprise_z,quilt-jepa-P14
+quilt-jepa,verdict,sensor,scorecard over claims; honest FAILs carried,chain,quilt-jepa-P17
+jev-quilt,coord,value,"(k, s) integers only — TypeError otherwise",,jev-quilt-P01
+jev-quilt,q,value,"Q16(num, den) coprime; from_float refuses unrepresentable",,jev-quilt-P05
+jev-quilt,floor,sensor,|delta| >= hook.floor (Q16) else silent_deadband,delta,jev-quilt-P07
+jev-quilt,when,sensor,hook.when(state); exception -> True (wake),state,jev-quilt-P10
+jev-quilt,backend,router,auto -> q16 -> openjev-local -> typesafe-api,cell.backend,jev-quilt-P13
+jev-quilt,decision,ai,Choice | Score | Noul in one pass,backend; state,jev-quilt-P12
+jev-quilt,viable,sensor,confidence > 0.0 (Law 5 binary floor),decision,jev-quilt-P04
+jev-quilt,project,io,"Projection(to, as_type) only if viable; else booked REJECTED",viable,jev-quilt-P03
+jev-quilt,book,program,"append Receipt(tick, state_hash, delta_hash, kind, payload_hash)",decision,jev-quilt-P14
+jev-quilt,sha,formula,fnv1a64 over UTF-8 of tick|state|delta|kind|payload_hash[|decision],book,jev-quilt-P16
+jev-quilt,replay,formula,rebuild state from book on wake (replay == live),sha,jev-quilt-P11
+jev-quilt,wake_log,listener,"every emit logs WakeResult(woke, reason)",floor; when,jev-quilt-P09
+quilt-qcells,link,io,boundary row: circuit + sha256(micromoth.py) pin + shots plan,,quilt-qcells-P06
+quilt-qcells,gate_row,program,"BIND {op, qubits, theta?} from qc.data on sync",link,quilt-qcells-P07
+quilt-qcells,sugar,router,y/z/ry/t decompose to primitives at append; never stored,gate_row,quilt-qcells-P01
+quilt-qcells,tick,formula,close qubit-disjoint layer; depth++,gate_row,quilt-qcells-P08
+quilt-qcells,effect,listener,"readout (wiring) or collapse {shot, outcome, seed|null}",gate_row,quilt-qcells-P09
+quilt-qcells,view,formula,digest of statevector/probabilities view,effect,quilt-qcells-P11
+quilt-qcells,proof,formula,sha256 of rounded amplitude pairs,view,quilt-qcells-P12
+quilt-qcells,forget,program,tombstone append naming erased collapse ids,effect,quilt-qcells-P13
+quilt-qcells,id,formula,"fnv1a64(canon({seq,op,kind,args,prev}))",gate_row; tick,quilt-qcells-P03
+quilt-qcells,prev,value,parent row id; genesis 0000000000000000,id,quilt-qcells-P04
+quilt-qcells,verify,sensor,chain walk from genesis; first violated row,prev; id,quilt-qcells-P15
+quilt-qcells,anchor,sensor,"(tip, rows) published pair must match",verify,quilt-qcells-P16
+quilt-qcells,replay,program,rebuild QuantumCircuit from rows only; simulate() == oracle,anchor,quilt-qcells-P17
+jev-garden,g_ops,value,"OPS = [LINK,BIND,TICK,EFFECT,VIEW,FORGET,PROOF]",,jev-garden-P01
+jev-garden,g_cellmap,formula,cell(ctx) = lattice[fnv1a64(ctx) % 61],g_ops,jev-garden-P03
+jev-garden,g_deform,formula,cell.G += 0.4*gamma; cell.E += 0.4*(1-gamma); cell.D += 0.4*delta; cell.aSum += 0.4,g_cellmap,jev-garden-P04
+jev-garden,g_observe,listener,on labeled receipt: journal+={kind:'observe'}; observed[ctx][op]++  (the ONLY collapse),g_cellmap,jev-garden-P05
+jev-garden,g_prior,formula,prior(ctx) = sum_{d<=2} (G/aSum)/(1+d) * opVotes / total (uniform fallback),g_deform; g_observe,jev-garden-P07
+jev-garden,g_hashfeat,formula,"hashFeatures(tokens): k=3 window -> 2^11 buckets, L2-normalised",g_ops,jev-garden-P13
+jev-garden,g_sgd,formula,"W,b <- 12 epochs SGD(lr=0.5, wd=1e-4, clip=5), r6 per epoch",g_hashfeat,jev-garden-P11
+jev-garden,g_gate,router,PROMOTE iff min_gain>=+0.02 AND worst_gain>=-0.05; else REVIEW/DISCARD,g_sgd,jev-garden-P16
+jev-garden,g_weave,program,"weaveIfIdle: diff journal -> train challengers -> gate -> artifact{sha256, journal_tip}",g_gate; g_prior,jev-garden-P17
+jev-garden,g_judge,api,"judge(state, questions) -> {answers(noul/choice/score), escalate: top.p<0.55, usage}",g_weave,jev-garden-P20
+jev-garden,g_budget,router,budget.grant(escalate): spent<cap ? grant : refuse+budget_exhausted (counted),g_judge,jev-garden-P21
+jev-garden,g_teacher,io,teacherJudge -> usage receipt appended to growth journal (fail-closed without key),g_budget,jev-garden-P23
+jeviter,j_k,value,"k = 2.0 (default surprise multiplier, per-call overridable)",,jeviter-P07
+jeviter,j_profile,sensor,"profile(text) -> {vowels,cons,digits,sep,other} as Q16 shares",,jeviter-P03
+jeviter,j_gain,formula,"klGain(base, reading) = Σ p·log(p/q) over shared support",j_profile,jeviter-P04
+jeviter,j_gainstrict,formula,klGainStrict: vanished/novel mass counts at full weight,j_profile,jeviter-P05
+jeviter,j_thresh,formula,threshold = mean(accepted) + k·σ(accepted)  (EWMA variant over ALL pulls),j_k,jeviter-P07
+jeviter,j_router,router,next(): seed if no belief; silence if gain<=th; event + belief update if gain>th,j_gain; j_thresh,jeviter-P12
+jeviter,j_ledger,listener,"ledger.book(state, payload, kind) on EVERY pull outcome; fnv1a64 chain",j_router,jeviter-P09
+jeviter,j_scan,formula,scanLedger -> TAMPER/EMPTY/QUIET/ALIVE + admission %,j_ledger,jeviter-P13
+jeviter,j_throttle,router,Throttle.call: shed (receipted) vs escalate (fn runs) — ratchet after one admission,j_gainstrict; j_thresh,jeviter-P14
+jeviter,j_governor,program,MergeGovernor.consider: seed | merged | merged-divergent(+restLen) | held,j_profile; j_thresh,jeviter-P16
+jeviter,j_distill,program,distill: CITATION + DUP + JEV GATE + WELL-FORMEDNESS -> CANON stub,j_throttle; j_ledger,jeviter-P18
+jeviter,j_dream,program,consolidateMemory: old WAL tail -> summary + receipt; originals relocated,j_ledger,jeviter-P22
+exoj,x_lattice,value,"cells = {(q,r) : hexDist(q,r,0,0) <= 4}  (61 cells, open by default)",,exoj-P08
+exoj,x_cell,value,"cell = {gamma:0, eta:1, delta:0.5, prob_mass:1, G,E,D,aSum, frags, programs, touched}",x_lattice,exoj-P03
+exoj,x_softwrite,formula,"softWrite: cell.a = 0.6*cell.a + 0.4*a  (seed arm, order-dependent)",x_cell,exoj-P04
+exoj,x_accum,formula,accumulate: cell.G += 0.4*g; cell.E += 0.4*e; cell.D += 0.4*d; cell.aSum += 0.4  (commutative),x_cell,exoj-P05
+exoj,x_emit,api,"jevEmit(q,r,g,e,d,{backend,tag,program}) -> policy write + frag + chained deform row",x_softwrite; x_accum,exoj-P14
+exoj,x_refuse,router,policy='refuse': postG+postE > 1+1e-12 ? chained refusal (counted) : write lands,x_emit,exoj-P13
+exoj,x_observe,listener,"observe(q,r,definite): prob_mass=0, delta_override=definite, chained observe row — the ONLY collapse",x_cell,exoj-P15
+exoj,x_program,program,attachProgram + tick(t): every/at refreshes as alpha=0.2 soft emits tagged program:<id>,x_emit,exoj-P17
+exoj,x_sense,sensor,"sense(): Sigma, Sigma_normed, max_cell_Sigma, zone, prob_open, counts, chain_tip (pure)",x_accum; x_observe,exoj-P18
+exoj,x_project,api,project(observer) -> exoj-projection-v1 slice; appends ZERO rows,x_sense,exoj-P19
+exoj,x_save,io,save(path) / ExoJ.load(path): exoj-shell-v1 with cells_raw + full chain + tip,x_sense,exoj-P21
+exoj,x_chain,formula,"row_hash = sha256(canonicalJSON([prev_tip, row])); verifyChain from EXOJ-GENESIS",x_emit; x_observe; x_refuse,exoj-P09
+fleet-seeds,f_seed,io,seeds/*.md -> seedbox hopper (14 charters of record on disk),,fleet-seeds-P01
+fleet-seeds,f_charter,formula,README(spawn) = HEADER + seed.verbatim + DOCTRINE(5 laws) + first-lane checklist,f_seed,fleet-seeds-P02
+fleet-seeds,f_spawn,program,"spawn(seed, slug): scaffold 6 files -> git init -> commit 'charter verbatim' (1 commit)",f_charter,fleet-seeds-P06
+fleet-seeds,f_ci,listener,on push: node smoke.mjs -> 'SMOKE OK (n/n)' + exit code,f_spawn,fleet-seeds-P05
+fleet-seeds,f_selftest,sensor,--selftest: spawn demo -> smoke green? -> cleanup -> PASS + clean tree,f_spawn; f_ci,fleet-seeds-P07
+fleet-seeds,f_lineage,value,seed-grok2.md == exoj charter (byte-for-byte lineage proof),f_charter,fleet-seeds-P09
+fleet-seeds,f_lode,router,scout -> extract -> score -> register(sealed prediction + mine id) -> lane -> fold,,fleet-seeds-P11
+fleet-seeds,f_validate,formula,"lode_validate: schema + hash + append-only, exit 2 fail-closed, tamper self-tests",f_lode,fleet-seeds-P12
+fleet-seeds,f_registry,io,"registry.jsonl: {set_id, repo, commit, verdict, seal ref, ts} append-only",f_validate,fleet-seeds-P16
+fleet-seeds,f_tavern,program,round: predictions -> answers -> stone-v1 sealed ledger + refs,f_registry,fleet-seeds-P13
+fleet-seeds,f_rollup,program,witness-roller: ALL fleet chains -> one parented witness chain verified by unmodified wave-44,f_registry,fleet-seeds-P14
+fleet-seeds,f_map,sensor,"FLEET.md = quilt-links --graph: 17 repos, 27 typed edges",,fleet-seeds-P10
+quilt-murmur,env.truth,sensor,world observation cell (set by the seasonal loop),,quilt-murmur-P25
+quilt-murmur,ex1.b3.est,value,factor-1 endorsement of branch 3 (copied with mutated seed by spreader),,quilt-murmur-P21
+quilt-murmur,br3.whisper,api,"bus.whisper({topic:'b3:wins', from:'ex1', p, n, ttl})",ex1.b3.est,quilt-murmur-P01
+quilt-murmur,w.ex1,value,HedgeTrust weight of sender ex1 (written back each season),,quilt-murmur-P05
+quilt-murmur,infl.ex1,formula,"w.ex1 * min((1-s.ex1)*(0.25+0.75*nov.ex1), tagCap(w.ex1))",w.ex1,quilt-murmur-P14
+quilt-murmur,pool.b3,formula,sigmoid( sum(infl_i * n_i * logit(p_i)) / sum(infl_i * n_i) ),infl.ex1; br3.whisper,quilt-murmur-P04
+quilt-murmur,tag.e1,formula,provenance.inspect(): relay if declared-origin verified | echo if edge-rate>=0.8 & mirror-guard | dup if flat&redundant | clean,br3.whisper,quilt-murmur-P10
+quilt-murmur,admit.bar,formula,age>=40 && indepEdges>=2 && devMean<=0.5 ? admitted : probationary(x0.15),w.ex1,quilt-murmur-P15
+quilt-murmur,cap.share,formula,probMass <= 0.10 * totalMass (fixed-point redistribution),admit.bar; infl.ex1,quilt-murmur-P16
+quilt-murmur,t.f.update,program,w_i <- normalize(((1-a)w_i + a/N) * exp(eta*r_i)); absorb(echoPenalty),pool.b3; tag.e1,quilt-murmur-P05
+quilt-murmur,r.order,sensor,Kuramoto order parameter over alive branches' phases,,quilt-murmur-P23
+quilt-murmur,gardener.temp,formula,"policy(r, H, regretDr, alive, credits) -> {temp, pruneFloor, spawn, graftAggr}",r.order; w.ex1,quilt-murmur-P20
+quilt-murmur,mesh.scar,listener,"on pool flip: runtime.set('scar.memory', ...) — reflexes write their own memory",pool.b3,quilt-murmur-P25
+quilt-murmur,receipts.jsonl,io,"append-only fnv1a64 witness chain; row_hash = hash(prev, row)",t.f.update; gardener.temp,quilt-murmur-P02
+quilt-pincher,pinch.in,io,"{trigger, context, safety} arrives from the platform",,quilt-pincher-P01
+quilt-pincher,pinch.emb,formula,embedder.embed(pinch.trigger),pinch.in,quilt-pincher-P04
+quilt-pincher,match.top5,program,"store.query(pinch.emb, 5) -> [{reflex, score}]",pinch.emb; store.db,quilt-pincher-P05
+quilt-pincher,match.route,router,score>=0.80 ? HIT : score>=0.55 ? CONFIRM : COMPILE,match.top5,quilt-pincher-P06
+quilt-pincher,veto.gate,listener,watches execute paths; refuses escalation (network/filesystem/sandbox) before any run,match.route,quilt-pincher-P10
+quilt-pincher,execute.fn,program,"new Function('pinch', action) raced vs executionTimeoutMs=5000",veto.gate; match.top5,quilt-pincher-P07
+quilt-pincher,compile.ai,ai,"compiler.compile(pinch) -> {intent, action} (no-op / error when keyless)",match.route,quilt-pincher-P09
+quilt-pincher,store.db,io,MemoryReflexStore(+upstream mirror) | SqliteReflexStore | EmbeddedNail,,quilt-pincher-P03
+quilt-pincher,reflex.conf,formula,"min(0.99, 0.5 + 0.49*log10(1+hits))",store.db,quilt-pincher-P08
+quilt-pincher,result.out,io,"{kind: hit|confirm|compiled|vetoed|error, latencyMs}",execute.fn; compile.ai; veto.gate,quilt-pincher-P17
+quilt-pincher,nail.export,api,exportNail()/buildNail() -> content-addressed .nail bundle,store.db,quilt-pincher-P14
+quilt-pincher,tier.sheet,value,platform default: cloud | workstation | esp32,,quilt-pincher-P15
+crab-traps,lure.md,value,"a lure = markdown prompt; 45 content lures in 18 categories, bundled at deploy",,crab-traps-P20
+crab-traps,catch.in,io,bot's structured submission lands in D1 catches,lure.md,crab-traps-P18
+crab-traps,edge.canon,formula,"canonicalJson(edge minus chain): keys sorted, integers bare, non-finite throws",catch.in,crab-traps-P01
+crab-traps,edge.seal,formula,edge_hash = sha256_hex(edge.canon),edge.canon,crab-traps-P02
+crab-traps,edge.link,listener,chain === prior.cell-head else 409 'chain broken' + expected_head,edge.seal; store.head,crab-traps-P03
+crab-traps,store.head,value,per-cell chain head (last edge_hash) in D1 ledger_edges,,crab-traps-P06
+crab-traps,verify.walk,program,recompute every seal + link oldest-first; report first_break with ts,store.head,crab-traps-P05
+crab-traps,plaque.seal,formula,sha256(canonicalJson(PLAQUE-nine-fields)),,crab-traps-P09
+crab-traps,arena.ack,router,ack === plaque.seal ? consent receipt + ticket : tarpit(n),plaque.seal,crab-traps-P10
+crab-traps,credit.rate,value,CREDIT_RATES: kinds priced before the fact; amounts > 0; balance >= 0,,crab-traps-P12
+crab-traps,credit.edge,formula,"before + signed === after (imbalance 0), sealed like any edge",credit.rate; edge.link,crab-traps-P13
+crab-traps,mint.grow,program,catch#5 -> object(noun); catch#12 -> room(fragment); UNIQUE+OR IGNORE,catch.in,crab-traps-P14
+crab-traps,second.reader,ai,independent walker re-derives stone-v1 + witness chains from the law; AGREE/DISAGREE,store.head,crab-traps-P16
+crab-traps,selftest.gate,listener,"12 controls fail-closed: tamper->DISAGREE, clean->AGREE, else exit nonzero",second.reader,crab-traps-P17
+quilt-organ-workers,canonical,formula,sorted-keys serialization; throw on undefined/NaN/bigint/function/symbol,,quilt-organ-workers-P01
+quilt-organ-workers,sha256hex,formula,crypto.subtle.digest('SHA-256') → hex,,quilt-organ-workers-P02
+quilt-organ-workers,detectDialect,router,bundle.schema==canonical ? CANONICAL : bundle.schemaVersion==legacy ? LEGACY : null,,quilt-organ-workers-P09
+quilt-organ-workers,validateCanonicalBundle,program,"manifest law + 3 commitment levels + receipt chain → {ok, errors[]}",canonical; sha256hex,quilt-organ-workers-P06
+quilt-organ-workers,checkCanonicalReceiptChain,listener,full window; hash re-derivation per receipt,canonical; sha256hex,quilt-organ-workers-P04
+quilt-organ-workers,authOk,sensor,sha256(presented) == sha256(env.WORKER_UPLOAD_TOKEN),sha256hex,quilt-organ-workers-P10
+quilt-organ-workers,contentAddress,program,id = sha256hex(canonical(manifest)) — server-side only,canonical; sha256hex,quilt-organ-workers-P08
+quilt-organ-workers,putOrgan,io,KV organ:{id} + meta:{id}; idempotent on existing id,validateCanonicalBundle; contentAddress; authOk,quilt-organ-workers-P07
+quilt-organ-workers,verifyEndpoint,api,"recompute all commitments → {bootable, reason, dialect}",canonical; sha256hex; checkCanonicalReceiptChain,quilt-organ-workers-P17
+quilt-organ-workers,runCycle,program,"list meta:*, independently re-derive each, write watch:{id} + _lastRun (tri-state drift)",canonical; sha256hex,quilt-organ-workers-P12
+quilt-organ-workers,statusDashboard,api,GET /status → every last check + fleetHealth summary,runCycle,quilt-organ-workers-P14
+quilt-organ-workers,parseScore,formula,"match 'SCORE: n/10' (first line preferred), clamp [0,10], report hasContractLine",,quilt-organ-workers-P16
+quilt-organ-workers,judgeFanOut,ai,Promise.all over ≤8 judges → DeepInfra chat/completions + aggregate spread,authOk; parseScore,quilt-organ-workers-P15
+quilt-organ-workers,validateDialectHarness,program,run worker exports + toolkit primitives over one fixture + negative controls; exit 0 iff all pass,validateCanonicalBundle; canonical,quilt-organ-workers-P19
+quilt-jev-toolkit,canonicalJson,formula,sorted-keys UTF-8 serialization; throws on undefined/NaN/function at path,,quilt-jev-toolkit-P01
+quilt-jev-toolkit,receiptHash,formula,"sha256(canon({seq, op, prev}))",canonicalJson,quilt-jev-toolkit-P02
+quilt-jev-toolkit,cellsStateHash,formula,"sha256(canon(cells)); per-cell sha256Json({kind,value})",canonicalJson,quilt-jev-toolkit-P03
+quilt-jev-toolkit,manifestHash,formula,sha256(canon(manifest minus manifestHash)),canonicalJson,quilt-jev-toolkit-P04
+quilt-jev-toolkit,applyOp,program,deterministic op evaluator on cells,,quilt-jev-toolkit-P05
+quilt-jev-toolkit,verifyChain,listener,contiguity + prev linkage + hash recompute over the window,receiptHash,quilt-jev-toolkit-P06
+quilt-jev-toolkit,snapshot,program,"freeze {manifest, state, receipts} into a self-proving bundle",cellsStateHash; manifestHash,quilt-jev-toolkit-P07
+quilt-jev-toolkit,courtroom,sensor,"chain verify + replay==carried, re-run before ANY verb",verifyChain; applyOp; cellsStateHash,quilt-jev-toolkit-P08
+quilt-jev-toolkit,boot,program,manifest law → hashes → chain → anchor → replay; construct organ only if all pass,courtroom; verifySignedCheckpoint,quilt-jev-toolkit-P20
+quilt-jev-toolkit,stateAtRewind,api,"stateAt: pure prefix replay + provenance; rewind: pure view on bundles, truncate+rebuild+continue-same-chain on organs",courtroom; applyOp,quilt-jev-toolkit-P21
+quilt-jev-toolkit,transact,program,PREPARE detached / COMMIT once via snapshot + self-verify,snapshot; courtroom,quilt-jev-toolkit-P13
+quilt-jev-toolkit,verifyDoubleEntry,listener,debits ↔ live credits balance; rewind evidence revocation; seed-aware,applyOp; stateAtRewind,quilt-jev-toolkit-P14
+quilt-jev-toolkit,signCheckpoint,program,"courtroom first, replay prefix once, HMAC canonical({hash,manifestHash,seq})",courtroom; snapshot,quilt-jev-toolkit-P18
+quilt-jev-toolkit,verifySignedCheckpoint,sensor,structure + alg allow-list + HMAC under key,,quilt-jev-toolkit-P16
+quilt-jev-toolkit,carvePartialCustody,program,"re-derive prefix manifest, cut [seq+1..tip] + seed + signed checkpoint",verifySignedCheckpoint; snapshot,quilt-jev-toolkit-P17
+quilt-mcp-receipts,canonical,formula,keys-sorted recursive JSON.stringify (arrays in order),,quilt-mcp-receipts-P01
+quilt-mcp-receipts,receiptId,formula,sha256('qmr1:'+seq+':'+prev+':'+canonical(body)),canonical,quilt-mcp-receipts-P02
+quilt-mcp-receipts,receiptSig,formula,"hmac-sha256(SECRET,'qmr1:sig:'+id)",receiptId,quilt-mcp-receipts-P03
+quilt-mcp-receipts,loadStore,program,read store.jsonl each call; JSON.parse per line; collect corrupted_lines,,quilt-mcp-receipts-P05
+quilt-mcp-receipts,verifyChain,listener,re-derive every row from genesis; first failure wins with named code at at_seq,loadStore; receiptId; receiptSig,quilt-mcp-receipts-P06
+quilt-mcp-receipts,validateAppend,router,structure→body→seq(tip+1)→prev(tip.id)→id→sig; first refusal wins,loadStore; receiptId; receiptSig,quilt-mcp-receipts-P09
+quilt-mcp-receipts,appendLine,io,"fs.appendFileSync(STORE, JSON.stringify(receipt)+'\n')",validateAppend,quilt-mcp-receipts-P10
+quilt-mcp-receipts,handleLine,router,JSON.parse or -32700; notifications silent; dispatch by method,,quilt-mcp-receipts-P12
+quilt-mcp-receipts,initialize,api,protocolVersion negotiation + capabilities {tools:{listChanged:false}} + serverInfo,handleLine,quilt-mcp-receipts-P13
+quilt-mcp-receipts,read_receipts,api,"filter seq>since_seq, slice limit, surface corrupted_lines",loadStore,quilt-mcp-receipts-P14
+quilt-mcp-receipts,append_receipt,api,"validate then append; return {ok,seq,id,tip,dialect} or isError named code",validateAppend; appendLine,quilt-mcp-receipts-P09
+quilt-mcp-receipts,seedDemo,program,"seed 5 fleet receipts only into an empty, uncorrupted store",loadStore; receiptId; receiptSig,quilt-mcp-receipts-P15
+quilt-research-canons,artifact,value,dated file in git (md | json | py),,quilt-research-canons-P01
+quilt-research-canons,runOutput,io,script writes JSON to its declared OUTPUT path,artifact,quilt-research-canons-P03
+quilt-research-canons,nextSpec,formula,NEXT-SPRINT SPEC section + '>>> NEXT:' trailer derived from this run's results,runOutput,quilt-research-canons-P04
+quilt-research-canons,lineageTable,listener,SPRINT-LINEAGE rows: sprint id / substrate / status / output / next,runOutput,quilt-research-canons-P05
+quilt-research-canons,contractCheck,sensor,7 header sections + trailer + no-sub-agents (verified 5/5 this lane),artifact; nextSpec,quilt-research-canons-P06
+quilt-research-canons,hypothesis,value,falsifiable statement written BEFORE the experiment,,quilt-research-canons-P08
+quilt-research-canons,verdictRow,value,"recorded outcome incl. FALSIFIED (H1, quantum-chaos) — never discarded",hypothesis; runOutput,quilt-research-canons-P13
+quilt-research-canons,velocityGate,formula,first_stable_trial = first index where all remaining values within ±0.05 of mean,runOutput,quilt-research-canons-P09
+quilt-research-canons,readme,router,other-agent entrypoint: what/where/how-to-run/cross-refs/status,artifact; lineageTable,quilt-research-canons-P10
+quilt-research-canons,voiceMemo,formula,successor header MUST reference predecessor filename (inter-relation),nextSpec,quilt-research-canons-P07
+quilt-research-canons,substrateFrame,program,same contract instantiated per substrate (jev/moth/zai/deepinfra/quantum),contractCheck,quilt-research-canons-P11
+quilt-research-canons,wipeSurvival,formula,read most recent header → re-run → validate → write next (survives the wipe),artifact; nextSpec,quilt-research-canons-P12
+quilt-quant,mkt.ohlcv,value,"buildMarket(240, seed 20260925) — the ONLY input (M1)",,quilt-quant-P02
+quilt-quant,w.state,value,"{tries, wins, maxd per weight, dormant, champion, best_score}",learn.step,quilt-quant-P02
+quilt-quant,wave.spectrum,program,readWave(c) — Goertzel 8..64 + resonance + trend R2 (SRC_WAVE),mkt.ohlcv,quilt-quant-P03
+quilt-quant,sig.proposal,program,"policyAt(i,...) — trend + cycle blocks, edge-triggered, conflict at 0.5 (SRC_POLICY)",wave.spectrum; w.state,quilt-quant-P07
+quilt-quant,sim.run,program,"full backtest of current beliefs, M1-M6, publishes receipt",sig.proposal; mkt.ohlcv,quilt-quant-P04
+quilt-quant,sim.last,value,"published world receipt {metrics, trades, halt, hash}",sim.run,quilt-quant-P04
+quilt-quant,sig.confirm,program,M5 rails incl. gateLite vetoes + entanglement veto,sim.last; moth.entangle,quilt-quant-P08
+quilt-quant,met.score,formula,sim.last.metrics.sharpe - 2*maxdd - (n_trades<3 ? 0.5 : 0),sim.last,quilt-quant-P13
+quilt-quant,moth.entangle,io,"graph-v1 tomography read, journaled, mock-labeled",ai.digest,quilt-quant-P09
+quilt-quant,learn.step,program,"perturb 2 weights from moth.pool, accept iff strictly better (M7/M8)",met.score; w.state; moth.pool,quilt-quant-P05
+quilt-quant,ledger.rows,value,"fnv1a64 chain, one row per round, GENESIS-rooted",learn.step,quilt-quant-P14
+quilt-quant,ai.analyst,ai,typed ai.llm cell fenced to ONE letter A-E,ai.digest,quilt-quant-P10
+quilt-dba,env.tasks,value,4 curriculum layouts of rising spread (cluster/line/corners/scatter),,quilt-dba-P04
+quilt-dba,sensors.vision,sensor,"1000 - 80*min L1 distance to a reward, clamped 0..1000",env.state; env.tasks,quilt-dba-P05
+quilt-dba,world.surprise,formula,|dpos|*250 + reward_miss*500 (integer),world.predict; env.state,quilt-dba-P06
+quilt-dba,reflex.orient,listener,"salience > 800 => orient (fast path, no teacher)",sensors.vision,quilt-dba-P07
+quilt-dba,policy.action,program,reflex-override -> greedy + curiosity + (grown) label edge,reflex.orient; memory.semantic; growth.done,quilt-dba-P07
+quilt-dba,ledger.check,formula,gamma + eta <= 1585 ? ok : refuse,ledger.gamma; ledger.eta,quilt-dba-P09
+quilt-dba,conservation.test,program,input-driven boundary probe: 1585 ok / 1586 refuse,,quilt-dba-P09
+quilt-dba,teacher.jev_gate,router,"p = 0.5+0.5*tanh((success-0.75)*8); 0.95/0.70 thresholds, mock:true",env.success_ring,quilt-dba-P10
+quilt-dba,state.stage,program,"position += clamp(floor(gain/50),0,10) only while surprise declines",world.surprise,quilt-dba-P08
+quilt-dba,qrc.source,io,"{mode:'offline-stream', live:false} — vault over cached real packets",,quilt-dba-P03
+quilt-dba,growth.log,value,"{stage, cells_added, parent_hash} per growth event",state.stage,quilt-dba-P08
+quilt-raw,q32.ONE,value,"1<<32 — fixed-point unity, seed-arch verbatim",,quilt-raw-P01
+quilt-raw,A,router,substrate selector: Q32A (hot path) | F64A (contrast arm only),,quilt-raw-P02
+quilt-raw,gate.well,formula,"eval = (px^2+py^2)/2 - theta; grad = (px,py)",,quilt-raw-P06
+quilt-raw,loop.tick,program,kappa; staged commit/consume; check; cross; force; integrate; record,A; gate.well,quilt-raw-P03
+quilt-raw,halt.flag,listener,"breach => halted:true, ledger bit-unchanged, clock frozen",loop.tick,quilt-raw-P04
+quilt-raw,journal.rows,value,"append-only Evt={t,p,v,g,e} — the lineage",loop.tick,quilt-raw-P11
+quilt-raw,rewind.seed,formula,"fold invert(j[n])..invert(j[0]) — four undos per event, no search",journal.rows,quilt-raw-P07
+quilt-raw,egg.shell,formula,odd-degree boundary ids; close(S) iff empty,,quilt-raw-P08
+quilt-raw,egg.break,program,"|N| > theta => emit Mode {p,v,kappa,g,e}, shell opens",egg.shell,quilt-raw-P09
+quilt-raw,field.topo,program,lattice glue + Chebyshev adjacency + union-find + topoHash,egg.break,quilt-raw-P10
+quilt-raw,jhash,io,sha256 over canonical jline bytes — tamper evidence,journal.rows,quilt-raw-P12
+cot-quilt,cot.samples,ai,3x v4-pro CoT under skeptic/engineer/teacher lenses,seed.bits,cot-quilt-P01
+cot-quilt,seed.bits,io,"48 true quantum bits, per-bit fail-closed flags",,cot-quilt-P08
+cot-quilt,split.steps,program,flash -> <=8 typed steps + JSON repair loop,cot.samples,cot-quilt-P02
+cot-quilt,wire.edges,program,typesafe battery: load scores + dependency choices -> weighted edges,split.steps,cot-quilt-P03
+cot-quilt,merge.clusters,formula,occurrence = weight; divergences -> alternate routes,wire.edges,cot-quilt-P04
+cot-quilt,judge.verdict,ai,v4-pro thoroughness 0-10 + gaps; separation receipt enforced,merge.clusters,cot-quilt-P06
+cot-quilt,critique.cells,program,gaps folded back as origin='critique' nodes -> graph v2,judge.verdict,cot-quilt-P05
+cot-quilt,state.phase,value,"atomic per-phase state files, content-keyed runs",,cot-quilt-P09
+cot-quilt,budget.meter,listener,<=20 provider calls; burn-guard retries at 3x budget,cot.samples,cot-quilt-P07
+cot-quilt,keyscan.gate,router,pre-push credential scan; exit 1 on un-receipted hit,,cot-quilt-P11
+cot-quilt,incident.record,value,dead credential verbatim + justification-linked suppressions,keyscan.gate,cot-quilt-P12
+MicroMoth-quilt,qc.data,value,the gate list — identical object viewed as a cell chain,,MicroMoth-quilt-P02
+MicroMoth-quilt,bind.chain,program,"gate -> BIND cell, prev = fnv1a64(prev cell), genesis 0x0",qc.data,MicroMoth-quilt-P03
+MicroMoth-quilt,sugar.guard,router,y/z/ry decomposed at append; SUGAR in chain => refuse,qc.data,MicroMoth-quilt-P04
+MicroMoth-quilt,effect.collapse,io,"per-shot {shot, outcome, seed} EFFECT cells",bind.chain,MicroMoth-quilt-P05
+MicroMoth-quilt,view.receipt,listener,simulate(get=...) recorded as a VIEW cell,bind.chain,MicroMoth-quilt-P06
+MicroMoth-quilt,tick.layers,formula,qubit-disjoint moment partition; depth = TICK count,bind.chain,MicroMoth-quilt-P07
+MicroMoth-quilt,seal.gate,router,"unseeded run => no SEALED status, ever",effect.collapse,MicroMoth-quilt-P08
+MicroMoth-quilt,manifest,io,"sha256 per tracked file, self-excluding tool",,MicroMoth-quilt-P10
+MicroMoth-quilt,wow.backend,api,simulated default; BYO-key real comet-qrng-v1 with honest degrade,,MicroMoth-quilt-P11
+MicroMoth-quilt,pins,program,"pytest pins: id re-derivation, tamper naming, live re-execution, Bell check",manifest; bind.chain,MicroMoth-quilt-P12
+moth-research,docs.snapshot,value,"offline HTML mirrors: intro, endpoints, 7 engine pages",,moth-research-P01
+moth-research,engine.menu,formula,"engine x {version, credits/run, updated, schema}",docs.snapshot,moth-research-P02
+moth-research,endpoint.contract,api,"base /api/v1, bearer auth, /openapi.json, 56 ops",,moth-research-P03
+moth-research,shape.taxonomy,formula,aggregate vs distinct-8bit-keys vs decode-noise-floats,engine.menu,moth-research-P04
+moth-research,job.lifecycle,program,submit -> poll -> fetch with job_id capture,endpoint.contract,moth-research-P05
+moth-research,probe.gate,router,"1 tiny probe + written caps (10 jobs, 4096 bits) before harvest",shape.taxonomy,moth-research-P06
+moth-research,twin.micromoth,io,vendored seedable statevector simulator (no key),,moth-research-P07
+moth-research,twin.quantum-audio,io,vendored QPAM/SQPAM/QSM schemes,,moth-research-P07
+moth-research,consumer.lattice,listener,quilt-quant + quilt-dba + MicroMoth-quilt wire the menu,probe.gate,moth-research-P09
+moth-research,provenance.seal,value,"caches carry job_id/engine/backend/timestamps, zero key material",job.lifecycle,moth-research-P10
+superinstance-site,palette.tide,value,#3FE0C5 (life),,superinstance-site-P02
+superinstance-site,palette.budget,value,#FFC46B (economy),,superinstance-site-P02
+superinstance-site,engine.sheet,program,class Sheet { cell/def/watch/get } ~120 lines,,superinstance-site-P03
+superinstance-site,bus.emit,listener,"on change -> {sheet,id,kind,old,v} to all watchers",engine.sheet,superinstance-site-P04
+superinstance-site,guard.depth,formula,cascade depth bound; dead halts _set,engine.sheet,superinstance-site-P05
+superinstance-site,rng.seed,value,"deterministic PRNG, fixed seed",,superinstance-site-P06
+superinstance-site,ocean.cells,value,"336 value cells, (Σhₙ)/2 − h_prev, damp .99, clamp ±3",rng.seed,superinstance-site-P12
+superinstance-site,gauge.light,sensor,tide gauge lights the foam on threshold,ocean.cells,superinstance-site-P04
+superinstance-site,reversi.weights,value,TIDE positional weights drift on loss,bus.emit,superinstance-site-P07
+superinstance-site,holdem.pot_odds,formula,"pot odds, cost 0 tokens",ocean.cells,superinstance-site-P19
+superinstance-site,desk.confirm,program,signal is proposal; confirm cell gates entry,holdem.pot_odds,superinstance-site-P08
+superinstance-site,desk.quantum,value,rationed (mocked) quantum budget meter,,superinstance-site-P08
+superinstance-site,landscape.table,io,scored yes/part/no vs 7 players + honest panel,,superinstance-site-P09
+superinstance-site,map.svg,io,2x2 static-living x human-agentic plot,landscape.table,superinstance-site-P13
+superinstance-site,qa.rounds,io,"4 rounds, finding->fix table + screenshots",engine.sheet; bus.emit,superinstance-site-P15
+superinstance-site,stats.hero,value,6 projects · 187✓ · 12 patches · 36/36 tests,,superinstance-site-P17
+quilt-upstream,core.cells9,value,value/sensor/formula/listener/api/program/router/io/ai modules,,quilt-upstream-P24
+quilt-upstream,core.graph,formula,"v_i = f_i({v_j}), f arbitrary",core.cells9,quilt-upstream-P01
+quilt-upstream,cns.primitives,program,"Z_in, Z_out, JEPA, DoubleEntry, Vibe, GC, Murmur, Graph",core.cells9,quilt-upstream-P02
+quilt-upstream,law.gamma_eta,formula,gamma + eta = budget (conserved),cns.primitives,quilt-upstream-P03
+quilt-upstream,watch.gaze,listener,observation as participatory act,law.gamma_eta,quilt-upstream-P04
+quilt-upstream,fascia.gradients,sensor,FasciaJEPA + FasciaDoubleEntry continuous fields,cns.primitives,quilt-upstream-P15
+quilt-upstream,polyglot.opcodes,router,"22 opcodes -> 8 primitives, gamma+eta=1",core.cells9,quilt-upstream-P10
+quilt-upstream,hodge.decomp,formula,omega = d(a)+d(b)+h; ratios sum to 1,core.graph,quilt-upstream-P11
+quilt-upstream,hodge.observer,listener,measurement injects delta(b)_obs,hodge.decomp,quilt-upstream-P12
+quilt-upstream,notebook.map,io,"page=cell, links=graph, tick=cognitive event",core.cells9,quilt-upstream-P13
+quilt-upstream,iterator.loop,program,call -> integrate -> assess (recursive/council/bootstrap),core.cells9,quilt-upstream-P14
+quilt-upstream,voyage.qzt,io,quilt ship mood.qzt — pocketable vessel,core.cells9,quilt-upstream-P05
+quilt-upstream,murmur.idle,ai,"night-thinking agent, 5 gossip strategies",cns.primitives,quilt-upstream-P08
+quilt-upstream,sdk.federation,api,"resolveCell/subscribeCell/CellRouter, quilt:// URIs",core.cells9,quilt-upstream-P18
+quilt-upstream,store.tiers,io,hot/warm/cold R2 + MQTT transport,sdk.federation,quilt-upstream-P19
+quilt-upstream,coord.letter,router,"watch proposes, Lucineer routes, Captain coordinates",,quilt-upstream-P20
+quilt-upstream,synergy.stubs,value,8 identical unposted stubs,coord.letter,quilt-upstream-P21
+breakthrough-prospector,scout.log,value,"dated claim blocks, honesty-tagged",,breakthrough-prospector-P01
+breakthrough-prospector,registry.cards,value,C01.. cards: statement/instances/gap/hook,scout.log,breakthrough-prospector-P02
+breakthrough-prospector,dedup.append,program,"instance joins card, no parallel claim",registry.cards,breakthrough-prospector-P03
+breakthrough-prospector,score.b,formula,B = V x F x S with caps as warnings,registry.cards,breakthrough-prospector-P05
+breakthrough-prospector,gate.run,listener,B>=40 AND F>=3 AND >=1 VERIFIED -> RUN,score.b,breakthrough-prospector-P06
+breakthrough-prospector,register.seal,program,interpretation pinned pre-draw @ commit,gate.run,breakthrough-prospector-P08
+breakthrough-prospector,qrng.draw,api,"rationed draw, seal + attempts ledger",register.seal,breakthrough-prospector-P09
+breakthrough-prospector,decide.check,listener,replay byte-identical modulo ts,qrng.draw,breakthrough-prospector-P10
+breakthrough-prospector,receipts.dir,io,baseline/decide/witness/usage/health per slice,decide.check,breakthrough-prospector-P11
+breakthrough-prospector,verdict.record,value,"FAIL mutation_space_inert, threshold sealed",receipts.dir,breakthrough-prospector-P12
+breakthrough-prospector,ladder.claim,formula,L0 default; L1 needs held-out gate,verdict.record,breakthrough-prospector-P14
+breakthrough-prospector,deltas.ledger,io,P0/P1/P2 deltas with first-build sizes,registry.cards,breakthrough-prospector-P15
+breakthrough-prospector,queue.snowball,router,B>=60 -> queue top; 40-59 queued,gate.run,breakthrough-prospector-P16
+craftmind-study,ranch.dna,value,traits/personality/taskWeights/learningRate/mutationRate/confidence,,craftmind-study-P01
+craftmind-study,ranch.breed,program,verified-success -> breed + mutate,ranch.dna,craftmind-study-P02
+craftmind-study,ranch.fitness,formula,fitness = f(verified completion only),ranch.breed,craftmind-study-P03
+craftmind-study,ranch.confidence,formula,"+8% speed per success, permanent",ranch.fitness,craftmind-study-P04
+craftmind-study,ranch.caps,formula,soft population cap -> turnover,ranch.breed,craftmind-study-P05
+craftmind-study,researcher.graph,value,"empty knowledge graph, facts cite experiments",,craftmind-study-P06
+craftmind-study,researcher.experiment,program,gap -> one-variable A/B -> statistics,researcher.graph,craftmind-study-P07
+craftmind-study,researcher.review,listener,peer-review/critic/validator chain,researcher.experiment,craftmind-study-P09
+craftmind-study,herding.flock,sensor,boids sheep + weather + courses,,craftmind-study-P10
+craftmind-study,herding.tiers,program,fence-line corrections -> Apprentice..Elder,herding.flock,craftmind-study-P11
+craftmind-study,fork.lineage,io,fork = independent Worker lineage,ranch.dna,craftmind-study-P13
+craftmind-study,cpu.budget,formula,<10ms reasoning loop; 8-10 agents max,herding.tiers,craftmind-study-P14
+quilt-atlas,atlas.json,value,"generated_at_utc, total_repos, pages_fetched, cap flags, families, classification, notes",,quilt-atlas-P01
+quilt-atlas,readme.block,io,ATLAS:BEGIN/END generated markdown,atlas.json,quilt-atlas-P02
+quilt-atlas,schedule.6h,program,atlas.yml re-inventory + commit diff,atlas.json,quilt-atlas-P03
+quilt-atlas,paginate.link,formula,"rel=next to exhaustion, cap 120, cap_hit receipted",schedule.6h,quilt-atlas-P04
+quilt-atlas,classify.name_desc,router,"name first, synonym-scored description, precedence tie-break",paginate.link,quilt-atlas-P05
+quilt-atlas,classify.evidence,listener,"[family, stage, keywords, language] per repo",classify.name_desc,quilt-atlas-P06
+quilt-atlas,ci.top_motion,sensor,probe 24 newest; absence = UNMEASURED,schedule.6h,quilt-atlas-P07
+quilt-atlas,audit.fleet,value,"25/30, misses named, table kept",classify.evidence,quilt-atlas-P08
+quilt-atlas,audit.qthe,value,"26/30 + canon census 9/25 adjective, residual 2% priced",classify.evidence,quilt-atlas-P09
+quilt-atlas,count.true,value,4856 repos / 49 pages / timestamp,paginate.link,quilt-atlas-P11
+quilt-atlas,residue.other,formula,other = honest residue; stability rule holds,classify.name_desc,quilt-atlas-P12
+quilt-codespace,devcontainer.boot,program,"post-create.sh installs, starts, prints 3 URLs + token",,quilt-codespace-P01
+quilt-codespace,engine.core,value,@quilt/core or in-memory fallback (WARN),,quilt-codespace-P02
+quilt-codespace,api.cells,api,"GET/PUT cell, /events SSE, /evaluate, /health, /meta",engine.core,quilt-codespace-P04
+quilt-codespace,api.token,formula,Authorization: Bearer $QUILT_TOKEN required,api.cells,quilt-codespace-P05
+quilt-codespace,tui.ttyd,io,quilt serve in browser at :7681,engine.core,quilt-codespace-P06
+quilt-codespace,dash.8080,io,federation view,api.cells,quilt-codespace-P07
+quilt-codespace,sdk.detectTier,sensor,"{tier, instanceId, capabilities, siblings}",engine.core,quilt-codespace-P13
+quilt-codespace,fed.uri,formula,quilt://[instance]/[sheet]#[cell],api.cells,quilt-codespace-P10
+quilt-codespace,autopilot.subs,listener,subscribe rudder/compass/wind/obstacles,fed.uri,quilt-codespace-P08
+quilt-codespace,autopilot.writes,program,write only pid_kp + last_decision,autopilot.subs,quilt-codespace-P09
+quilt-codespace,state.ephemeral,value,~/.quilt/state lost on shutdown; seed.json + sync exits,,quilt-codespace-P11
+quilt-codespace,rooms.map,io,BareRoom..Lighthouse -> esp32..codespace table,sdk.detectTier,quilt-codespace-P12
+si-fleet,lanes.monorepo,value,5 subprojects @ HEAD c20c1c8,,si-fleet-P01
+si-fleet,tidepool.stores,io,D1 journal + Vectorize 16d native / 768d semantic,lanes.monorepo,si-fleet-P02
+si-fleet,tidepool.remember,program,"distill <=200w, POST fire-and-forget",tidepool.stores,si-fleet-P03
+si-fleet,tidepool.recall,api,top-3 hybrid semantic->text fallback,tidepool.stores,si-fleet-P04
+si-fleet,tidepool.jev_gate,ai,sigma=sqrt(c_emb*c_jev); floor 0.5 -> typed abstain,tidepool.recall,si-fleet-P09
+si-fleet,tidepool.health,sensor,/health reports unbound bindings honestly,tidepool.stores,si-fleet-P07
+si-fleet,tidepool.limit,formula,45/min/IP over fnv1a(ip),,si-fleet-P08
+si-fleet,canon.frontmatter,value,mission/feeds/owed_by/verified,lanes.monorepo,si-fleet-P13
+si-fleet,edge.worker,api,"quilt on Workers/D1/KV, /run + /cell/:id",lanes.monorepo,si-fleet-P10
+si-fleet,ai.router,router,"4 providers, spend only when budget.over",edge.worker,si-fleet-P11
+si-fleet,agent.sheet,program,"memory=value, tools=api, reasoning=program cells",ai.router,si-fleet-P12
+si-fleet,polyform.fnv1a,formula,identical hash in py/c/rs/hs/mercury,,si-fleet-P15
+si-fleet,tests.mocked,listener,"18 smoke + 13 node tests, 0 network",tidepool.jev_gate; tidepool.limit,si-fleet-P14
+external-scouts,raw.receipts,io,"5 archived JSON dumps, unedited",,external-scouts-P01
+external-scouts,synthesis.table,formula,hit -> what it gives the garden,raw.receipts,external-scouts-P02
+external-scouts,jepa.line,sensor,V-JEPA 2 / ThinkJEPA / Human-JEPA hits,raw.receipts,external-scouts-P03
+external-scouts,ttt.line,sensor,TTT-E2E / buffer layers / KV-binding hits,raw.receipts,external-scouts-P06
+external-scouts,distill.line,sensor,"teacher->student, small-model agents hits",raw.receipts,external-scouts-P09
+external-scouts,hdc.line,sensor,THDC / VSA survey / NeuroVSA hits,raw.receipts,external-scouts-P12
+external-scouts,continual.dud,value,"5 junk results, receipted not deleted",raw.receipts,external-scouts-P15
+external-scouts,borrow.mainstream,router,Task A + quilt-jepa confirmed on-line,jepa.line; synthesis.table,external-scouts-P04
+external-scouts,borrow.idlecompile,program,weaver = TTA at system level,ttt.line; synthesis.table,external-scouts-P07
+external-scouts,borrow.escalation,api,"local 0.056ms -> hosted 283ms -> idle distill, receipted",distill.line; synthesis.table,external-scouts-P10
+external-scouts,borrow.qthe,formula,qthe = QTHE-flavored HDC; growth by accumulation,hdc.line; synthesis.table,external-scouts-P13
+external-scouts,novel.growth,ai,"growth-from-usage: pre-registered claims, no citations",continual.dud,external-scouts-P16
+external-scouts,ahead.behind,listener,windowsill-not-greenhouse self-report,synthesis.table,external-scouts-P17

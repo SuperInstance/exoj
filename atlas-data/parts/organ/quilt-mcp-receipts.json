@@ -1,0 +1,272 @@
+{
+  "work": "quilt-mcp-receipts",
+  "family": "organ",
+  "repo_path": "/home/z/my-project/quilt-mcp-receipts",
+  "head": "889960a",
+  "smoke": {
+    "cmd": "npm test  (= node --test, per package.json scripts.test)",
+    "verdict": "PASS 15/15 (5.6s, offline)",
+    "notes": "Every test spawns a real server process and speaks newline-delimited JSON-RPC over stdio; the test signer is re-derived from DESIGN.md §2, not imported from server.mjs (test/mcp.test.mjs:5-7). Honest harness note: `node --test test/` (trailing dir arg) fails with MODULE_NOT_FOUND on Node v24.21.0 — the working invocation is the package.json script `node --test` (auto-discovery). No network, no API keys used."
+  },
+  "essence": "Fleet receipt chain as signed append-only MCP organ; fail-closed named errors.",
+  "ideas": [
+    {
+      "id": "quilt-mcp-receipts-I1",
+      "name": "qmr1 receipt dialect",
+      "statement": "A receipt is exactly five fields {seq, prev, body, id, sig}; id = SHA-256(\"qmr1:\"+seq+\":\"+prev+\":\"+canonicalJSON(body)) is the chain link, sig = HMAC-SHA256(secret, \"qmr1:sig:\"+id); genesis prev = 64 zeros. Canonical JSON binds the body by canonical form, so key reordering and whitespace never break verification — only value edits do (DESIGN.md §2).",
+      "parts": ["quilt-mcp-receipts-P01", "quilt-mcp-receipts-P02", "quilt-mcp-receipts-P03", "quilt-mcp-receipts-P04"]
+    },
+    {
+      "id": "quilt-mcp-receipts-I2",
+      "name": "re-derivation over trust",
+      "statement": "verify_chain() re-parses the store from disk and re-derives every id and signature from genesis, failing closed on the FIRST broken row with a named, grep-able code at a named at_seq — the fleet's instrument against the 'well-formed, checkable, wrong artifact' finding (DESIGN.md §3, §6).",
+      "parts": ["quilt-mcp-receipts-P05", "quilt-mcp-receipts-P06", "quilt-mcp-receipts-P07", "quilt-mcp-receipts-P08"]
+    },
+    {
+      "id": "quilt-mcp-receipts-I3",
+      "name": "admission is fail-closed",
+      "statement": "append_receipt validates structure → body shape → seq (tip+1) → prev (tip id) → id (recomputed) → sig (HMAC); first failure wins as a tool error carrying the named code; nothing invalid is ever written; there is deliberately no sign_receipt helper — the server stays a verifier, never a co-signer (DESIGN.md §3).",
+      "parts": ["quilt-mcp-receipts-P09", "quilt-mcp-receipts-P10", "quilt-mcp-receipts-P11"]
+    },
+    {
+      "id": "quilt-mcp-receipts-I4",
+      "name": "honest MCP wire surface",
+      "statement": "Stdio newline-delimited JSON-RPC 2.0 with the MCP handshake (initialize + version negotiation + notifications/initialized), exactly three tools (read_receipts / verify_chain / append_receipt), protocol errors -32601/-32600/-32700, and recall that never lies: reads re-parse from disk each call and surface corrupted_lines instead of silently skipping them (server.mjs:59-73, 222-233).",
+      "parts": ["quilt-mcp-receipts-P12", "quilt-mcp-receipts-P13", "quilt-mcp-receipts-P14", "quilt-mcp-receipts-P15"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "quilt-mcp-receipts-P01",
+      "layer": 0,
+      "name": "canonicalJSON",
+      "essence": "Recursive key-sorted, no-whitespace serialization; arrays keep order, object keys sorted lexicographically at every depth — the binding form for everything hash-relevant.",
+      "inputs": ["any JSON value"],
+      "outputs": ["canonical string"],
+      "gate": "keys sorted at every depth; arrays keep order; output is deterministic across processes",
+      "gate_kind": "invariant",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "server.mjs:37-42"
+    },
+    {
+      "part_id": "quilt-mcp-receipts-P02",
+      "layer": 0,
+      "name": "receipt id formula (chain link)",
+      "essence": "id = SHA-256(\"qmr1:\" + seq + \":\" + prev + \":\" + canonicalJSON(body)) — the body, sequence and parent are all inside one hash.",
+      "inputs": ["seq", "prev", "body"],
+      "outputs": ["64-hex id"],
+      "gate": "recomputed id must equal stored id",
+      "gate_kind": "seal",
+      "failure_mode": "E_HASH_MISMATCH (body/seq/prev altered after sealing)",
+      "elementary": true,
+      "evidence": "server.mjs:44-46; DESIGN.md:56"
+    },
+    {
+      "part_id": "quilt-mcp-receipts-P03",
+      "layer": 0,
+      "name": "receipt signature formula",
+      "essence": "sig = HMAC-SHA256(secret, \"qmr1:sig:\" + id) — symmetric spike scheme; attribution is fleet-trust, stated honestly, Ed25519 per-agent keypairs are the additive qmr2 path (DESIGN.md §4).",
+      "inputs": ["secret (env MCP_RECEIPT_SECRET)", "id"],
+      "outputs": ["64-hex sig"],
+      "gate": "recomputed HMAC must equal stored sig",
+      "gate_kind": "seal",
+      "failure_mode": "E_BAD_SIGNATURE (altered id or wrong secret)",
+      "elementary": true,
+      "evidence": "server.mjs:48-50; DESIGN.md:58-59"
+    },
+    {
+      "part_id": "quilt-mcp-receipts-P04",
+      "layer": 0,
+      "name": "genesis rule",
+      "essence": "GENESIS_PREV = '0'×64; the first receipt has seq 1 and prev = GENESIS_PREV — the chain has exactly one root and every store answers to it.",
+      "inputs": [],
+      "outputs": ["expected prev of row 1"],
+      "gate": "row 1 prev must equal GENESIS_PREV (enforced via the same prev-linkage check)",
+      "gate_kind": "invariant",
+      "failure_mode": "E_PREV_MISMATCH",
+      "elementary": true,
+      "evidence": "server.mjs:13, 93, 129; DESIGN.md:52"
+    },
+    {
+      "part_id": "quilt-mcp-receipts-P05",
+      "layer": 1,
+      "name": "disk re-parse (no-cache honesty)",
+      "essence": "loadStore() re-reads and re-parses store.jsonl on every call — every answer describes the file as it IS now, not as it was at boot; unparseable lines are collected, never silently skipped.",
+      "inputs": ["store.jsonl bytes"],
+      "outputs": ["receipts[]", "corrupted_lines[]"],
+      "gate": "no answer is served from a cached view of the file",
+      "gate_kind": "invariant",
+      "failure_mode": "E_STORE_CORRUPT (named line numbers of non-JSON lines)",
+      "elementary": true,
+      "evidence": "server.mjs:59-73; DESIGN.md:75-78"
+    },
+    {
+      "part_id": "quilt-mcp-receipts-P06",
+      "layer": 1,
+      "name": "verifyChain genesis re-derivation",
+      "essence": "Row-by-row loop from genesis checking, in order: structure → seq → prev linkage → id recomputation → sig recomputation; fails closed on the FIRST broken row with at_seq and count_checked.",
+      "inputs": ["loadStore() output"],
+      "outputs": ["{ok:true, count, tip, dialect} or {ok:false, error, at_seq, detail}"],
+      "gate": "every id and sig re-derives; first failure wins",
+      "gate_kind": "invariant",
+      "failure_mode": "any of the eight named codes, localized at at_seq",
+      "elementary": true,
+      "evidence": "server.mjs:81-118"
+    },
+    {
+      "part_id": "quilt-mcp-receipts-P07",
+      "layer": 1,
+      "name": "five-field strictness",
+      "essence": "Exactly {seq, prev, body, id, sig}: missing fields and unknown fields both refuse — no client can add semantics the verifier does not check.",
+      "inputs": ["receipt object"],
+      "outputs": ["pass | refusal"],
+      "gate": "REQUIRED_FIELDS membership is exact in both directions",
+      "gate_kind": "admission",
+      "failure_mode": "E_MISSING_FIELD | E_UNKNOWN_FIELD",
+      "elementary": true,
+      "evidence": "server.mjs:16, 100-101; DESIGN.md:151-152"
+    },
+    {
+      "part_id": "quilt-mcp-receipts-P08",
+      "layer": 1,
+      "name": "seq/prev linkage checks",
+      "essence": "seq must equal row index+1 (covers replay of an old receipt) and prev must equal the previous row's id (the broken-hash-link case).",
+      "inputs": ["receipt", "expected seq", "expected prev"],
+      "outputs": ["pass | refusal"],
+      "gate": "total order is contiguous and parent-bound",
+      "gate_kind": "invariant",
+      "failure_mode": "E_SEQ_MISMATCH (replay/gap) | E_PREV_MISMATCH (broken link)",
+      "elementary": true,
+      "evidence": "server.mjs:109-110; DESIGN.md:146-147"
+    },
+    {
+      "part_id": "quilt-mcp-receipts-P09",
+      "layer": 2,
+      "name": "validateAppend admission ladder",
+      "essence": "The write-side order: structure → body shape (body.kind, body.ts non-empty strings) → seq = tip+1 → prev = tip id → id recompute → sig recompute; first failure wins and returns isError:true with the named code.",
+      "inputs": ["submitted receipt", "current store"],
+      "outputs": ["{ok:true, tip} | {error, detail}"],
+      "gate": "nothing invalid is ever appended to disk",
+      "gate_kind": "admission",
+      "failure_mode": "E_BODY_INVALID | E_MISSING_FIELD | E_UNKNOWN_FIELD | E_SEQ_MISMATCH | E_PREV_MISMATCH | E_HASH_MISMATCH | E_BAD_SIGNATURE",
+      "elementary": true,
+      "evidence": "server.mjs:122-152; DESIGN.md:100-106"
+    },
+    {
+      "part_id": "quilt-mcp-receipts-P10",
+      "layer": 2,
+      "name": "append-only write primitive",
+      "essence": "fs.appendFileSync of exactly one JSON line; there is no update verb and no delete verb anywhere in the server — mutation is not an operation it performs, and verify_chain catches edits done behind its back.",
+      "inputs": ["validated receipt"],
+      "outputs": ["one appended store line"],
+      "gate": "no code path rewrites or truncates the store (demo seeding only fills an empty store)",
+      "gate_kind": "invariant",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "server.mjs:75-77, 247; DESIGN.md:33-35, 141-144"
+    },
+    {
+      "part_id": "quilt-mcp-receipts-P11",
+      "layer": 2,
+      "name": "verifier-not-co-signer stance",
+      "essence": "No draft tool, no sign_receipt helper — signing key material never flows through the wire; the client constructs and signs, the server validates; the reference signer lives in examples/, outside the server.",
+      "inputs": ["client-side signed receipt"],
+      "outputs": ["accept | named refusal"],
+      "gate": "the server never holds or transports client key material beyond its own HMAC secret",
+      "gate_kind": "precondition",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "DESIGN.md:108-110; examples/client-demo.mjs"
+    },
+    {
+      "part_id": "quilt-mcp-receipts-P12",
+      "layer": 3,
+      "name": "stdio JSON-RPC 2.0 transport",
+      "essence": "Newline-delimited JSON-RPC 2.0 loop: parse errors → -32700, non-2.0/invalid requests → -32600, notifications (id absent) never reply; buffer-split line handling keeps partial reads honest.",
+      "inputs": ["stdin bytes"],
+      "outputs": ["stdout JSON-RPC responses"],
+      "gate": "a notification never produces a reply; an unparseable line still answers -32700",
+      "gate_kind": "invariant",
+      "failure_mode": "-32700 Parse error | -32600 Invalid Request",
+      "elementary": true,
+      "evidence": "server.mjs:260-343"
+    },
+    {
+      "part_id": "quilt-mcp-receipts-P13",
+      "layer": 3,
+      "name": "MCP handshake + tool surface",
+      "essence": "initialize negotiates the protocol version (echoes any 20xx- requested version, else 2024-11-05), advertises capabilities {tools:{listChanged:false}} + serverInfo; tools/list returns exactly the three tools with input schemas; unknown method → -32601, unknown tool name → -32602.",
+      "inputs": ["initialize | ping | tools/list | tools/call requests"],
+      "outputs": ["capabilities + serverInfo | tool descriptors | tool results"],
+      "gate": "the wire surface is exactly three tools; nothing else is callable",
+      "gate_kind": "admission",
+      "failure_mode": "-32601 method not found | -32602 invalid params/unknown tool",
+      "elementary": true,
+      "evidence": "server.mjs:278-309, 190-219; DESIGN.md:71"
+    },
+    {
+      "part_id": "quilt-mcp-receipts-P14",
+      "layer": 3,
+      "name": "read_receipts recall with cursor",
+      "essence": "Returns receipts with seq > since_seq capped at limit∈[1,1000]; bad args refuse with E_BAD_ARGS; corrupted_lines ride along in the payload when present — recall stays honest about its own substrate.",
+      "inputs": ["{since_seq, limit}"],
+      "outputs": ["{ok, count, tip, receipts[], corrupted_lines?}"],
+      "gate": "since_seq must be a non-negative integer; limit in [1,1000]",
+      "gate_kind": "precondition",
+      "failure_mode": "E_BAD_ARGS",
+      "elementary": true,
+      "evidence": "server.mjs:222-233"
+    },
+    {
+      "part_id": "quilt-mcp-receipts-P15",
+      "layer": 4,
+      "name": "demo seeding that never deletes",
+      "essence": "--demo seeds 5 fleet-real receipts (genesis, engine.run.sealed, lesson.minted, organ.boot.verified, scout.report.landed) ONLY into an empty/missing store, and refuses to seed a corrupt store — the convenience path cannot become an eraser.",
+      "inputs": ["--demo flag", "store state"],
+      "outputs": ["seeded store + stderr notice with tip"],
+      "gate": "seed only if receipts.length === 0 and no corrupted lines",
+      "gate_kind": "precondition",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "server.mjs:156-187"
+    },
+    {
+      "part_id": "quilt-mcp-receipts-P16",
+      "layer": 4,
+      "name": "dev-secret loud warning",
+      "essence": "When the built-in fallback HMAC secret is in use the server warns on stderr (unless --quiet-notice) — an honest residual: HMAC shared-secret signing means any writer holds full signing power.",
+      "inputs": ["env MCP_RECEIPT_SECRET"],
+      "outputs": ["stderr warning"],
+      "gate": "fallback-secret use is never silent",
+      "gate_kind": "invariant",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "server.mjs:15, 25, 31-33; DESIGN.md:114-119"
+    }
+  ],
+  "sheet": {
+    "name": "quilt-mcp-receipts-as-cells",
+    "cells": [
+      {"id": "canonical", "kind": "formula", "expr": "keys-sorted recursive JSON.stringify (arrays in order)", "deps": [], "maps_to_part": "quilt-mcp-receipts-P01"},
+      {"id": "receiptId", "kind": "formula", "expr": "sha256('qmr1:'+seq+':'+prev+':'+canonical(body))", "deps": ["canonical"], "maps_to_part": "quilt-mcp-receipts-P02"},
+      {"id": "receiptSig", "kind": "formula", "expr": "hmac-sha256(SECRET,'qmr1:sig:'+id)", "deps": ["receiptId"], "maps_to_part": "quilt-mcp-receipts-P03"},
+      {"id": "loadStore", "kind": "program", "expr": "read store.jsonl each call; JSON.parse per line; collect corrupted_lines", "deps": [], "maps_to_part": "quilt-mcp-receipts-P05"},
+      {"id": "verifyChain", "kind": "listener", "expr": "re-derive every row from genesis; first failure wins with named code at at_seq", "deps": ["loadStore", "receiptId", "receiptSig"], "maps_to_part": "quilt-mcp-receipts-P06"},
+      {"id": "validateAppend", "kind": "router", "expr": "structure→body→seq(tip+1)→prev(tip.id)→id→sig; first refusal wins", "deps": ["loadStore", "receiptId", "receiptSig"], "maps_to_part": "quilt-mcp-receipts-P09"},
+      {"id": "appendLine", "kind": "io", "expr": "fs.appendFileSync(STORE, JSON.stringify(receipt)+'\\n')", "deps": ["validateAppend"], "maps_to_part": "quilt-mcp-receipts-P10"},
+      {"id": "handleLine", "kind": "router", "expr": "JSON.parse or -32700; notifications silent; dispatch by method", "deps": [], "maps_to_part": "quilt-mcp-receipts-P12"},
+      {"id": "initialize", "kind": "api", "expr": "protocolVersion negotiation + capabilities {tools:{listChanged:false}} + serverInfo", "deps": ["handleLine"], "maps_to_part": "quilt-mcp-receipts-P13"},
+      {"id": "read_receipts", "kind": "api", "expr": "filter seq>since_seq, slice limit, surface corrupted_lines", "deps": ["loadStore"], "maps_to_part": "quilt-mcp-receipts-P14"},
+      {"id": "append_receipt", "kind": "api", "expr": "validate then append; return {ok,seq,id,tip,dialect} or isError named code", "deps": ["validateAppend", "appendLine"], "maps_to_part": "quilt-mcp-receipts-P09"},
+      {"id": "seedDemo", "kind": "program", "expr": "seed 5 fleet receipts only into an empty, uncorrupted store", "deps": ["loadStore", "receiptId", "receiptSig"], "maps_to_part": "quilt-mcp-receipts-P15"}
+    ]
+  },
+  "layer_logic": {
+    "0": "Canonical JSON + SHA-256 + HMAC-SHA256: a receipt is five fields whose id binds seq:prev:body and whose sig binds the id — the irreducible representation of a fleet memory line.",
+    "1": "loadStore + verifyChain transform raw file bytes into a verified total order from genesis, with no cache and no silent skips — the mechanism is re-derivation, every time.",
+    "2": "Policy = admission ladder: nothing invalid is ever written; no update/delete verbs exist; the server verifies and never co-signs; the shared-secret residual is stated, not hidden.",
+    "3": "Interface = stdio newline JSON-RPC 2.0 speaking MCP: initialize/ping/tools.list/tools.call, exactly three tools, protocol error codes for everything malformed.",
+    "4": "Evidence = verify_chain's named codes at named at_seq (the tamper trio proven in the wire suite), corrupted_lines on recall, tip comparison to detect forks, and a stderr warning whenever the dev secret is trusted."
+  }
+}

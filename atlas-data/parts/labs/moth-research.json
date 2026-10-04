@@ -1,0 +1,192 @@
+{
+  "work": "moth-research",
+  "family": "labs",
+  "repo_path": "/home/z/my-project/moth-research",
+  "head": "c20c1c8",
+  "smoke": {
+    "cmd": null,
+    "verdict": "NOT_RUN (no executable entry point — docs-only research mooring)",
+    "notes": "The repo is offline HTML snapshots of the Moth Quantum API docs (intro, endpoints, 7 engine pages), the vendored MicroMoth source, and the vendored quantum-audio package. No runner exists to smoke. Cheap offline verification performed instead: text extraction over the exhibits confirms the contracts the labs consume (coin-toss-v1 v1.0.15 @ 2 credits/run; qpixl-v1 @ 1 credit encodes float arrays via Interwoven QPIXL; graph-v1 @ 5 credits prepares graph states; base URL + bearer auth + /openapi.json, 56 operations; quickstart submit->poll->fetch loop)."
+  },
+  "essence": "Vendored quantum API docs + offline twins: the sourcing discipline behind lab entropy.",
+  "ideas": [
+    {
+      "id": "moth-research-I1",
+      "name": "Know the source before you drink",
+      "statement": "The primary sources for what quantum entropy CAN be are vendored verbatim: every public engine with its cost, version and schemas, plus the endpoint contract — a lab may not wire an engine it has not read.",
+      "parts": ["moth-research-P01", "moth-research-P02", "moth-research-P03"]
+    },
+    {
+      "id": "moth-research-I2",
+      "name": "Entropy has shapes; match shape to use",
+      "statement": "The docs distinguish payload shapes — coin-toss aggregates, graph-v1 counts keyed by distinct 8-bit outcome strings, qpixl decode-noise floats — and jobs run submit->poll->fetch; the labs' probe-first selection policy is a direct reading of this menu.",
+      "parts": ["moth-research-P04", "moth-research-P05", "moth-research-P06"]
+    },
+    {
+      "id": "moth-research-I3",
+      "name": "Develop offline, deploy honestly",
+      "statement": "Vendored twins (MicroMoth statevector simulator, quantum-audio schemes) give no-key local quantum semantics to build against; the self-contained per-engine HTML exhibits are the interface engineers actually read.",
+      "parts": ["moth-research-P07", "moth-research-P08"]
+    },
+    {
+      "id": "moth-research-I4",
+      "name": "The menu feeds three labs",
+      "statement": "This discipline is consumed, not admired: quilt-quant's moth_client, quilt-dba's mothqrc/vault, and MicroMoth's quantum-wow real mode each wire the documented engines with labels, caps and provenance — the research mooring drives the substrate for real.",
+      "parts": ["moth-research-P09", "moth-research-P10"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "moth-research-P01",
+      "layer": 0,
+      "name": "Vendored primary-source snapshot",
+      "essence": "The Moth Quantum docs are mirrored offline as self-contained HTML (intro, endpoints, engines): the stable, no-network ground truth about what quantum randomness and waveform services exist.",
+      "inputs": ["upstream docs site"],
+      "outputs": ["offline exhibits readable without a key"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "Link-rot or paywalled docs would leave the labs guessing at engine semantics",
+      "elementary": true,
+      "evidence": "intro.html:1-10; p_engines.html:1-5"
+    },
+    {
+      "part_id": "moth-research-P02",
+      "layer": 0,
+      "name": "Engine menu with economics",
+      "essence": "Per-engine pages carry the decision fields: coin-toss-v1 v1.0.15 at 2 credits/run, qpixl-v1 at 1 credit, graph-v1 at 5 credits, labyrinth and entanglement-shader — version, publisher, updated-date, usage per run.",
+      "inputs": ["engine documentation"],
+      "outputs": ["costed, versioned engine inventory"],
+      "gate": "An engine without version + usage metadata is not selectable",
+      "gate_kind": "precondition",
+      "failure_mode": "Choosing by name alone ignores cost and behavioral version drift",
+      "elementary": true,
+      "evidence": "p_engines_coin-toss-v1.html:1-39; p_engines_qpixl-v1.html:1-53; p_engines_graph-v1.html:1-56"
+    },
+    {
+      "part_id": "moth-research-P03",
+      "layer": 1,
+      "name": "Endpoint contract",
+      "essence": "Base URL https://api.mothquantum.com/api/v1, bearer auth on every call, machine-readable /openapi.json, 56 operations, identity via GET /me — the stable plumbing every client copies.",
+      "inputs": ["HTTP"],
+      "outputs": ["uniform request/response envelope for all engines"],
+      "gate": "Bearer auth required on every call — no anonymous paths",
+      "gate_kind": "precondition",
+      "failure_mode": "Quilt-dba receipted the .dev/.ai host confusion; the contract page is what arbitrates",
+      "elementary": true,
+      "evidence": "p_endpoints.html:1-21"
+    },
+    {
+      "part_id": "moth-research-P04",
+      "layer": 1,
+      "name": "Payload-shape taxonomy",
+      "essence": "The engines differ in what randomness they yield: coin-toss returns per-job H/T aggregates; graph-v1 returns counts keyed by measured 8-bit outcome strings (each distinct key is a real sample); qpixl returns decode-noise floats — three shapes for three uses (stats, bits, entropy floats).",
+      "inputs": ["engine result schemas"],
+      "outputs": ["shape -> use-case mapping consumed by quilt-dba E-D3"],
+      "gate": "A payload with no extractable per-bit variability contributes provenance, never fake bits",
+      "gate_kind": "postcondition",
+      "failure_mode": "Misreading shapes would harvest aggregates as if they were per-shot bits",
+      "elementary": true,
+      "evidence": "p_engines_graph-v1.html:1-56; p_engines_qpixl-v1.html:1-53"
+    },
+    {
+      "part_id": "moth-research-P05",
+      "layer": 1,
+      "name": "Async job lifecycle",
+      "essence": "Submit a job (POST /engines/{id}/process), poll status, fetch result — the quickstart loop every fleet client re-implements (moth_client, mothqrc, quantum-wow real mode).",
+      "inputs": ["engine params", "bearer key"],
+      "outputs": ["job results with job_id"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "Fire-and-forget calls would lose job_id provenance",
+      "elementary": true,
+      "evidence": "intro.html:1-10"
+    },
+    {
+      "part_id": "moth-research-P06",
+      "layer": 2,
+      "name": "Probe-first selection policy",
+      "essence": "The discipline the docs enable: probe with 1 tiny job, inspect result shapes, THEN choose the engine that yields genuine per-bit variability; hard caps on jobs (10) and target stream size (4096 bits) are set before any harvest.",
+      "inputs": ["engine menu", "probe job results"],
+      "outputs": ["a justified engine choice with caps"],
+      "gate": "No harvest before a probe and written caps — the decision precedes the spend",
+      "gate_kind": "admission",
+      "failure_mode": "Harvesting blind would waste credits on engines whose shape cannot serve the use",
+      "elementary": true,
+      "evidence": "p_engines.html:1-5; (consumer enforcement) quilt-dba/dba/mothqrc.mjs:19-28,41-42"
+    },
+    {
+      "part_id": "moth-research-P07",
+      "layer": 2,
+      "name": "Offline twin strategy",
+      "essence": "The repo vendors the offline twins the labs develop against: MicroMoth (stdlib statevector simulator, seedable) and quantum-audio (QPAM/SQPAM/QSM schemes mapping audio onto circuits) — quantum semantics available with no key and no network.",
+      "inputs": ["vendored upstream packages"],
+      "outputs": ["no-key local quantum ground truth"],
+      "gate": "Twins are labeled as twins — simulated semantics never claim hardware provenance",
+      "gate_kind": "invariant",
+      "failure_mode": "Confusing twin output with hardware output would fake quantum results",
+      "elementary": true,
+      "evidence": "MicroMoth/README.md:89-97; quantum-audio/README.md:1-14"
+    },
+    {
+      "part_id": "moth-research-P08",
+      "layer": 3,
+      "name": "Exhibit interface",
+      "essence": "Each engine page is a self-contained HTML exhibit with request/response schemas, try-it links, and example outputs — the artifact format that makes the menu legible to a zero-shot reader or agent.",
+      "inputs": ["docs HTML"],
+      "outputs": ["per-engine readable contracts"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "A prose summary alone would lose the exact schemas clients copy",
+      "elementary": true,
+      "evidence": "p_engines_coin-toss-v1.html:1-39; p_endpoints.html:1-21"
+    },
+    {
+      "part_id": "moth-research-P09",
+      "layer": 3,
+      "name": "Consumer lattice",
+      "essence": "Three labs wire this menu: quilt-quant (coin-toss probe, qpixl waveform round-trip -> entropy pool, graph-v1 tomography -> veto), quilt-dba (vault over cached packets; E-D3 live QRC stream), MicroMoth-quilt (quantum-wow real mode via comet-qrng-v1 with honest degrade).",
+      "inputs": ["documented engines"],
+      "outputs": ["applied entropy in trading, development and web randomness"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "A lab bypassing the documented contract would fork the wire semantics",
+      "elementary": true,
+      "evidence": "p_engines_qpixl-v1.html:1-53; (consumers) quilt-quant/lab/README.md:121-139; quilt-dba/dba/mothqrc.mjs:1-28"
+    },
+    {
+      "part_id": "moth-research-P10",
+      "layer": 4,
+      "name": "Provenance chain discipline",
+      "essence": "The docs' job_id/backend/timestamp fields are what make downstream receipts possible: every fetched batch lands in caches WITH provenance (job_id, engine, backend, timestamps) and WITHOUT key material; labels live:true/mock:false only for completed real jobs.",
+      "inputs": ["job results"],
+      "outputs": ["replayable provenance records"],
+      "gate": "No key material may ever enter a cache or receipt; provenance fields are mandatory",
+      "gate_kind": "seal",
+      "failure_mode": "Dropping job_id would make a randomness claim unreplayable and unauditable",
+      "elementary": true,
+      "evidence": "p_endpoints.html:1-21; (consumer enforcement) quilt-dba/dba/mothqrc.mjs:8-17"
+    }
+  ],
+  "sheet": {
+    "name": "moth-research-as-cells",
+    "cells": [
+      {"id": "docs.snapshot", "kind": "value", "expr": "offline HTML mirrors: intro, endpoints, 7 engine pages", "deps": [], "maps_to_part": "moth-research-P01"},
+      {"id": "engine.menu", "kind": "formula", "expr": "engine x {version, credits/run, updated, schema}", "deps": ["docs.snapshot"], "maps_to_part": "moth-research-P02"},
+      {"id": "endpoint.contract", "kind": "api", "expr": "base /api/v1, bearer auth, /openapi.json, 56 ops", "deps": [], "maps_to_part": "moth-research-P03"},
+      {"id": "shape.taxonomy", "kind": "formula", "expr": "aggregate vs distinct-8bit-keys vs decode-noise-floats", "deps": ["engine.menu"], "maps_to_part": "moth-research-P04"},
+      {"id": "job.lifecycle", "kind": "program", "expr": "submit -> poll -> fetch with job_id capture", "deps": ["endpoint.contract"], "maps_to_part": "moth-research-P05"},
+      {"id": "probe.gate", "kind": "router", "expr": "1 tiny probe + written caps (10 jobs, 4096 bits) before harvest", "deps": ["shape.taxonomy"], "maps_to_part": "moth-research-P06"},
+      {"id": "twin.micromoth", "kind": "io", "expr": "vendored seedable statevector simulator (no key)", "deps": [], "maps_to_part": "moth-research-P07"},
+      {"id": "twin.quantum-audio", "kind": "io", "expr": "vendored QPAM/SQPAM/QSM schemes", "deps": [], "maps_to_part": "moth-research-P07"},
+      {"id": "consumer.lattice", "kind": "listener", "expr": "quilt-quant + quilt-dba + MicroMoth-quilt wire the menu", "deps": ["probe.gate"], "maps_to_part": "moth-research-P09"},
+      {"id": "provenance.seal", "kind": "value", "expr": "caches carry job_id/engine/backend/timestamps, zero key material", "deps": ["job.lifecycle"], "maps_to_part": "moth-research-P10"}
+    ]
+  },
+  "layer_logic": {
+    "0": "Substrate: verbatim offline snapshots of the quantum API docs plus vendored offline twins — a no-network ground truth for what quantum entropy services exist and cost.",
+    "1": "Mechanisms: the endpoint contract, the async job lifecycle, and a payload-shape taxonomy (aggregates vs per-bit keys vs floats) that turns marketing pages into engineering decisions.",
+    "2": "Policy: probe-first engine selection with written caps before any spend, twins clearly labeled as twins, and shapes that may contribute provenance but never fake bits.",
+    "3": "Interfaces: self-contained per-engine HTML exhibits, and the consumer lattice of three labs that copy this contract into moth clients, vaults and web plugins.",
+    "4": "Evidence: the docs' own job_id/backend/timestamp fields become the downstream provenance seals — caches carry provenance and never key material, labels never lie about live vs mock."
+  }
+}

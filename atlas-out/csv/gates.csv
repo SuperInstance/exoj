@@ -1,0 +1,402 @@
+work,part_id,layer,gate_kind,gate
+qthe,qthe-P01,0,postcondition,256/256 values round-trip exact AND 256 distinct packed outputs (gate G1)
+qthe,qthe-P02,0,invariant,"PSI === [0, 1, -1, 'i'] asserted by G1"
+qthe,qthe-P03,0,postcondition,"hand-computed fixtures exact and every output Number.isInteger (G4: row0 [A10,R4,I6,G63] x xs[2,3,5,7] -> {re:8, im:30})"
+qthe,qthe-P04,0,precondition,"w, h positive integers else RangeError"
+qthe,qthe-P05,1,invariant,"exactly SLOT_COUNT=64 slots; write outside [0,64) throws RangeError"
+qthe,qthe-P06,1,postcondition,lone Abstain cell never twins after its own first write; every event term === log2(3) exactly (G5 schedule)
+qthe,qthe-P07,1,postcondition,totalWrites = 12 after the G5 6-tick twin fixture
+qthe,qthe-P08,2,budget,"the SPEC prices sigma as OPEN: only the sweep {log2(3), 0.5, 1, 2, 4} decides (C3); the gifted 'proof' is receipted as decorative"
+qthe,qthe-P09,1,invariant,tick mutates in place and returns the same substrate with synchronous-exact semantics
+qthe,qthe-P10,1,invariant,G2 full-tick exhaustion: 3840/3840 cell-updates in bounds with tau preserved
+qthe,qthe-P11,1,postcondition,"2304/2304 exhausted states x 9 pressures stay in [0,63] (G2a — the Coq theorem restated by exhaustion)"
+qthe,qthe-P12,1,invariant,G2: tau preserved EXACTLY on 3840/3840 updates
+qthe,qthe-P14,1,seal,"G3: two substrates, 1000 ticks, all per-tick trace hashes byte-identical; different seed differs; static scan finds ZERO Math.random in the kernel"
+qthe,qthe-P15,3,invariant,an empty table is trace-equivalent to wormholes disabled; paired arms byte-equal with zero Abstain cells (G6/S2)
+qthe,qthe-P16,2,postcondition,G6/S1: ON-trace != OFF-trace (divergence tick exists); G6/S2: with zero Abstain cells ON === OFF byte-identical at all 200 ticks
+qthe,qthe-P17,4,seal,"honest FAILs stay in the receipt chain, never rewritten"
+qthe,qthe-P18,4,seal,re-run produces byte-identical receipts
+qthe,qthe-P19,4,invariant,the registered literal is never edited post-registration
+qthe,qthe-P20,4,postcondition,exit 0 iff every negative control was DETECTED and localized to the correct row
+qthe,qthe-P21,2,admission,a claim that dies dies cheap and honest with the receipt kept beside the body; a claim that lives owes a mechanism-level explanation
+qthe,qthe-P22,3,postcondition,HUD SHA stable across reload (demo/smoke screenshots receipted)
+quilt-jepa,quilt-jepa-P01,0,invariant,no Math.random anywhere in core (determinism claim P4 PASS)
+quilt-jepa,quilt-jepa-P02,0,invariant,"values are projections in [0,1] (v*0.5+0.5, min(1, ...))"
+quilt-jepa,quilt-jepa-P06,1,postcondition,"stationarity drift < 0.01 (claim R2v4 PASS, drift 2.640e-3)"
+quilt-jepa,quilt-jepa-P07,1,postcondition,"learning-sanity ratio 0.34923 == run4 pin, re-bound bit-exact through round 10"
+quilt-jepa,quilt-jepa-P08,1,postcondition,"P6_zero_self_repair honestly FAILed in run 1 (jump_ratio 0.979) — the fault was permanent, receipted as design law paid for"
+quilt-jepa,quilt-jepa-P09,0,invariant,lambda = 0.2 <= 0.25 stability bound
+quilt-jepa,quilt-jepa-P10,1,conservation,total energy conserved to 1.2e-8 relative (P5 PASS; my scratch rerun measured 0.0 over 10 steps)
+quilt-jepa,quilt-jepa-P11,1,postcondition,p5_variance_non_increasing true (receipts/run.json)
+quilt-jepa,quilt-jepa-P12,2,postcondition,"R3v4 z-conc 3.5407 > 3.0 (PASS, carried)"
+quilt-jepa,quilt-jepa-P13,4,seal,masked self-sha recomputes exactly AND |mtime - sealed| <= 2000ms else fail-closed
+quilt-jepa,quilt-jepa-P14,4,postcondition,"every row re-hashes to its pin, links parent-correct, tip equal; exit 0 only if everything re-hashes"
+quilt-jepa,quilt-jepa-P15,2,admission,"seal verified at startup, else the run refuses"
+quilt-jepa,quilt-jepa-P16,4,postcondition,"any sha mismatch fails the run — the operating point (lr 0.3, tau 0.99998, K4, amp, seed) is UNCHANGED or the round is void"
+quilt-jepa,quilt-jepa-P17,4,postcondition,"claims_passed reported as measured, never rounded up"
+quilt-jepa,quilt-jepa-P18,3,admission,DESIGN/DEMO ONLY — no headless execution claim
+jev-quilt,jev-quilt-P01,0,admission,non-integer or non-pair coord is refused at __post_init__
+jev-quilt,jev-quilt-P04,2,admission,confidence is None -> viable; else confidence > 0.0 required
+jev-quilt,jev-quilt-P05,0,invariant,den == 0 raises ZeroDivisionError; gcd reduction is an invariant
+jev-quilt,jev-quilt-P06,2,admission,|num/SCALE - f| > 1e-12 -> ValueError
+jev-quilt,jev-quilt-P07,2,precondition,mag >= floor else silent_deadband
+jev-quilt,jev-quilt-P08,2,precondition,mag is None -> return True
+jev-quilt,jev-quilt-P09,1,conservation,every hooked cell gets exactly one WakeResult per emit
+jev-quilt,jev-quilt-P10,2,invariant,exception -> wake (never drop)
+jev-quilt,jev-quilt-P11,1,precondition,wake_state() precedes backend resolution in _wake
+jev-quilt,jev-quilt-P12,1,postcondition,"predictor exception -> pred=None (feeling is optional, never fatal)"
+jev-quilt,jev-quilt-P13,2,admission,unknown backend refused at Cell construction
+jev-quilt,jev-quilt-P14,4,postcondition,replay == live (suite test_replay_determinism)
+jev-quilt,jev-quilt-P15,0,invariant,cross-language agreement on identical residues (fnv1a reference-vector suite)
+jev-quilt,jev-quilt-P16,4,seal,payload edit without hash edit -> replay mismatch (tamper is loud)
+jev-quilt,jev-quilt-P17,4,invariant,all-None fields -> empty bytes -> historical preimage byte-identical (additive pin change only)
+jev-quilt,jev-quilt-P18,2,admission,raise-on-unrepresentable beats round-and-continue
+jev-quilt,jev-quilt-P19,1,invariant,"wake_state honestly reports booked_ticks: 0, chain: None"
+jev-quilt,jev-quilt-P20,3,admission,"UNVERIFIED is printed where no toolchain ran — do not write counts, run the suites"
+quilt-qcells,quilt-qcells-P01,2,admission,P2: only primitive ops in BIND rows across all 16 ledgers
+quilt-qcells,quilt-qcells-P02,0,invariant,parse_ledger: canon(obj) != line -> 'row %d is not in canonical form'
+quilt-qcells,quilt-qcells-P03,0,seal,id mismatch -> 'content tampered or id forged' at that row
+quilt-qcells,quilt-qcells-P04,0,conservation,verify_ledger walks prev == running id from GENESIS; break named at the exact row
+quilt-qcells,quilt-qcells-P06,4,precondition,conformance refuses if vendored micromoth.py sha256 != pinned bbd10ac2... (fail-closed)
+quilt-qcells,quilt-qcells-P07,1,invariant,emission happens on _sync from qc.data — no parallel hand-maintained history
+quilt-qcells,quilt-qcells-P08,1,postcondition,"TICK tracks BIND gate rows only ('m' readouts are records, not gates)"
+quilt-qcells,quilt-qcells-P09,1,invariant,readout rows never mutate gate cells
+quilt-qcells,quilt-qcells-P10,2,admission,determinism claims (P4) cover only the 15/15 sealed circuits
+quilt-qcells,quilt-qcells-P11,3,postcondition,view digests re-derive by replay (P1)
+quilt-qcells,quilt-qcells-P12,3,seal,sha256(canon(rounded)) == row digest
+quilt-qcells,quilt-qcells-P13,2,conservation,forget with nothing pending raises LedgerError (refusing an empty erasure receipt)
+quilt-qcells,quilt-qcells-P14,3,postcondition,tombstoned ids filtered when serve=True
+quilt-qcells,quilt-qcells-P15,4,postcondition,"P3: single-byte tamper of 4254/4254 rows (id-flip, kind-flip, prev-flip x every row of every ledger) detected at exactly the tampered row"
+quilt-qcells,quilt-qcells-P16,4,postcondition,row count and tip must equal the anchored pair else 'tail added or removed'
+quilt-qcells,quilt-qcells-P17,1,postcondition,"P1: replay == oracle exactly (rebuilt data == wrapped data, statevector ==, sealed counts ==) across 16/16 circuits"
+quilt-qcells,quilt-qcells-P18,2,admission,any existing gate row -> refuse
+quilt-qcells,quilt-qcells-P19,4,seal,"sha256 equal AND |mtime - sealed| <= 1.0s AND size equal, else FATAL refuse"
+quilt-qcells,quilt-qcells-P20,4,postcondition,"each control must be caught by the named mechanism, and the unsealed hole must be real"
+quilt-qcells,quilt-qcells-P21,4,seal,two full runs produce byte-identical receipts (no wall-clock leakage)
+jev-garden,jev-garden-P01,0,invariant,cell count == 61 at radius 4 (axial formula 3r^2+3r+1)
+jev-garden,jev-garden-P02,0,invariant,no wall-clock or Math.random in any deterministic path (header law of canon.mjs)
+jev-garden,jev-garden-P03,1,invariant,"same context string always yields the same cell (pre-registered, deterministic)"
+jev-garden,jev-garden-P04,1,invariant,"deform never emits a definite token — only (gamma,eta,delta) masses"
+jev-garden,jev-garden-P05,1,invariant,observations are the only collapses (smoke-asserted)
+jev-garden,jev-garden-P06,4,seal,verifyJournal ok after clean run; tamper detected AND localized at exact row (selftest rows)
+jev-garden,jev-garden-P07,1,postcondition,"total<=0 falls back to uniform 1/7 (no crash, no invention)"
+jev-garden,jev-garden-P08,1,postcondition,"unseen context uses the global observed distribution, never zeros"
+jev-garden,jev-garden-P09,3,invariant,"byte-deterministic under canonicalJSON (sorted contexts, sorted ops, r6)"
+jev-garden,jev-garden-P10,1,postcondition,zero-score tie falls back to honest uniform (tie flag returned)
+jev-garden,jev-garden-P11,1,invariant,"deterministic: zero-init weights, no RNG (selftest 'trainHash deterministic')"
+jev-garden,jev-garden-P12,2,admission,ENS_LAMBDA=0.5 sealed in PREDICTIONS.md before the run (decision rules before the run)
+jev-garden,jev-garden-P13,1,invariant,K=3 window sealed (selftest 'K=3 window sealed'); hash features L2-normalised and deterministic
+jev-garden,jev-garden-P14,1,invariant,every stream sample does exactly one deform and one observe
+jev-garden,jev-garden-P15,4,precondition,arms differ only in the mechanism under test; identical sample list for every arm
+jev-garden,jev-garden-P16,2,admission,gain >= +0.02 to promote; any tracked gain < -0.05 discards
+jev-garden,jev-garden-P17,3,seal,artifact_sha256 = sha256(canonicalJSON(artifact)); journal_tip chain-tips the artifact to the journal that produced it
+jev-garden,jev-garden-P18,3,invariant,schema jev-garden/weave-v2; registered weights only (wh/wq/wf)
+jev-garden,jev-garden-P19,3,admission,unknown weave schema -> throw 'refuse: unknown weave schema'
+jev-garden,jev-garden-P20,2,invariant,gate-closed paths serve the byte-identical v1 expression; opt-in modes change nothing without their artifact flag
+jev-garden,jev-garden-P21,2,budget,"non-integer or negative cap throws at construction (fail-closed), not mid-walk"
+jev-garden,jev-garden-P22,2,admission,"threshold constant sealed, reused as H* by the A8/A9 gated modes"
+jev-garden,jev-garden-P23,3,precondition,missing TYPESAFE_API_KEY -> fail-closed throw ('teacher channel closed'); HTTP error surfaces status + body
+jev-garden,jev-garden-P24,3,admission,"split is byte-order sorted and sealed (selftest 'split: 12 train / 4 eval', 'split is byte-order sorted')"
+jev-garden,jev-garden-P25,1,precondition,changes are impact-sensitive: op/seq/prev/args actually touched (selftest 'changes are impact-sensitive'); 'original rows untouched'
+jev-garden,jev-garden-P26,4,postcondition,verdict of record: AUC 0.9294 >= 0.90 AND FPR 0.0353 <= 0.10 (P-G4); semantic-only AUC 0.9539 (P-G4b) with seq/prev delegated to the chain reader
+jeviter,jeviter-P01,0,invariant,café vector equality holds (pinned by tests)
+jeviter,jeviter-P02,0,invariant,"identity comparisons never pass through floats (floats live in the gain, not the identity)"
+jeviter,jeviter-P03,1,postcondition,empty/whitespace text normalises against total=1 (no divide-by-zero)
+jeviter,jeviter-P04,1,invariant,p==0 or q==0 shared-support terms contribute nothing (documented semantics)
+jeviter,jeviter-P05,1,postcondition,"three independent lanes' falsifiers (flipped verdict digit, fixed-grammar stream, maximally different essays) book non-zero"
+jeviter,jeviter-P06,1,postcondition,"'verdict=ok' -> 'verdict=fail' is a full class move (~1/leaves-per-row mass), the falsifier that killed coroner v1"
+jeviter,jeviter-P07,2,precondition,no admissions yet -> threshold 0 (the seed path stays open)
+jeviter,jeviter-P08,2,invariant,baseline moves on silences too ('25 quiet samples let the baseline forget the day')
+jeviter,jeviter-P09,4,seal,"verify() false on any mutated body; a ledger that verifies with 0 events is receipted QUIET, not a hang"
+jeviter,jeviter-P10,1,precondition,"first pull MUST NOT yield as an event (law 1, pinned by tests)"
+jeviter,jeviter-P11,4,postcondition,EVERY silenced pull is booked (law 2) — admission accounting stays exact
+jeviter,jeviter-P12,1,admission,yield happens iff gain > threshold (admission)
+jeviter,jeviter-P13,4,postcondition,"broken chain names its own row; QUIET is a verdict, not an error"
+jeviter,jeviter-P14,2,conservation,a flood of identical requests self-sheds after exactly one admission — alternating payloads cannot buy perpetual escalation (law 4)
+jeviter,jeviter-P15,1,invariant,signature is order-insensitive (areas sorted) — file order cannot fake divergence
+jeviter,jeviter-P16,2,conservation,"rest length is fixed (restLen held PRs), NOT time — wall-clock smuggling is not a release mechanism (law 3); one divergent shape buys exactly one rest"
+jeviter,jeviter-P17,4,postcondition,chainVerified surfaces ledger integrity with every readout
+jeviter,jeviter-P18,2,admission,unresolved cite -> REFUSED (never silently pinned)
+jeviter,jeviter-P19,2,conservation,"already-pinned hash -> silence, never re-pin (dormancy is not costume)"
+jeviter,jeviter-P20,4,postcondition,hand-edited stub fails re-parse against recomputed transcript hashes
+jeviter,jeviter-P21,2,postcondition,no code path throws on malformed input (NEVER-THROW doctrine header)
+jeviter,jeviter-P22,1,conservation,summarize null/undefined -> refusal receipt (precondition); no source entry is ever deleted
+jeviter,jeviter-P23,3,admission,named handles only — unknown handle refuses rather than guessing
+jeviter,jeviter-P24,3,postcondition,"scan names the silence pattern; TUI renders quiet as data, not as failure costume (test-pinned)"
+exoj,exoj-P02,0,invariant,key order can never change a hash (sorted canonical form)
+exoj,exoj-P03,0,invariant,"a never-touched cell is fully open: prob_mass = 1.0, gamma = 0"
+exoj,exoj-P04,1,invariant,alpha fixed at 0.4 default; write is convex (no overshoot of the targets)
+exoj,exoj-P05,1,invariant,permutation of the same writes changes nothing beyond ~1e-15 float noise
+exoj,exoj-P06,1,invariant,delta_override outranks the aggregate once set
+exoj,exoj-P07,1,postcondition,state untouched after normalisation (pure read)
+exoj,exoj-P08,0,invariant,lattice contains exactly the cells with hexDist <= radius
+exoj,exoj-P09,4,seal,"verifyChain ok in memory AND from the reloaded file (PoC 8: links=14, both ok)"
+exoj,exoj-P10,3,postcondition,attending leaves Sigma/prob_open identical to 1e-15 (PoC 4)
+exoj,exoj-P11,1,postcondition,"collateral mutations are COUNTED, never hidden (e_x2 crowned the alternatives on this telemetry)"
+exoj,exoj-P13,2,conservation,post gamma+eta <= 1.0 + 1e-12 or the write never lands; refusals are never silent
+exoj,exoj-P14,1,postcondition,"in-band emits conserve gamma+eta=1 exactly (PoC 5: 100/100, max deviation 0.0)"
+exoj,exoj-P15,1,postcondition,"PoC 3 sealed rule: target prob_mass == 0 AND hex-neighbour >= 0.999 AND distant cell >= 0.999 (local, never global collapse)"
+exoj,exoj-P16,1,seal,the chained spec is a deep copy frozen at attach time
+exoj,exoj-P17,1,postcondition,"PoC 7: every-program fires exactly at t in {3,6,9} and at-program exactly once at t=5 by t=10"
+exoj,exoj-P18,4,invariant,PoC 1 sealed rule: |Sigma - 1.0| <= 1e-9 AND max_cell_Sigma <= 1 + 1e-9 after balanced writes
+exoj,exoj-P19,3,postcondition,PoC 6: appends ZERO chain rows and leaves Sigma/prob_open unchanged to 1e-15
+exoj,exoj-P20,3,invariant,untouched cells never appear (the sheet shows only what the wave has visited)
+exoj,exoj-P21,3,seal,cells_raw carries G/E/D/aSum/n so the ledger policy round-trips exactly
+exoj,exoj-P22,3,postcondition,PoC 8: verifyChain ok from the SAVED file after load; tip identical to in-memory
+exoj,exoj-P23,2,admission,"unrecognised policy simply takes the seed branch (documented default), all four enumerated in the header law"
+exoj,exoj-P24,2,admission,"PoC 5: 100/100 emissions across 4 backends have Delta in [0.4,0.6] AND |gamma+eta-1| <= 1e-9, read from the chained payloads"
+exoj,exoj-P25,2,seal,"rules rows precede result rows in the chain (structural, chain-ordered); no post-hoc verdicts"
+exoj,exoj-P26,4,postcondition,EX0 VERDICT line is 8/8 PASS only if every sealed rule evaluates true AND the chain verifies in memory and from file
+fleet-seeds,fleet-seeds-P01,3,precondition,spawn refuses an existing slug directory ('already exists — pick another slug')
+fleet-seeds,fleet-seeds-P02,2,invariant,seed text embedded verbatim (seed.trim() + newline only) — no editorial rewrite
+fleet-seeds,fleet-seeds-P03,2,invariant,all five laws present in the template (structural: template constant)
+fleet-seeds,fleet-seeds-P05,4,postcondition,exit 0 iff fail === 0; the printed count is the CI-enforced contract
+fleet-seeds,fleet-seeds-P06,1,seal,commit message fixed; commit exists before the lane ever runs
+fleet-seeds,fleet-seeds-P07,4,postcondition,PASS iff demo repo has 1 commit AND its smoke output includes 'SMOKE OK'; tree left clean (rmSync of dir + seed)
+fleet-seeds,fleet-seeds-P08,3,precondition,wrong arity -> usage line + exit 1 (never a half-spawn)
+fleet-seeds,fleet-seeds-P09,2,invariant,charter text in the spawned repo == seed text byte-for-byte (verbatim claim checked by reading both)
+fleet-seeds,fleet-seeds-P10,4,postcondition,"regenerable by tool, not hand-maintained prose"
+fleet-seeds,fleet-seeds-P11,2,admission,registration requires the sealed prediction hash + mine-id citation (admission into the fleet experiment queue)
+fleet-seeds,fleet-seeds-P12,4,seal,append-only enforced fail-closed (exit 2); tamper self-tests included
+fleet-seeds,fleet-seeds-P13,3,postcondition,every claim carries verifier-checkable refs (house rules header)
+fleet-seeds,fleet-seeds-P14,4,postcondition,exit 0 IFF every target verified AND the wave-46 chain verifies (with the unmodified verifier — no verifier drift allowed)
+fleet-seeds,fleet-seeds-P15,4,postcondition,"all artifacts offline only, zero deps, no keys (WAVE45 header law); truncate audit is exhaustive per byte offset"
+fleet-seeds,fleet-seeds-P16,4,seal,append-only (enforced by P12's validator); each row cites its registration seal
+quilt-murmur,quilt-murmur-P01,0,precondition,p and n must be finite numbers
+quilt-murmur,quilt-murmur-P02,0,seal,every row must carry row_hash matching re-derivation from genesis
+quilt-murmur,quilt-murmur-P03,0,budget,"liveJobs hard cap maxLiveJobs; offline/budget refusal yields labeled mock, never silent"
+quilt-murmur,quilt-murmur-P04,1,conservation,W > 0 else posterior = 0.5; influence mass W is the pool's conservation denominator
+quilt-murmur,quilt-murmur-P05,1,conservation,"weights always renormalized to sum 1 (mass conserved); rewards clamped to [0,1]"
+quilt-murmur,quilt-murmur-P09,1,precondition,"matchRate(origin, L) >= 0.8 for some L in 1..maxLag, and origin != self"
+quilt-murmur,quilt-murmur-P10,1,precondition,aligned >= minEdges AND rate >= confirmEdges(0.8) AND rate > reverse-best AND content >= confirm(0.8)
+quilt-murmur,quilt-murmur-P11,1,precondition,"sd <= dupSigma(0.02) AND matchRate(id2, L) >= confirm for some peer/lag"
+quilt-murmur,quilt-murmur-P13,1,invariant,penalized weight floored at floor=0.02 — never zeroed (reform must remain possible)
+quilt-murmur,quilt-murmur-P14,1,budget,"infl = w * min(m, tagCap) — hard tag caps the extreme, soft score does the fine grading"
+quilt-murmur,quilt-murmur-P15,2,admission,"age >= 40 AND indepEdges >= 2 AND devMean <= 0.5, else influence stays x epsNew"
+quilt-murmur,quilt-murmur-P16,2,budget,"P <= capShare*Z enforced exactly (post-cap share = capShare), then uniform renormalize back to Z"
+quilt-murmur,quilt-murmur-P17,2,precondition,present at round 1 AND coldStart -> admitted by acclamation
+quilt-murmur,quilt-murmur-P18,2,budget,"min(m, tagCap) — soft layer can only lower, hard tag bounds the worst case"
+quilt-murmur,quilt-murmur-P19,1,precondition,Number.isFinite(p) && Number.isFinite(n) else throw
+quilt-murmur,quilt-murmur-P20,2,budget,spawn only if alive < maxBranches AND credits >= policy floor AND world-signal condition
+quilt-murmur,quilt-murmur-P21,1,budget,"prune: streak >= floorStreak, ranked worst, capped at maxDead (2) per generation"
+quilt-murmur,quilt-murmur-P22,1,invariant,"graft target must NOT be inside the moving subtree (cycle) — throw in graftSubtree, null in graftView; accept iff T rises"
+quilt-murmur,quilt-murmur-P23,1,postcondition,"r must EARN its keep: corr(r_t, future regret) receipted each run; gating trust on r HURTS (E22 corollary)"
+quilt-murmur,quilt-murmur-P24,2,invariant,"EWMA gap > delta(0.15) for k(8) rounds AND recent < recentCeil(0.45), only for entrenched voices; untrip at gap < 0.10"
+quilt-murmur,quilt-murmur-P25,3,precondition,"dotted-prefix law, listener caller.metadata contract, CellValue unwrap, multi-char ids — four receipted engine lessons are load-bearing conventions"
+quilt-murmur,quilt-murmur-P26,4,postcondition,fails === 0 else exit(1)
+quilt-murmur,quilt-murmur-P28,4,postcondition,sheet pooling must equal reference math byte-for-byte or the run is invalid
+quilt-pincher,quilt-pincher-P03,1,precondition,cosine returns 0 on dimension mismatch (never throws mid-match)
+quilt-pincher,quilt-pincher-P06,1,precondition,score >= 0.80 for direct hit; 0.55 <= score < 0.80 for confirm
+quilt-pincher,quilt-pincher-P07,1,budget,Promise.race against executionTimeoutMs (default 5000) — a hung reflex cannot hang the engine
+quilt-pincher,quilt-pincher-P08,1,invariant,"confidence clamped to [0.5 start, 0.99 ceiling] — invariant band"
+quilt-pincher,quilt-pincher-P09,1,admission,veto check runs on the FRESH reflex before insert+execute (a compiled reflex can be born vetoed)
+quilt-pincher,quilt-pincher-P10,2,admission,no execution without veto.ok — refusal reason becomes the result's 'vetoed' kind
+quilt-pincher,quilt-pincher-P11,2,precondition,thresholds are read once at construction — mid-flight policy changes are not possible (deterministic per engine instance)
+quilt-pincher,quilt-pincher-P12,2,precondition,compile tier requires this.compiler !== undefined
+quilt-pincher,quilt-pincher-P16,4,postcondition,"assert.equal(result.kind, 'hit') etc. — tier outcomes are the contract"
+quilt-pincher,quilt-pincher-P17,4,postcondition,latencyMs recorded on EVERY outcome incl. errors and vetoes
+crab-traps,crab-traps-P01,0,precondition,non-finite numbers and unknown types throw (not canonically serializable) — the POST path turns this into a 400
+crab-traps,crab-traps-P03,1,admission,"e.chain === prior.edge_hash for non-genesis appends — a missing or stale link is refused, never auto-healed"
+crab-traps,crab-traps-P04,1,invariant,UNIQUE/PRIMARY KEY violation -> duplicate refused
+crab-traps,crab-traps-P05,1,seal,every recomputed seal must equal the stored edge_hash AND every chain link must equal the prior seal
+crab-traps,crab-traps-P08,2,budget,declaredLength > MAX AND raw.length > MAX both checked before JSON.parse
+crab-traps,crab-traps-P09,2,seal,any plaque wording change rotates the seal and revokes every ticket derived from it
+crab-traps,crab-traps-P10,2,admission,ack must equal the current plaque seal; consent receipt persisted before any arena content is served
+crab-traps,crab-traps-P12,2,admission,amount > 0 AND kind in CREDIT_RATES AND balance + delta >= 0 AND entries <= 100
+crab-traps,crab-traps-P13,1,conservation,before + signed === after on every edge — a stranger recomputes the balance from the stream alone (the claim SCN-001 exists to attack)
+crab-traps,crab-traps-P14,1,invariant,mint thresholds are fixed constants; duplicate mints are no-ops (idempotent by UNIQUE + OR IGNORE)
+crab-traps,crab-traps-P15,2,budget,"bounded LRU — eviction, not growth"
+crab-traps,crab-traps-P16,1,seal,a second reader must not trust the first reader's engine — or even its helper functions
+crab-traps,crab-traps-P17,4,postcondition,"ALL controls must behave as designed (negative -> DISAGREE, positive -> AGREE, clean CLI -> exit 0) else fail-closed"
+crab-traps,crab-traps-P19,4,postcondition,only sealed ledger rows feed the display; unscored (null imbalance) entries never contribute a number
+crab-traps,crab-traps-P21,0,postcondition,output must equal the canonical FNV-1a-64 rendering — the arena's GAN lanes forge-and-verify against exactly this spec
+crab-traps,crab-traps-P22,2,admission,"no acknowledgment -> tarpit, never the arena; observation/artifacts/breeding all live behind the ack"
+quilt-organ-workers,quilt-organ-workers-P01,0,invariant,values with no stable JSON meaning throw (fail-closed) instead of coercing
+quilt-organ-workers,quilt-organ-workers-P03,0,invariant,watcher writes only watch:* rows; loader writes only organ:/meta: rows
+quilt-organ-workers,quilt-organ-workers-P04,1,invariant,full window present; every hash re-derives
+quilt-organ-workers,quilt-organ-workers-P05,1,invariant,every legacy digest re-derives and matches the range
+quilt-organ-workers,quilt-organ-workers-P06,1,invariant,"all three commitment levels (manifest, whole state, per-cell) must re-derive"
+quilt-organ-workers,quilt-organ-workers-P07,1,postcondition,same bytes → same id → no duplicate objects
+quilt-organ-workers,quilt-organ-workers-P08,2,seal,id is always sha256hex(canonical(manifest)) computed by the worker
+quilt-organ-workers,quilt-organ-workers-P09,2,admission,"only the two registered dialect strings pass; legacy is loudly deprecated, never silent"
+quilt-organ-workers,quilt-organ-workers-P10,2,admission,"no token, or missing binding → refuse"
+quilt-organ-workers,quilt-organ-workers-P11,2,budget,declared and actual size both ≤ MAX_BODY_BYTES
+quilt-organ-workers,quilt-organ-workers-P12,2,invariant,a stored organ that fails re-derivation is never silently dropped nor auto-deleted
+quilt-organ-workers,quilt-organ-workers-P13,3,postcondition,route table matches the advertised index exactly
+quilt-organ-workers,quilt-organ-workers-P14,3,postcondition,one record per organ per cycle; summary counts must add up
+quilt-organ-workers,quilt-organ-workers-P15,3,budget,judges ≤ 8; candidate ≤ 256 KiB; unsupported provider refuses per-judge without failing the batch
+quilt-organ-workers,quilt-organ-workers-P16,3,admission,"score must come from the contract line; clamp at [0,10]"
+quilt-organ-workers,quilt-organ-workers-P17,4,postcondition,bootable only if every commitment re-derives
+quilt-organ-workers,quilt-organ-workers-P18,4,invariant,zero shared validation code with the loader
+quilt-organ-workers,quilt-organ-workers-P19,4,postcondition,exit 0 iff every check holds
+quilt-organ-workers,quilt-organ-workers-P20,4,precondition,no credential ever enters the repo or the uploaded metadata file's leftovers
+quilt-jev-toolkit,quilt-jev-toolkit-P01,0,invariant,undefined / functions / NaN refuse to serialize (throw)
+quilt-jev-toolkit,quilt-jev-toolkit-P02,0,seal,recomputed hash must equal carried hash
+quilt-jev-toolkit,quilt-jev-toolkit-P03,0,seal,recomputed hashes must equal manifest claims
+quilt-jev-toolkit,quilt-jev-toolkit-P04,0,seal,recomputed self-cover must equal carried manifestHash
+quilt-jev-toolkit,quilt-jev-toolkit-P05,1,precondition,an op must be determinable and reference known cells
+quilt-jev-toolkit,quilt-jev-toolkit-P06,1,invariant,chain is contiguous and parent-bound across the full window
+quilt-jev-toolkit,quilt-jev-toolkit-P07,1,postcondition,frozen bundle must pass its own validation
+quilt-jev-toolkit,quilt-jev-toolkit-P08,1,precondition,no verb acts on an unproven subject
+quilt-jev-toolkit,quilt-jev-toolkit-P09,1,invariant,replayed state hash == carried state hash
+quilt-jev-toolkit,quilt-jev-toolkit-P10,2,admission,schema + schemaVersion are exactly the implemented ones
+quilt-jev-toolkit,quilt-jev-toolkit-P11,2,admission,every carried range must be anchored; every gap must be signature-covered
+quilt-jev-toolkit,quilt-jev-toolkit-P12,2,precondition,toSeq within the subject's carried custody
+quilt-jev-toolkit,quilt-jev-toolkit-P13,2,conservation,all ops or nothing; successor passes its own boot courtroom
+quilt-jev-toolkit,quilt-jev-toolkit-P14,2,conservation,debits and credits net to zero across the nest boundary
+quilt-jev-toolkit,quilt-jev-toolkit-P15,2,conservation,"evidence must be real, unique, and temporally precede the receipt"
+quilt-jev-toolkit,quilt-jev-toolkit-P16,2,seal,unknown alg refuses; HMAC must verify under the provided key
+quilt-jev-toolkit,quilt-jev-toolkit-P17,2,admission,checkpoint prefix must re-hash to the signed manifestHash; boundary must leave a tail
+quilt-jev-toolkit,quilt-jev-toolkit-P18,1,precondition,never sign an unproven snapshot; boundary within carried range; full custody source
+quilt-jev-toolkit,quilt-jev-toolkit-P19,1,invariant,seed hash must equal the boot-verified custody seed hash
+quilt-jev-toolkit,quilt-jev-toolkit-P20,3,postcondition,constructed only after every check passes
+quilt-jev-toolkit,quilt-jev-toolkit-P21,3,postcondition,same-chain continuation after organ rewind; purity on bundle subjects
+quilt-jev-toolkit,quilt-jev-toolkit-P22,3,admission,host chain stays contiguous; one nest receipt per manifestHash
+quilt-jev-toolkit,quilt-jev-toolkit-P23,4,seal,provenance names the anchor the custody rests on
+quilt-jev-toolkit,quilt-jev-toolkit-P24,4,seal,every named code has a test or a refusal behind it
+quilt-jev-toolkit,quilt-jev-toolkit-P25,4,seal,receipts are regenerated truthfully by the runs themselves
+quilt-mcp-receipts,quilt-mcp-receipts-P01,0,invariant,keys sorted at every depth; arrays keep order; output is deterministic across processes
+quilt-mcp-receipts,quilt-mcp-receipts-P02,0,seal,recomputed id must equal stored id
+quilt-mcp-receipts,quilt-mcp-receipts-P03,0,seal,recomputed HMAC must equal stored sig
+quilt-mcp-receipts,quilt-mcp-receipts-P04,0,invariant,row 1 prev must equal GENESIS_PREV (enforced via the same prev-linkage check)
+quilt-mcp-receipts,quilt-mcp-receipts-P05,1,invariant,no answer is served from a cached view of the file
+quilt-mcp-receipts,quilt-mcp-receipts-P06,1,invariant,every id and sig re-derives; first failure wins
+quilt-mcp-receipts,quilt-mcp-receipts-P07,1,admission,REQUIRED_FIELDS membership is exact in both directions
+quilt-mcp-receipts,quilt-mcp-receipts-P08,1,invariant,total order is contiguous and parent-bound
+quilt-mcp-receipts,quilt-mcp-receipts-P09,2,admission,nothing invalid is ever appended to disk
+quilt-mcp-receipts,quilt-mcp-receipts-P10,2,invariant,no code path rewrites or truncates the store (demo seeding only fills an empty store)
+quilt-mcp-receipts,quilt-mcp-receipts-P11,2,precondition,the server never holds or transports client key material beyond its own HMAC secret
+quilt-mcp-receipts,quilt-mcp-receipts-P12,3,invariant,a notification never produces a reply; an unparseable line still answers -32700
+quilt-mcp-receipts,quilt-mcp-receipts-P13,3,admission,the wire surface is exactly three tools; nothing else is callable
+quilt-mcp-receipts,quilt-mcp-receipts-P14,3,precondition,"since_seq must be a non-negative integer; limit in [1,1000]"
+quilt-mcp-receipts,quilt-mcp-receipts-P15,4,precondition,seed only if receipts.length === 0 and no corrupted lines
+quilt-mcp-receipts,quilt-mcp-receipts-P16,4,invariant,fallback-secret use is never silent
+quilt-research-canons,quilt-research-canons-P02,0,postcondition,must parse and carry its own provenance fields
+quilt-research-canons,quilt-research-canons-P03,1,precondition,file must be re-runnable without asking a human anything
+quilt-research-canons,quilt-research-canons-P04,1,postcondition,spec must be specific enough to implement without clarification
+quilt-research-canons,quilt-research-canons-P06,2,admission,all seven sections + trailer present; no sub-agent spawning
+quilt-research-canons,quilt-research-canons-P07,2,invariant,successor declares its dependency on the predecessor
+quilt-research-canons,quilt-research-canons-P08,2,precondition,hypothesis must be stated before the experiment; verdict must be recorded whatever it is
+quilt-research-canons,quilt-research-canons-P09,2,admission,promotion only after the stability criterion holds
+quilt-research-canons,quilt-research-canons-P12,4,invariant,artifacts + intent-to-continue must both survive the wipe boundary
+quilt-research-canons,quilt-research-canons-P13,4,seal,no verdict is discarded for being negative
+quilt-quant,quilt-quant-P01,0,invariant,"If a quant check fails it is the sheet's fault, not the engine's (engine frozen, verified against 36 upstream tests)"
+quilt-quant,quilt-quant-P02,0,precondition,Tape shorter than 60 bars or containing a non-finite positive bar halts everything (M1)
+quilt-quant,quilt-quant-P03,1,precondition,"Indicators may be null while warming up — nulls mean FLAT, never a guess"
+quilt-quant,quilt-quant-P04,1,invariant,No lookahead: bar i may only see bars <= i (truncated-tape policy replay probe)
+quilt-quant,quilt-quant-P05,1,admission,Accept iff score = sharpe - 2*maxdd - 0.5*[trades<3] strictly improves
+quilt-quant,quilt-quant-P06,1,admission,"Dormancy requires >= 7 tries AND max delta < 0.02 — decided from data, not luck"
+quilt-quant,quilt-quant-P07,2,precondition,"Edge-trigger: the vote must be absent on the previous bar (a signal is an event, not a state)"
+quilt-quant,quilt-quant-P08,2,admission,A proposal acts only if every rail returns null — verdict lists its checks
+quilt-quant,quilt-quant-P09,2,admission,"|ZZ(mom,rev)| < 0.82 required for CONFLICT proposals"
+quilt-quant,quilt-quant-P10,2,admission,Reply must decode to exactly one of A-E — anything else is REFUSED with a reason
+quilt-quant,quilt-quant-P11,3,seal,Every API call must land in moth.journal; offline substitutions must be labeled mock:true
+quilt-quant,quilt-quant-P13,4,postcondition,Return/Sharpe/maxdd/exposure and trade sequence must match the reference to 1e-9
+quilt-quant,quilt-quant-P14,4,seal,Chain re-derivation must succeed; tampering must break it visibly
+quilt-dba,quilt-dba-P01,0,invariant,Boundary tolerance 1e-9 scaled units — comparisons are exact at the integers
+quilt-dba,quilt-dba-P02,0,invariant,"Every draw must be recoverable from (seed, index) alone"
+quilt-dba,quilt-dba-P03,0,precondition,"Monobit sanity: pool rejected unless ones-ratio in (0.4, 0.6)"
+quilt-dba,quilt-dba-P04,1,precondition,"Start cell (8,8) is never a hazard"
+quilt-dba,quilt-dba-P05,1,postcondition,"Salience clamped to [0,1000] (smoke pins 440 -> in range)"
+quilt-dba,quilt-dba-P06,1,invariant,Surprise is a pure integer function of state — recomputable at any checkpoint
+quilt-dba,quilt-dba-P07,1,admission,Strictly salience > 800 — the threshold is the whole reflex policy
+quilt-dba,quilt-dba-P08,1,precondition,"Position accrues ONLY on declining surprise (competence, not reward)"
+quilt-dba,quilt-dba-P09,2,conservation,"gamma + eta <= C = log2(3) x 1000, exact at the scaled integers"
+quilt-dba,quilt-dba-P10,2,admission,Every gate row carries the mock label — the OFF voice never impersonates live judgment
+quilt-dba,quilt-dba-P11,2,admission,Only EXECUTE + noul > 0.95 + task < 3 may switch — and never downward
+quilt-dba,quilt-dba-P12,3,budget,A live gate that cannot answer must never stall the loop and must never silently pretend — every row labeled live|cache|negcache|budget_mock|fail_closed_*
+quilt-dba,quilt-dba-P13,3,admission,A batch is labeled live:true/mock:false ONLY if a real job completed
+quilt-dba,quilt-dba-P14,4,seal,verifyChain over the re-read file must pass; resumed hash must equal full hash
+quilt-dba,quilt-dba-P15,4,seal,No key material may appear in any artifact — selfScan must find zero matches
+quilt-raw,quilt-raw-P01,0,invariant,"mul must match the (i128>>32, wrap) reference; isqrt must be the exact floor"
+quilt-raw,quilt-raw-P02,0,invariant,"R2 contrast must be SUBSTRATE-ONLY: identical code path, identical op order"
+quilt-raw,quilt-raw-P04,1,conservation,On breach the ledger must be bit-unchanged (mini-R1 sealed check)
+quilt-raw,quilt-raw-P06,1,admission,A decision requires BOTH sign flip AND rising slope
+quilt-raw,quilt-raw-P07,1,postcondition,"rewind(50 events) must bit-equal the origin seed (integer equality, no tolerance)"
+quilt-raw,quilt-raw-P08,1,precondition,glueAll returns null on any disjoint pair — the shape must stay connected
+quilt-raw,quilt-raw-P09,1,precondition,The shell boundary must stay empty up to the break (R3 asserts exactly this)
+quilt-raw,quilt-raw-P10,1,postcondition,"render is pure: same journal -> same topology, hash-checked (R4)"
+quilt-raw,quilt-raw-P11,3,invariant,Event t values must be contiguous 0..n-1 — a gap means an unrecorded write
+quilt-raw,quilt-raw-P12,4,seal,Same state must always produce the same bytes (deterministic serialization)
+quilt-raw,quilt-raw-P13,4,precondition,No post-hoc verdicts — the rule must precede the numbers in the receipt chain
+quilt-raw,quilt-raw-P14,4,postcondition,The contrast must show NONZERO float drift while Q32 stays bit-equal
+cot-quilt,cot-quilt-P01,0,precondition,Burn-guard: finish=length with empty content triggers a 3x-budget retry
+cot-quilt,cot-quilt-P02,1,postcondition,"Steps must parse to the typed schema — malformed JSON goes through repair, not silently onward"
+cot-quilt,cot-quilt-P05,1,postcondition,"The judge's gaps must become cells, not a footnote"
+cot-quilt,cot-quilt-P06,2,admission,A judge must never see only its own compositions
+cot-quilt,cot-quilt-P07,2,budget,"Total calls capped; every retry and remediation receipted, all-in spend declared ($0.098)"
+cot-quilt,cot-quilt-P08,2,seal,Every bit must be labeled true-quantum or fail-closed — no unlabeled mixing
+cot-quilt,cot-quilt-P09,3,invariant,Receipt writes must be atomic — a mid-write kill once truncated a receipt and the lesson is receipted
+cot-quilt,cot-quilt-P11,4,admission,Exit 1 on any un-receipted credential-shaped hit — the scanner must never become the leak
+cot-quilt,cot-quilt-P12,4,seal,A suppression requires a written justification + pointer to the incident record
+MicroMoth-quilt,MicroMoth-quilt-P01,0,invariant,Upstream tree untouched — the fleet adds only receipts around it
+MicroMoth-quilt,MicroMoth-quilt-P03,1,invariant,Edit one gate and every downstream id moves — the tamper-evidence property
+MicroMoth-quilt,MicroMoth-quilt-P04,1,admission,Sugar ops in a chain are a refuse condition (sugar never ledgers)
+MicroMoth-quilt,MicroMoth-quilt-P05,1,invariant,A collapse event must never alter the gate chain
+MicroMoth-quilt,MicroMoth-quilt-P08,2,seal,No seed plumbed and recorded => no seal
+MicroMoth-quilt,MicroMoth-quilt-P09,2,admission,No quilt-native code lands in this repo until the sibling-port question is settled
+MicroMoth-quilt,MicroMoth-quilt-P10,3,seal,The tool must exclude itself by name — self-reference would make the manifest unverifiable
+MicroMoth-quilt,MicroMoth-quilt-P11,3,postcondition,Every public method returns a usable result plus mode/degraded — the widget must say what actually happened
+MicroMoth-quilt,MicroMoth-quilt-P12,4,postcondition,"Pins must fail loudly and name the fix (regenerate the manifest, never edit by hand)"
+MicroMoth-quilt,MicroMoth-quilt-P13,4,seal,Nothing may be tagged VERIFIED without a run and a date
+moth-research,moth-research-P02,0,precondition,An engine without version + usage metadata is not selectable
+moth-research,moth-research-P03,1,precondition,Bearer auth required on every call — no anonymous paths
+moth-research,moth-research-P04,1,postcondition,"A payload with no extractable per-bit variability contributes provenance, never fake bits"
+moth-research,moth-research-P06,2,admission,No harvest before a probe and written caps — the decision precedes the spend
+moth-research,moth-research-P07,2,invariant,Twins are labeled as twins — simulated semantics never claim hardware provenance
+moth-research,moth-research-P10,4,seal,No key material may ever enter a cache or receipt; provenance fields are mandatory
+superinstance-site,superinstance-site-P03,1,invariant,"formula re-eval is skipped when sameV(old,new) is true"
+superinstance-site,superinstance-site-P04,1,invariant,"every console line must originate from a real Bus emit, not synthesized text"
+superinstance-site,superinstance-site-P05,1,invariant,cascade depth bounded; dead sheet halts further _set propagation
+superinstance-site,superinstance-site-P06,1,invariant,reload N and reload N+1 must produce identical cell histories
+superinstance-site,superinstance-site-P08,2,admission,entry admitted only after confirmation cell AND quantum budget draw
+superinstance-site,superinstance-site-P09,2,invariant,the honest panel must exist and name concrete domains where competitors win
+superinstance-site,superinstance-site-P15,4,seal,every fix in the table must be traceable to a stated finding
+superinstance-site,superinstance-site-P16,4,seal,screenshots must come from real QA runs of the shipped file
+superinstance-site,superinstance-site-P18,4,postcondition,zero console/page errors across the whole playthrough
+superinstance-site,superinstance-site-P19,2,budget,mechanical computation must remain free (0 tokens)
+quilt-upstream,quilt-upstream-P03,1,conservation,"gamma + eta = budget at all times; no more, no less"
+quilt-upstream,quilt-upstream-P09,2,invariant,the integrity of the idea must hold in every implementation
+quilt-upstream,quilt-upstream-P10,1,conservation,gamma + eta = 1 conserved in all three embeddings
+quilt-upstream,quilt-upstream-P11,1,conservation,R_exp + R_expt + R_prior = 1 by construction
+quilt-upstream,quilt-upstream-P12,2,postcondition,pre-observation ratios are declared unknowable in principle
+quilt-upstream,quilt-upstream-P16,2,invariant,no unified system claim may assert all three properties
+quilt-upstream,quilt-upstream-P19,1,postcondition,R2 failures are best-effort — puts must not break when cold tier is down
+quilt-upstream,quilt-upstream-P20,2,admission,no code pushed to another lane's repos; issues with [SYNERGY] label are the channel
+quilt-upstream,quilt-upstream-P21,4,seal,a SYNERGY issue only counts once actually posted to the tracker
+breakthrough-prospector,breakthrough-prospector-P01,0,precondition,"no URL/commit, no claim"
+breakthrough-prospector,breakthrough-prospector-P04,2,budget,scout reports what it verified by minute 25 even if incomplete
+breakthrough-prospector,breakthrough-prospector-P06,2,admission,B >= 40 AND F >= 3 AND >= 1 VERIFIED citation
+breakthrough-prospector,breakthrough-prospector-P07,2,invariant,"caps applied deterministically by the scorer, visible in output"
+breakthrough-prospector,breakthrough-prospector-P08,1,seal,registration sealed and pushed before any external call / draw
+breakthrough-prospector,breakthrough-prospector-P09,1,budget,draw attempts and channel health are receipted per attempt
+breakthrough-prospector,breakthrough-prospector-P10,1,invariant,decide --check must be byte-identical modulo timestamp
+breakthrough-prospector,breakthrough-prospector-P12,4,seal,threshold fixed at registration; measured-but-failed arms published verbatim
+breakthrough-prospector,breakthrough-prospector-P14,2,admission,an L1 claim requires a held-out gate receipt
+craftmind-study,craftmind-study-P03,2,admission,attempts award zero fitness
+craftmind-study,craftmind-study-P05,2,budget,"population stays under the soft cap, oldest/weakest make room"
+craftmind-study,craftmind-study-P08,2,postcondition,a fact enters the KB only with reproducible results + experiment citation
+craftmind-study,craftmind-study-P12,2,invariant,no explicit inter-dog messaging channel
+craftmind-study,craftmind-study-P14,2,budget,agent reasoning loop completes in <10ms CPU
+quilt-atlas,quilt-atlas-P04,1,budget,hard cap 120 pages; a cap hit must set pagination_cap_hit=true rather than truncate silently
+quilt-atlas,quilt-atlas-P06,4,invariant,no family assignment without its evidence row
+quilt-atlas,quilt-atlas-P07,2,invariant,"absence of measurement must render as UNMEASURED, not 0"
+quilt-atlas,quilt-atlas-P08,4,admission,precision bar 70% must be met to keep the synonym table
+quilt-atlas,quilt-atlas-P09,4,admission,"family precision >= 70% bar; residual below that is priced, not reclassified"
+quilt-atlas,quilt-atlas-P12,2,invariant,no reclassification without an audit forcing it
+quilt-codespace,quilt-codespace-P05,2,admission,missing/incorrect bearer token rejects the route
+quilt-codespace,quilt-codespace-P09,2,precondition,"the codespace may write only tunables and audit rows, never actuator cells"
+quilt-codespace,quilt-codespace-P11,2,postcondition,shutdown loses state unless one of the named exits was taken
+si-fleet,si-fleet-P03,1,budget,distillation <= 200 words
+si-fleet,si-fleet-P05,2,precondition,a write without author/ts is distrusted by policy
+si-fleet,si-fleet-P06,2,postcondition,empty recall obligates a first write
+si-fleet,si-fleet-P07,2,invariant,"the pool must never return 502; degradation is declared, not hidden"
+si-fleet,si-fleet-P08,2,budget,max 45 requests/min per IP fingerprint
+si-fleet,si-fleet-P09,1,admission,pairings below the floor refuse as a typed abstain; untyped JEV input fails closed
+si-fleet,si-fleet-P11,3,budget,router escalates to expensive providers only when the cheap path or budget says so
+si-fleet,si-fleet-P14,4,invariant,gate-off responses must remain bit-identical to ungated ones
+external-scouts,external-scouts-P01,0,seal,raw receipts are archived before synthesis is written
+external-scouts,external-scouts-P02,4,admission,a hit enters synthesis only with a named 'what it gives the garden'
+external-scouts,external-scouts-P10,2,budget,every escalation carries a usage receipt (pricing-first)
+external-scouts,external-scouts-P15,4,seal,"junk results are receipted and named in the report, never silently dropped"
+external-scouts,external-scouts-P16,2,precondition,"an unanchored pillar must carry pre-registered claims, not borrowed citations"

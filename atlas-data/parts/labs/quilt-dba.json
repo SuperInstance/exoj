@@ -1,0 +1,258 @@
+{
+  "work": "quilt-dba",
+  "family": "labs",
+  "repo_path": "/home/z/my-project/download/quilt-dba",
+  "head": "7113eed",
+  "smoke": {
+    "cmd": "node experiments/smoke.mjs",
+    "verdict": "PASS (13/13 checks)",
+    "notes": "Honest negative: the repo-root `node smoke.mjs` FAILS (dba/driver.mjs:20 imports TASKS from dba/sheet.mjs which no longer exports it — SyntaxError). The canonical smoke path in README (experiments/smoke.mjs) is green: 13 canonical cells, boundary 1585 ok / 1586 refuse, no-lookahead, jev mock execute/discard, growth beta1 -1 -> 1, qrc labeled live:false, receipt chain seals+verifies."
+  },
+  "essence": "Developmental agent as 12-cell seed sheet: growth, conservation law, honest gates.",
+  "ideas": [
+    {
+      "id": "quilt-dba-I1",
+      "name": "Nothing new at the substrate, everything at the declaration",
+      "statement": "The claim under test: the quilt engine already contains every primitive needed to GROW an agent — the sheet is the contract, pure integer kernels are the substance, and the receipt chain records the substrate selection.",
+      "parts": ["quilt-dba-P01", "quilt-dba-P02", "quilt-dba-P03"]
+    },
+    {
+      "id": "quilt-dba-I2",
+      "name": "A forager that senses, predicts and reflexes",
+      "statement": "Z_in salience sensors, a JEPA momentum predictor with integer L1 surprise, and a pincher fast path (salience > 800 orients with no teacher) feed a reflex-override policy.",
+      "parts": ["quilt-dba-P04", "quilt-dba-P05", "quilt-dba-P06", "quilt-dba-P07"]
+    },
+    {
+      "id": "quilt-dba-I3",
+      "name": "Growth and curriculum are gated, not rewarded",
+      "statement": "Stage position accumulates only while surprise DECLINES; at threshold the sheet literally grows (stage-2 cells load, beta1 moves); task switching happens only on an EXECUTE verdict in the zone of proximal development.",
+      "parts": ["quilt-dba-P08", "quilt-dba-P10", "quilt-dba-P11"]
+    },
+    {
+      "id": "quilt-dba-I4",
+      "name": "The law, the receipts, the honest negative",
+      "statement": "gamma + eta <= C = log2(3) scaled to 1585 is enforced exactly at the integers; every experiment is a receipt chain with byte-identical replay; R3's honest negative is that the law is NEVER-BOUND in vivo at these parameters — the boundary test carries the guarantee.",
+      "parts": ["quilt-dba-P09", "quilt-dba-P12", "quilt-dba-P13", "quilt-dba-P14", "quilt-dba-P15"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "quilt-dba-P01",
+      "layer": 0,
+      "name": "Fixed-point scaled-integer substrate",
+      "essence": "All ledger quantities are scaled integers (unit 1/1000 bit): C_SCALED=1585, ETA_SCALE=2000, gamma constants — no floating-point nondeterminism in JEPA or DoubleEntry cells; vibe floats accumulate through a fixed op order.",
+      "inputs": ["sensor/mission events"],
+      "outputs": ["deterministic ledger arithmetic"],
+      "gate": "Boundary tolerance 1e-9 scaled units — comparisons are exact at the integers",
+      "gate_kind": "invariant",
+      "failure_mode": "Float drift would break byte-identical replay (seed3 §4.1 determinism demand)",
+      "elementary": true,
+      "evidence": "dba/kernels.mjs:8-22"
+    },
+    {
+      "part_id": "quilt-dba-P02",
+      "layer": 0,
+      "name": "Checkpointable randomness",
+      "essence": "mulberry32 single-uint32 RNG plus a stateless keyed flicker bit (fnv1a64 of worldSeed:evalN:i) — no hidden rng state, so any mid-run checkpoint replays bit-identically.",
+      "inputs": ["worldSeed", "evalN"],
+      "outputs": ["uniform draws, hazard/food placement, flicker"],
+      "gate": "Every draw must be recoverable from (seed, index) alone",
+      "gate_kind": "invariant",
+      "failure_mode": "Hidden RNG state would make resume divergence silent",
+      "elementary": true,
+      "evidence": "dba/kernels.mjs:49-68"
+    },
+    {
+      "part_id": "quilt-dba-P03",
+      "layer": 0,
+      "name": "Entropy vault over real cached packets",
+      "essence": "DbaVault reads REAL cached moth packets from disk (moth-holdem.json, moth-e16.json), stretches them into a bit pool (fnv1a64 counter-mode), hard-labeled live:false / mock:true — a mock never pretends to be quantum.",
+      "inputs": ["cached packet files (read-only)"],
+      "outputs": ["poolDigest, per-purpose sub-streams, u32 seeds"],
+      "gate": "Monobit sanity: pool rejected unless ones-ratio in (0.4, 0.6)",
+      "gate_kind": "precondition",
+      "failure_mode": "A degenerate pool would correlate world randomness; monobit throws on breach",
+      "elementary": true,
+      "evidence": "dba/vault.mjs:31-77"
+    },
+    {
+      "part_id": "quilt-dba-P04",
+      "layer": 1,
+      "name": "Deterministic world generation",
+      "essence": "16x16 grid, 4 hazard blocks and 4 zones x 10 food items generated deterministically from worldSeed; hazards never overlap and never sit on the start cell.",
+      "inputs": ["worldSeed"],
+      "outputs": ["world layout"],
+      "gate": "Start cell (8,8) is never a hazard",
+      "gate_kind": "precondition",
+      "failure_mode": "Overlapping hazards would silently shrink the world",
+      "elementary": true,
+      "evidence": "dba/kernels.mjs:73-90"
+    },
+    {
+      "part_id": "quilt-dba-P05",
+      "layer": 1,
+      "name": "Z_in sensors",
+      "essence": "sensors.vision = inverse L1 distance to nearest reward scaled to salience 0..1000; sensors.proprio = own position {x,y,t}.",
+      "inputs": ["env.state", "env.cfg", "env.tasks"],
+      "outputs": ["salience, proprioception"],
+      "gate": "Salience clamped to [0,1000] (smoke pins 440 -> in range)",
+      "gate_kind": "postcondition",
+      "failure_mode": "Unbounded salience would spike the reflex path",
+      "elementary": true,
+      "evidence": "dba/sheet.mjs:78-92"
+    },
+    {
+      "part_id": "quilt-dba-P06",
+      "layer": 1,
+      "name": "JEPA predict + integer surprise",
+      "essence": "world.predict: momentum next-position (pos + (pos - prev), clamped) + reward guess from memory.semantic; world.surprise: |dpos|*250 + reward_miss*500 — integer L1 surprise, eta.",
+      "inputs": ["env.state", "memory.semantic"],
+      "outputs": ["predicted next position", "surprise scalar"],
+      "gate": "Surprise is a pure integer function of state — recomputable at any checkpoint",
+      "gate_kind": "invariant",
+      "failure_mode": "Prediction drift would corrupt the competence signal that gates growth",
+      "elementary": true,
+      "evidence": "dba/sheet.mjs:95-110"
+    },
+    {
+      "part_id": "quilt-dba-P07",
+      "layer": 1,
+      "name": "Pincher reflex fast path",
+      "essence": "reflex.orient fires at salience > 800 (no teacher, no deliberation); when it fires, policy.action is overridden by pure salience climb.",
+      "inputs": ["sensors.vision"],
+      "outputs": ["reflex bit", "override branch in policy.action"],
+      "gate": "Strictly salience > 800 — the threshold is the whole reflex policy",
+      "gate_kind": "admission",
+      "failure_mode": "Reflex hijack of deliberate action near rewards is the intended fast path, not a bug",
+      "elementary": true,
+      "evidence": "dba/sheet.mjs:113-115,170-180"
+    },
+    {
+      "part_id": "quilt-dba-P08",
+      "layer": 1,
+      "name": "Growth: adding cells IS advancing stages",
+      "essence": "state.stage accumulates position only while surprise declines (gain/50 clamped 0..10); position >= 1000 loads the stage-2 sheet (sensors.language + teacher.label, policy.action reads them) via engine.loadSheet; skills.graph beta1 = E - V + C moves -1 -> 1.",
+      "inputs": ["world.surprise", "state.position"],
+      "outputs": ["grown sheet with new live cells"],
+      "gate": "Position accrues ONLY on declining surprise (competence, not reward)",
+      "gate_kind": "precondition",
+      "failure_mode": "Reward alone never grows the sheet — E-D1 R2: unguided arm 10 vs 24500 position",
+      "elementary": true,
+      "evidence": "dba/sheet.mjs:31-33,202-210,233-254"
+    },
+    {
+      "part_id": "quilt-dba-P09",
+      "layer": 2,
+      "name": "DoubleEntry conservation law",
+      "essence": "ledger.gamma = 100 base + 150 per teacher consult; ledger.eta = surprise; ledger.check: gamma + eta <= 1585 ? ok : refuse; conservation.test probes the boundary input-driven — 1585 passes, 1586 refuses exactly.",
+      "inputs": ["teacher.jev_log", "world.surprise", "probe input"],
+      "outputs": ["verdict ok|refuse", "conservation.ledger refusal receipts"],
+      "gate": "gamma + eta <= C = log2(3) x 1000, exact at the scaled integers",
+      "gate_kind": "conservation",
+      "failure_mode": "R3 honest negative: never breached in vivo at these parameters — the boundary test carries the guarantee",
+      "elementary": true,
+      "evidence": "dba/sheet.mjs:184-199"
+    },
+    {
+      "part_id": "quilt-dba-P10",
+      "layer": 2,
+      "name": "JEV typed-decision gate (mock calibration)",
+      "essence": "teacher.jev_gate: p = 0.5 + 0.5*tanh((success - 0.75)*8) over the last-100 success ring; > 0.95 execute, 0.70-0.95 escalate, < 0.70 discard; LABELED mock:true, every consult logged in teacher.jev_log.",
+      "inputs": ["env.success_ring", "teacher.mode"],
+      "outputs": ["typed decision {type:'noul', noul, action, mock:true}"],
+      "gate": "Every gate row carries the mock label — the OFF voice never impersonates live judgment",
+      "gate_kind": "admission",
+      "failure_mode": "Unlabeled mock would fake a live JEV verdict",
+      "elementary": true,
+      "evidence": "dba/sheet.mjs:118-131"
+    },
+    {
+      "part_id": "quilt-dba-P11",
+      "layer": 2,
+      "name": "Curriculum switching policy",
+      "essence": "teacher.feedback: in jev-gated mode only an EXECUTE verdict with noul > 0.95 switches the task, and only upward (easy -> hard, zone of proximal development); unguided arm D switches every 500 evals as the control.",
+      "inputs": ["teacher.jev_gate verdict", "env.cfg task"],
+      "outputs": ["switch_to decision"],
+      "gate": "Only EXECUTE + noul > 0.95 + task < 3 may switch — and never downward",
+      "gate_kind": "admission",
+      "failure_mode": "Unguided switching grows rewards but never development (E-D1 R2 control)",
+      "elementary": true,
+      "evidence": "dba/sheet.mjs:133-142"
+    },
+    {
+      "part_id": "quilt-dba-P12",
+      "layer": 3,
+      "name": "Live typesafe SystemOne client, fail-closed",
+      "essence": "One batched POST /v1/systemone answers N typed questions (noul/choice/score) in ~334ms; four budget caps; one retry then FAIL CLOSED to the sheet's mock gate with fallback_used:true; positive AND negative decisions disk-cached for zero-call bit-identical replay.",
+      "inputs": ["buildState() developmental state", "TYPESAFE_KEY (runtime only)"],
+      "outputs": ["typed answers + usage tokens, journaled with prompt HASH"],
+      "gate": "A live gate that cannot answer must never stall the loop and must never silently pretend — every row labeled live|cache|negcache|budget_mock|fail_closed_*",
+      "gate_kind": "budget",
+      "failure_mode": "Endpoint migration (.dev NXDOMAIN -> .ai) receipted; 429/5xx -> fail-closed not crash",
+      "elementary": true,
+      "evidence": "dba/jev_live.mjs:6-35"
+    },
+    {
+      "part_id": "quilt-dba-P13",
+      "layer": 3,
+      "name": "Live moth QRC stochasticity lane",
+      "essence": "E-D3: probe FIRST (1 tiny job), inspect result shapes, then choose the engine that yields genuine per-bit variability (coin-toss aggregate vs graph-v1 distinct 8-bit outcome keys vs qpixl decode-noise floats); stream = concatenated job payloads in submission order; caps MAX_JOBS=10, MIN_BITS=4096.",
+      "inputs": ["MOTH_KEY (runtime only)", "engine choice"],
+      "outputs": ["cached quantum randomness stream with provenance"],
+      "gate": "A batch is labeled live:true/mock:false ONLY if a real job completed",
+      "gate_kind": "admission",
+      "failure_mode": "Jobs with no extractable per-bit payload still contribute provenance + H/T stats, never fake bits",
+      "elementary": true,
+      "evidence": "dba/mothqrc.mjs:19-28,37-43"
+    },
+    {
+      "part_id": "quilt-dba-P14",
+      "layer": 4,
+      "name": "Receipt chains + byte-identical replay",
+      "essence": "Each experiment appends receipt rows (21/28/17 rows for E-D1/2/3) sealed by fnv1a64 chains; E-D1 R5 replays from a mid-run checkpoint byte-identically (full_hash == resumed_hash 1de2f9c27e8d); the derived world seed is stored in bundles so replay never re-reads the vault mid-run.",
+      "inputs": ["experiment event rows"],
+      "outputs": ["sealed, verifiable, replayable experiment records"],
+      "gate": "verifyChain over the re-read file must pass; resumed hash must equal full hash",
+      "gate_kind": "seal",
+      "failure_mode": "Any mid-run mutation breaks the chain or the replay equality",
+      "elementary": true,
+      "evidence": "experiments/outputs/e_d1_summary.json:36-43"
+    },
+    {
+      "part_id": "quilt-dba-P15",
+      "layer": 4,
+      "name": "Key hygiene doctrine",
+      "essence": "Keys load AT RUNTIME only (env, then .env regex), held in closure, NEVER written to any file, log, receipt, journal or console; journal rows carry prompt HASHes; selfScan() re-checks written text against the live key.",
+      "inputs": ["process.env / .env"],
+      "outputs": ["in-memory key handle only"],
+      "gate": "No key material may appear in any artifact — selfScan must find zero matches",
+      "gate_kind": "seal",
+      "failure_mode": "An unsanitized exception string once leaked a credential in cot-quilt — this doctrine is the fix",
+      "elementary": true,
+      "evidence": "dba/jev_live.mjs:20-25; dba/mothqrc.mjs:8-17"
+    }
+  ],
+  "sheet": {
+    "name": "quilt-dba-as-cells",
+    "cells": [
+      {"id": "env.tasks", "kind": "value", "expr": "4 curriculum layouts of rising spread (cluster/line/corners/scatter)", "deps": [], "maps_to_part": "quilt-dba-P04"},
+      {"id": "sensors.vision", "kind": "sensor", "expr": "1000 - 80*min L1 distance to a reward, clamped 0..1000", "deps": ["env.state", "env.tasks"], "maps_to_part": "quilt-dba-P05"},
+      {"id": "world.surprise", "kind": "formula", "expr": "|dpos|*250 + reward_miss*500 (integer)", "deps": ["world.predict", "env.state"], "maps_to_part": "quilt-dba-P06"},
+      {"id": "reflex.orient", "kind": "listener", "expr": "salience > 800 => orient (fast path, no teacher)", "deps": ["sensors.vision"], "maps_to_part": "quilt-dba-P07"},
+      {"id": "policy.action", "kind": "program", "expr": "reflex-override -> greedy + curiosity + (grown) label edge", "deps": ["reflex.orient", "memory.semantic", "growth.done"], "maps_to_part": "quilt-dba-P07"},
+      {"id": "ledger.check", "kind": "formula", "expr": "gamma + eta <= 1585 ? ok : refuse", "deps": ["ledger.gamma", "ledger.eta"], "maps_to_part": "quilt-dba-P09"},
+      {"id": "conservation.test", "kind": "program", "expr": "input-driven boundary probe: 1585 ok / 1586 refuse", "deps": [], "maps_to_part": "quilt-dba-P09"},
+      {"id": "teacher.jev_gate", "kind": "router", "expr": "p = 0.5+0.5*tanh((success-0.75)*8); 0.95/0.70 thresholds, mock:true", "deps": ["env.success_ring"], "maps_to_part": "quilt-dba-P10"},
+      {"id": "state.stage", "kind": "program", "expr": "position += clamp(floor(gain/50),0,10) only while surprise declines", "deps": ["world.surprise"], "maps_to_part": "quilt-dba-P08"},
+      {"id": "qrc.source", "kind": "io", "expr": "{mode:'offline-stream', live:false} — vault over cached real packets", "deps": [], "maps_to_part": "quilt-dba-P03"},
+      {"id": "growth.log", "kind": "value", "expr": "{stage, cells_added, parent_hash} per growth event", "deps": ["state.stage"], "maps_to_part": "quilt-dba-P08"}
+    ]
+  },
+  "layer_logic": {
+    "0": "Substrate: scaled-integer fixed-point arithmetic, checkpointable RNG, and an entropy vault of real cached packets hard-labeled live:false — determinism first, honesty about entropy second.",
+    "1": "Mechanisms: deterministic world, salience sensors, JEPA predict/surprise, reflex override, and growth-as-cell-addition — the sheet literally gains cells when competence accrues.",
+    "2": "Policy: the conservation law (gamma+eta<=C exact at integers), the calibrated mock JEV gate, and curriculum switching gated to EXECUTE verdicts — reward is decoupled from development.",
+    "3": "Interfaces: a fail-closed batched live LLM gate (budgeted, cached, labeled) and a probe-first live quantum randomness lane — both wires keep honest labels in every row.",
+    "4": "Evidence: per-experiment receipt chains, byte-identical checkpoint replay, monobit pool sanity, and the receipted honest negative that the law is never bound in vivo — the boundary test carries the guarantee."
+  }
+}

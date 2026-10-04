@@ -1,0 +1,278 @@
+{
+  "work": "craftmind-study",
+  "family": "meta",
+  "repo_path": "/home/z/my-project/craftmind-study",
+  "head": "c20c1c8",
+  "smoke": {
+    "cmd": "node --check craftmind-ranch/src/dna.js && node --check craftmind-ranch/src/evolution-engine.js",
+    "verdict": "PASS",
+    "notes": "Core ranch modules parse clean. Test suites NOT_RUN: tests/test-all.js + integration tests target a Worker/runtime harness not present offline; live instances are remote URLs (out of scope, no network). craftmind-study is a STUDY of three sibling repos (ranch, researcher, herding) held under the my-project workspace repo (toplevel /home/z/my-project, HEAD c20c1c8); each sibling is self-contained (zero deps, Cloudflare Worker deployable)."
+  },
+  "essence": "study of three sibling Cocapn-fleet experiments where learning is emergent and verified-work-only: evolving ranch bots, a blank-slate researcher, correction-trained sheepdogs",
+  "ideas": [
+    {
+      "id": "craftmind-study-I1",
+      "name": "evolution on verified work only",
+      "statement": "craftmind-ranch runs populations of Minecraft bots whose heritable DNA adapts through breeding — with fitness awarded solely for verified, completed in-game work, never for attempting: 'No proxy rewards', you are the curator, not the trainer.",
+      "parts": ["craftmind-study-P01", "craftmind-study-P02", "craftmind-study-P03", "craftmind-study-P04", "craftmind-study-P05"]
+    },
+    {
+      "id": "craftmind-study-I2",
+      "name": "the blank-slate researcher",
+      "statement": "craftmind-researcher starts with an empty rulebook and learns Minecraft mechanics by identifying gaps in its own knowledge graph, designing single-variable A/B experiments, and requiring reproducible, citation-backed results before a fact enters the knowledge base.",
+      "parts": ["craftmind-study-P06", "craftmind-study-P07", "craftmind-study-P08", "craftmind-study-P09"]
+    },
+    {
+      "id": "craftmind-study-I3",
+      "name": "learning from the fence line",
+      "statement": "craftmind-herding trains border-collie agents with no commands and no training data: you correct behavior from the fence line, dogs coordinate solely through movement (no explicit communication), and five skill tiers (Apprentice to Elder) grant small permanent stat adjustments.",
+      "parts": ["craftmind-study-P10", "craftmind-study-P11", "craftmind-study-P12"]
+    },
+    {
+      "id": "craftmind-study-I4",
+      "name": "fork-first isolation",
+      "statement": "All three siblings are fork-first: every fork is a separate evolutionary lineage ('No two ranches will produce identical bots'), deployed as a single Cloudflare Worker with zero dependencies — divergence is the product, not a bug.",
+      "parts": ["craftmind-study-P13"]
+    },
+    {
+      "id": "craftmind-study-I5",
+      "name": "budgets shape cognition",
+      "statement": "Hard limits are stated as design forces: herding agents must reason in under 10ms of Worker CPU (8-10 agents max practical), and the ranch's evolution pace is tied to the game's task submission rate ('if no tasks are completed... evolution stalls') — constraints are published, not hidden.",
+      "parts": ["craftmind-study-P14"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "craftmind-study-P01",
+      "layer": 0,
+      "name": "heritable DNA blueprints",
+      "essence": "Each bot is a JSON DNA: species traits, personality, taskWeights (0.7-1.0 for preferred tasks), learningRate (0.1-0.3), mutationRate (0.1-0.25), per-task confidence map, generation and parentIds — eight species with distinct behavioral biases.",
+      "inputs": ["species definition + overrides"],
+      "outputs": ["a mutable, breedable blueprint"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "hardcoded behavior paths (explicitly rejected: 'no hardcoded paths')",
+      "elementary": true,
+      "evidence": "craftmind-study/craftmind-ranch/src/dna.js createDNA() as read; data/default-dna/ (mooshroom, duck, trufflehog, falcon, shepherd, goat, rooster, stallion)"
+    },
+    {
+      "part_id": "craftmind-study-P02",
+      "layer": 1,
+      "name": "breed + mutate on success",
+      "essence": "Successful bots breed, combining DNA with small random mutations; fitness is awarded only for verified completed work; populations compete for the jobs you provide.",
+      "inputs": ["fitness-verified population"],
+      "outputs": ["next-generation DNA mix"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "selection on proxy signals (attempts, appearances) instead of completions",
+      "elementary": true,
+      "evidence": "craftmind-study/craftmind-ranch/src/evolution-engine.js (module present, parse-checked); README 'Successful bots breed, combining their DNA with small random mutations'"
+    },
+    {
+      "part_id": "craftmind-study-P03",
+      "layer": 2,
+      "name": "no-proxy-reward rule",
+      "essence": "Fitness is awarded solely for completing a task, not for attempting it — the study's sharpest policy: the only currency is verified work.",
+      "inputs": ["task submission"],
+      "outputs": ["fitness credit only on verified completion"],
+      "gate": "attempts award zero fitness",
+      "gate_kind": "admission",
+      "failure_mode": "reward hacking via task spam",
+      "elementary": true,
+      "evidence": "craftmind-study/craftmind-ranch/README.md 'What Makes This Different' item 1"
+    },
+    {
+      "part_id": "craftmind-study-P04",
+      "layer": 1,
+      "name": "task-confidence permanent boost",
+      "essence": "A bot permanently improves its speed at a task by ~8% each time it succeeds — confidence accumulates per taskId inside the DNA (confidence: taskId -> 0..1).",
+      "inputs": ["completed task"],
+      "outputs": ["permanent speed increment on that task"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "unbounded compounding turning repetition into invincibility",
+      "elementary": true,
+      "evidence": "craftmind-ranch/README.md 'A bot permanently improves its speed at a task by 8% each time it succeeds'; dna.js confidence field"
+    },
+    {
+      "part_id": "craftmind-study-P05",
+      "layer": 2,
+      "name": "soft population caps",
+      "essence": "Soft caps keep turnover in the population — space is made for new genomes rather than a frozen elite.",
+      "inputs": ["population size"],
+      "outputs": ["bounded, turning-over population"],
+      "gate": "population stays under the soft cap, oldest/weakest make room",
+      "gate_kind": "budget",
+      "failure_mode": "elite stagnation freezing evolution",
+      "elementary": true,
+      "evidence": "craftmind-ranch/README.md 'Key Features' item 'Soft population caps to encourage turnover'"
+    },
+    {
+      "part_id": "craftmind-study-P06",
+      "layer": 0,
+      "name": "empty knowledge graph substrate",
+      "essence": "The researcher starts with no game knowledge: knowledge/ holds initial-facts.json, citations.json, building-techniques.json, meta-learner-state.json — a graph that grows only from its own experiments.",
+      "inputs": ["empty/seeded fact graph"],
+      "outputs": ["growing cited knowledge base"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "pre-programmed rulebooks (explicitly rejected: 'Most Minecraft agents operate from a complete, pre-programmed rulebook')",
+      "elementary": true,
+      "evidence": "craftmind-study/craftmind-researcher/knowledge/*.json; src/knowledge-base.js"
+    },
+    {
+      "part_id": "craftmind-study-P07",
+      "layer": 1,
+      "name": "gap -> single-variable experiment",
+      "essence": "The loop: identify gaps or contradictions in the graph, design a controlled experiment that changes only one variable at a time, run it, analyze for statistical consistency.",
+      "inputs": ["knowledge graph with gaps"],
+      "outputs": ["one-variable A/B experiment + result"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "multi-variable confounds entering as 'facts'",
+      "elementary": true,
+      "evidence": "craftmind-researcher/README.md 'How It Works' (identifies gaps, 'controlled experiments that change only one variable at a time')"
+    },
+    {
+      "part_id": "craftmind-study-P08",
+      "layer": 2,
+      "name": "reproducibility-before-fact rule",
+      "essence": "Results must be reproducible before a conclusion enters the knowledge base, and every learned fact logs citations to its source experiment data.",
+      "inputs": ["experimental result"],
+      "outputs": ["cited fact or discarded claim"],
+      "gate": "a fact enters the KB only with reproducible results + experiment citation",
+      "gate_kind": "postcondition",
+      "failure_mode": "one-off anomalies hardening into 'knowledge'",
+      "elementary": true,
+      "evidence": "craftmind-researcher/README.md 'Requires reproducible results before accepting a finding. Logs every learned fact with citations'"
+    },
+    {
+      "part_id": "craftmind-study-P09",
+      "layer": 1,
+      "name": "multi-agent research chain",
+      "essence": "The researcher is organized as specialist agents: discovery-agent, critic-agent, distiller-agent, teacher-agent, peer-review-system, hypothesis-tracker, experiment-validator, literature-review — peer review as code.",
+      "inputs": ["candidate findings"],
+      "outputs": ["critiqued, distilled, taught knowledge"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "a single agent grading its own homework",
+      "elementary": true,
+      "evidence": "craftmind-researcher/src/ file listing (critic-agent.js, peer-review-system.js, hypothesis-tracker.js, experiment-validator.js, meta-learner.js)"
+    },
+    {
+      "part_id": "craftmind-study-P10",
+      "layer": 0,
+      "name": "boids flock + personality matrix",
+      "essence": "Sheep run a tuned boids algorithm (panic, tire, cluster); each dog has a six-axis personality (Speed, Patience, Obedience, Social, Bravery, Gentleness); weather affects visibility and movement; five standard courses.",
+      "inputs": ["flock state, dog DNA, weather"],
+      "outputs": ["a living herding scenario"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "scripted sheep (no emergent difficulty)",
+      "elementary": true,
+      "evidence": "craftmind-herding/README.md 'Personality Matrix' + 'Flock Simulation' + 'Environmental Effects'; src/flock-simulation.js, src/dog-personalities.js"
+    },
+    {
+      "part_id": "craftmind-study-P11",
+      "layer": 1,
+      "name": "correction-driven tier ascent",
+      "essence": "You never give commands — you correct behavior from the fence line; agents learn only from interactions and outcomes during their own runtime, crossing five skill tiers (Apprentice to Elder) with small permanent stat adjustments.",
+      "inputs": ["handler corrections + outcomes"],
+      "outputs": ["tier promotions with permanent stat deltas"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "pre-trained models or uploaded datasets (explicitly: 'No Pre-Trained Models')",
+      "elementary": true,
+      "evidence": "craftmind-herding/README.md intro + 'Incremental Learning'; src/teachings.js, src/seasons.js"
+    },
+    {
+      "part_id": "craftmind-study-P12",
+      "layer": 2,
+      "name": "emergent-only teamwork rule",
+      "essence": "Dogs coordinate solely through movement and positioning; no explicit communication is programmed — teamwork must appear, not be declared.",
+      "inputs": ["multiple dogs' movements"],
+      "outputs": ["emergent cooperative herding"],
+      "gate": "no explicit inter-dog messaging channel",
+      "gate_kind": "invariant",
+      "failure_mode": "smuggling in a comms channel would void the emergence claim",
+      "elementary": true,
+      "evidence": "craftmind-herding/README.md 'Emergent Teamwork: Dogs coordinate solely through movement and positioning; no explicit communication is programmed'"
+    },
+    {
+      "part_id": "craftmind-study-P13",
+      "layer": 2,
+      "name": "fork-first lineage isolation",
+      "essence": "Development is fork-first across all three repos: every fork is a separate evolutionary lineage with its own Worker deployment; no two ranches produce identical bots; contributions return via PR.",
+      "inputs": ["a fork"],
+      "outputs": ["an independent lineage"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "shared training state leaking between forks",
+      "elementary": true,
+      "evidence": "craftmind-ranch/README.md 'What Makes This Different' item 3 + 'Contributing' ('Development is fork-first'); same pattern stated in researcher and herding READMEs"
+    },
+    {
+      "part_id": "craftmind-study-P14",
+      "layer": 2,
+      "name": "published budget ceilings",
+      "essence": "Constraints are published as design forces: the herding reasoning loop must finish in <10ms Worker CPU (8-10 agents max practical), and ranch evolution stalls without task completions — the study records limits as features.",
+      "inputs": ["Worker CPU limits, task flow"],
+      "outputs": ["cognition shaped to the budget"],
+      "gate": "agent reasoning loop completes in <10ms CPU",
+      "gate_kind": "budget",
+      "failure_mode": "hiding the ceiling until users hit it",
+      "elementary": true,
+      "evidence": "craftmind-herding/README.md 'Limitations' ('under 10ms of CPU time... 8-10 agents'); craftmind-ranch/README.md 'One Specific Limitation'"
+    },
+    {
+      "part_id": "craftmind-study-P15",
+      "layer": 3,
+      "name": "watchable live instances",
+      "essence": "Each sibling runs as a public live instance (the-fleet.casey-digennaro.workers.dev/ranch) with scripts/playtest.js — 'You watch evolution do farm work', 'watch populations evolve, export generation data, or fork your own ranch in about two minutes': the interface is observation itself.",
+      "inputs": ["deployed Worker"],
+      "outputs": ["a session a human can watch and steer"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "an evolution story nobody can watch run",
+      "elementary": true,
+      "evidence": "craftmind-ranch/README.md live-instance link + 'Live instance' framing; scripts/playtest.js present in all three siblings"
+    },
+    {
+      "part_id": "craftmind-study-P16",
+      "layer": 4,
+      "name": "test trios + roadmap receipts",
+      "essence": "Each sibling ships a test trio (test-all.js, test-ai.js, integration.test.js) and a ROADMAP.md — the study's repos carry their own verification and declared future, even as zero-dependency Workers.",
+      "inputs": ["repo code"],
+      "outputs": ["per-sibling test suites + roadmaps"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "emergence claims with no runnable verification",
+      "elementary": true,
+      "evidence": "craftmind-ranch/tests/ (test-all.js, test-ai.js, integration.test.js) + ROADMAP.md; same trio present in craftmind-researcher/ and craftmind-herding/"
+    }
+  ],
+  "sheet": {
+    "name": "craftmind-study-as-cells",
+    "cells": [
+      { "id": "ranch.dna", "kind": "value", "expr": "traits/personality/taskWeights/learningRate/mutationRate/confidence", "deps": [], "maps_to_part": "craftmind-study-P01" },
+      { "id": "ranch.breed", "kind": "program", "expr": "verified-success -> breed + mutate", "deps": ["ranch.dna"], "maps_to_part": "craftmind-study-P02" },
+      { "id": "ranch.fitness", "kind": "formula", "expr": "fitness = f(verified completion only)", "deps": ["ranch.breed"], "maps_to_part": "craftmind-study-P03" },
+      { "id": "ranch.confidence", "kind": "formula", "expr": "+8% speed per success, permanent", "deps": ["ranch.fitness"], "maps_to_part": "craftmind-study-P04" },
+      { "id": "ranch.caps", "kind": "formula", "expr": "soft population cap -> turnover", "deps": ["ranch.breed"], "maps_to_part": "craftmind-study-P05" },
+      { "id": "researcher.graph", "kind": "value", "expr": "empty knowledge graph, facts cite experiments", "deps": [], "maps_to_part": "craftmind-study-P06" },
+      { "id": "researcher.experiment", "kind": "program", "expr": "gap -> one-variable A/B -> statistics", "deps": ["researcher.graph"], "maps_to_part": "craftmind-study-P07" },
+      { "id": "researcher.review", "kind": "listener", "expr": "peer-review/critic/validator chain", "deps": ["researcher.experiment"], "maps_to_part": "craftmind-study-P09" },
+      { "id": "herding.flock", "kind": "sensor", "expr": "boids sheep + weather + courses", "deps": [], "maps_to_part": "craftmind-study-P10" },
+      { "id": "herding.tiers", "kind": "program", "expr": "fence-line corrections -> Apprentice..Elder", "deps": ["herding.flock"], "maps_to_part": "craftmind-study-P11" },
+      { "id": "fork.lineage", "kind": "io", "expr": "fork = independent Worker lineage", "deps": ["ranch.dna"], "maps_to_part": "craftmind-study-P13" },
+      { "id": "cpu.budget", "kind": "formula", "expr": "<10ms reasoning loop; 8-10 agents max", "deps": ["herding.tiers"], "maps_to_part": "craftmind-study-P14" }
+    ]
+  },
+  "layer_logic": {
+    "0": "substrate = three mutable memory structures: bot DNA, an empty cited knowledge graph, and a boids flock with personality axes",
+    "1": "mechanism = breed+mutate on verified success, gap-driven single-variable experiments, correction-driven tier ascent",
+    "2": "policy = no proxy rewards, reproducibility-before-fact, emergent-only teamwork, fork-first lineages, published budget ceilings",
+    "3": "interface = live Worker instances you watch (ranch/researcher/herding), playtest scripts, task-submission flow",
+    "4": "evidence = per-repo test trios + playtest.js + public live instances — the learning is offered observable, not asserted"
+  }
+}

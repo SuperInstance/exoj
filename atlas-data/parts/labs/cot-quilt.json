@@ -1,0 +1,219 @@
+{
+  "work": "cot-quilt",
+  "family": "labs",
+  "repo_path": "/home/z/my-project/cot-quilt",
+  "head": "0f360b9",
+  "smoke": {
+    "cmd": "node scripts/keyscan.mjs",
+    "verdict": "PASS (offline ritual: verdict CLEAN, exit 0) + live pipeline NOT_RUN",
+    "notes": "Live run needs DEEPSEEK/TYPESAFE/DEEPINFRA keys and network — forbidden by dog-food rules, so NOT_RUN with that reason. The offline credential scanner is green: 2 hits, both RECEIPTED-BENIGN (the dead, rolled deepseek credential in a sealed receipt, never-delete-data law). Offline structural check also re-validated artifacts: runs/2026-10-01-run1/graph.json parses with 49 nodes / 104 edges, exactly as README claims; judges/verdict.json carries typesafe p_complete 0.71 / p_faulty 0.27."
+  },
+  "essence": "Cheap models decompose a big model's CoT into a receipted cellular graph.",
+  "ideas": [
+    {
+      "id": "cot-quilt-I1",
+      "name": "A big idea becomes a cellular graph via cheap models",
+      "statement": "A large model's chain-of-thought (3 lens-persona samples, because the endpoint ignores seed) is split into typed steps, wired with load-bearing scores and dependency edges, merged across seeds (occurrence = weight, divergence = alternate routes), then judged with gaps folded back as critique cells.",
+      "parts": ["cot-quilt-P01", "cot-quilt-P02", "cot-quilt-P03", "cot-quilt-P04", "cot-quilt-P05"]
+    },
+    {
+      "id": "cot-quilt-I2",
+      "name": "Judgment is separated from composition",
+      "statement": "No model judges nodes it composed: flash composes, typesafe batteries score, Hermes attacks adversarially; a reasoner that burns its budget on reasoning is retried at 3x, not allowed to pass silently.",
+      "parts": ["cot-quilt-P06", "cot-quilt-P07"]
+    },
+    {
+      "id": "cot-quilt-I3",
+      "name": "Entropy and seeds are disciplined inputs",
+      "statement": "Seeds come from true quantum per-bit jobs fail-closed to os.urandom with per-bit flags; recorded even though the endpoint ignores them — book-keeping is the point.",
+      "parts": ["cot-quilt-P08"]
+    },
+    {
+      "id": "cot-quilt-I4",
+      "name": "The pipeline is resumable, receipted, and self-guarding",
+      "statement": "Per-phase state files with atomic tmp+fsync+rename writes, per-sample resume, one append-only ledger per run; the credential incident became a standing pre-push keyscan ritual with receipted-benign suppressions and a verbatim incident record.",
+      "parts": ["cot-quilt-P09", "cot-quilt-P10", "cot-quilt-P11", "cot-quilt-P12"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "cot-quilt-P01",
+      "layer": 0,
+      "name": "Lens-sampled chain-of-thought",
+      "essence": "3x deepseek-v4-pro samples of the same prompt under skeptic/engineer/teacher lenses; CoT + answer + usage + finish_reason captured per sample; diversity is enforced by persona because the seed parameter is accepted but ignored (probe-receipted).",
+      "inputs": ["prompt", "lens personas"],
+      "outputs": ["3 orthogonal CoTs"],
+      "gate": "Burn-guard: finish=length with empty content triggers a 3x-budget retry",
+      "gate_kind": "precondition",
+      "failure_mode": "A reasoner that spends the whole budget on reasoning would yield an empty sample",
+      "elementary": true,
+      "evidence": "README.md:18-21,91-96"
+    },
+    {
+      "part_id": "cot-quilt-P02",
+      "layer": 1,
+      "name": "Split: typed step compression",
+      "essence": "deepseek-flash compresses each CoT into <=8 typed steps (PREMISE | INFERENCE | CHECK | DECISION | CONCLUSION) with a JSON repair loop.",
+      "inputs": ["CoT markdown"],
+      "outputs": ["typed step lists"],
+      "gate": "Steps must parse to the typed schema — malformed JSON goes through repair, not silently onward",
+      "gate_kind": "postcondition",
+      "failure_mode": "Untyped dumps would make wiring and merging undefined",
+      "elementary": true,
+      "evidence": "README.md:22-23"
+    },
+    {
+      "part_id": "cot-quilt-P03",
+      "layer": 1,
+      "name": "Wire: load-bearing battery",
+      "essence": "typesafe.ai (jev-latest) battery per sample: rubric 0-3 load-bearing score per step (expectation = sum p_i * i) plus a dependency choice per step — edges with probabilities.",
+      "inputs": ["typed steps"],
+      "outputs": ["weighted dependency edges"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "Unweighted edges would lose the strength signal that routing later needs",
+      "elementary": true,
+      "evidence": "README.md:24-26"
+    },
+    {
+      "part_id": "cot-quilt-P04",
+      "layer": 1,
+      "name": "Merge: cross-seed agreement as weight",
+      "essence": "flash aligns steps across samples into clusters; occurrence count = cross-seed weight; kept-out divergences become ALTERNATE ROUTES — the convergence/divergence structure of the big model's idea becomes visible per-cell.",
+      "inputs": ["3 wired step graphs"],
+      "outputs": ["clustered graph + divergent routes"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "Averaging across seeds would erase exactly the divergence signal this stage exists to keep",
+      "elementary": true,
+      "evidence": "README.md:27-29,55-58"
+    },
+    {
+      "part_id": "cot-quilt-P05",
+      "layer": 1,
+      "name": "Judge and fold-back",
+      "essence": "The larger model judges the merged graph against the original prompt (thoroughness 0-10 + up to 5 gaps); flash folds the gaps back in as origin='critique' cells -> graph v2 — a quilt that grows its own missing cells.",
+      "inputs": ["merged graph", "original prompt"],
+      "outputs": ["judge score + gaps -> critique cells (graph v2)"],
+      "gate": "The judge's gaps must become cells, not a footnote",
+      "gate_kind": "postcondition",
+      "failure_mode": "First run judged 6/10 and the five gaps became five critique cells — the finding is the payload",
+      "elementary": true,
+      "evidence": "README.md:30-32,50-58,68-70"
+    },
+    {
+      "part_id": "cot-quilt-P06",
+      "layer": 2,
+      "name": "Compose/test separation",
+      "essence": "run-1 discipline: flash composes, typesafe and Hermes-3-405B judge; no model judges a node set it composed; flash cross-reviews typesafe-only nodes; the separation is receipted in judges/verdict.json.",
+      "inputs": ["per-arm node sets"],
+      "outputs": ["separation receipt + independent verdicts"],
+      "gate": "A judge must never see only its own compositions",
+      "gate_kind": "admission",
+      "failure_mode": "Self-judging would inflate completeness (p_complete 0.71 came from an independent battery)",
+      "elementary": true,
+      "evidence": "scripts/run1_pipeline.mjs:14-19; runs/2026-10-01-run1/judges/verdict.json"
+    },
+    {
+      "part_id": "cot-quilt-P07",
+      "layer": 2,
+      "name": "Budget and retry policy",
+      "essence": "run-1 budget <= ~20 provider calls (planned 10, reserves for JSON repair); burn-guard retries at 3x budget (12k -> 36k tokens); remediation path --redo-seed re-calls ONE contaminated seed and reuses every other cached stage verbatim.",
+      "inputs": ["phase plans", "provider responses"],
+      "outputs": ["bounded spend, receipted retries"],
+      "gate": "Total calls capped; every retry and remediation receipted, all-in spend declared ($0.098)",
+      "gate_kind": "budget",
+      "failure_mode": "Unbounded retries would silently burn credits",
+      "elementary": true,
+      "evidence": "scripts/run1_pipeline.mjs:23-27,43-47; README.md:133-136"
+    },
+    {
+      "part_id": "cot-quilt-P08",
+      "layer": 2,
+      "name": "Quantum seed discipline",
+      "essence": "3x16 true quantum bits from mothquantum coin-toss per-bit jobs, parallel, fail-closed to os.urandom with per-bit flags; flagship run 48/48 true bits; entropy_bits_true < 16 marks any fallback bit.",
+      "inputs": ["mothquantum coin-toss jobs"],
+      "outputs": ["seeded samples with provenance flags"],
+      "gate": "Every bit must be labeled true-quantum or fail-closed — no unlabeled mixing",
+      "gate_kind": "seal",
+      "failure_mode": "Silent urandom fallback would fake quantum provenance",
+      "elementary": true,
+      "evidence": "README.md:14-16,100-101"
+    },
+    {
+      "part_id": "cot-quilt-P09",
+      "layer": 3,
+      "name": "Atomic receipted runs, resumable",
+      "essence": "Every phase persists state/<phase>.json atomically (tmp + fsync + rename) and receipts each call into seeds/ledger.jsonl (append-only); interrupted runs resume per-sample; runs are keyed by content, not wall clock.",
+      "inputs": ["pipeline phase outputs"],
+      "outputs": ["resumable run directories with sealed ledgers"],
+      "gate": "Receipt writes must be atomic — a mid-write kill once truncated a receipt and the lesson is receipted",
+      "gate_kind": "invariant",
+      "failure_mode": "Partial writes would poison resume; the 63-a-r audit-then-remediate path exercised this for real",
+      "elementary": true,
+      "evidence": "scripts/run1_pipeline.mjs:24,55-64; README.md:35-39,97-99"
+    },
+    {
+      "part_id": "cot-quilt-P10",
+      "layer": 3,
+      "name": "Cell signature (drop into a quilt)",
+      "essence": "The output contract: graph_v1 nodes -> value cells; edges -> links with p as dial weight; judge.gaps -> question-cells; critique nodes -> origin='critique' next-generation cells; typesafe load-scores -> cell resolution policy.",
+      "inputs": ["graph v1/v2", "judge verdicts"],
+      "outputs": ["quilt-ready cell declarations"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "Without a drop-in contract the graph stays a research artifact",
+      "elementary": true,
+      "evidence": "README.md:60-72"
+    },
+    {
+      "part_id": "cot-quilt-P11",
+      "layer": 4,
+      "name": "Keyscan ritual",
+      "essence": "Pre-push credential scanner over HEAD tree + staged diff + worktree for gsk_/sk-/ghp_/github_pat_/apikey_/moth_/cfut_ patterns with length guards; matched values are NEVER printed; exit 0 only when clean or every hit matches a receipted-benign suppression.",
+      "inputs": ["git tree state"],
+      "outputs": ["CLEAN / RECEIPTED-BENIGN / UNRECEIPTED verdict"],
+      "gate": "Exit 1 on any un-receipted credential-shaped hit — the scanner must never become the leak",
+      "gate_kind": "admission",
+      "failure_mode": "Verified live: verdict CLEAN with 2 receipted-benign hits, exit 0",
+      "elementary": true,
+      "evidence": "scripts/keyscan.mjs:8-29,38-46"
+    },
+    {
+      "part_id": "cot-quilt-P12",
+      "layer": 4,
+      "name": "Incident ledger (never-delete-data)",
+      "essence": "The leaked deepseek credential stays verbatim in the sealed receipt; it is DEAD (rolled by principal); suppressions carry written justifications pointing at SECURITY-INCIDENT.md — suppression means receipted and inert, never ignore-the-future.",
+      "inputs": ["SECURITY-INCIDENT.md", "suppression table"],
+      "outputs": ["auditable incident memory"],
+      "gate": "A suppression requires a written justification + pointer to the incident record",
+      "gate_kind": "seal",
+      "failure_mode": "Deleting the evidence would hide the class of bug instead of the credential",
+      "elementary": true,
+      "evidence": "scripts/keyscan.mjs:50-59"
+    }
+  ],
+  "sheet": {
+    "name": "cot-quilt-as-cells",
+    "cells": [
+      {"id": "cot.samples", "kind": "ai", "expr": "3x v4-pro CoT under skeptic/engineer/teacher lenses", "deps": ["seed.bits"], "maps_to_part": "cot-quilt-P01"},
+      {"id": "seed.bits", "kind": "io", "expr": "48 true quantum bits, per-bit fail-closed flags", "deps": [], "maps_to_part": "cot-quilt-P08"},
+      {"id": "split.steps", "kind": "program", "expr": "flash -> <=8 typed steps + JSON repair loop", "deps": ["cot.samples"], "maps_to_part": "cot-quilt-P02"},
+      {"id": "wire.edges", "kind": "program", "expr": "typesafe battery: load scores + dependency choices -> weighted edges", "deps": ["split.steps"], "maps_to_part": "cot-quilt-P03"},
+      {"id": "merge.clusters", "kind": "formula", "expr": "occurrence = weight; divergences -> alternate routes", "deps": ["wire.edges"], "maps_to_part": "cot-quilt-P04"},
+      {"id": "judge.verdict", "kind": "ai", "expr": "v4-pro thoroughness 0-10 + gaps; separation receipt enforced", "deps": ["merge.clusters"], "maps_to_part": "cot-quilt-P06"},
+      {"id": "critique.cells", "kind": "program", "expr": "gaps folded back as origin='critique' nodes -> graph v2", "deps": ["judge.verdict"], "maps_to_part": "cot-quilt-P05"},
+      {"id": "state.phase", "kind": "value", "expr": "atomic per-phase state files, content-keyed runs", "deps": [], "maps_to_part": "cot-quilt-P09"},
+      {"id": "budget.meter", "kind": "listener", "expr": "<=20 provider calls; burn-guard retries at 3x budget", "deps": ["cot.samples"], "maps_to_part": "cot-quilt-P07"},
+      {"id": "keyscan.gate", "kind": "router", "expr": "pre-push credential scan; exit 1 on un-receipted hit", "deps": [], "maps_to_part": "cot-quilt-P11"},
+      {"id": "incident.record", "kind": "value", "expr": "dead credential verbatim + justification-linked suppressions", "deps": ["keyscan.gate"], "maps_to_part": "cot-quilt-P12"}
+    ]
+  },
+  "layer_logic": {
+    "0": "Substrate: other models' reasoning traces plus true quantum seed bits — the raw material is itself generated content, so provenance labels ride on every sample.",
+    "1": "Mechanisms are the five pipeline phases (CoT -> split -> wire -> merge -> judge+fold), each receipted, each transforming graphs of text into typed, weighted cell graphs.",
+    "2": "Policy: compose/test separation, burn-guard retries, a hard provider-call budget, per-bit entropy honesty, and the rule that judge gaps must become cells.",
+    "3": "Interfaces: atomic content-keyed run directories with append-only ledgers, per-sample resume, and the drop-in cell signature that turns a graph into quilt cells.",
+    "4": "Evidence: per-call receipts with usage and latency, the separation receipt, and the keyscan ritual with its never-delete-data incident ledger — the repo polices its own leaks."
+  }
+}

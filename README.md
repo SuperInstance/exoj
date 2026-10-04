@@ -531,3 +531,36 @@ I7): fail-closed on `E_SXC_FIELD / E_SXC_SEQ / E_SXC_PREV / E_SXC_HASH /
 E_SXC_SPEC`, float-free bodies for JS↔Python hash parity. Pathway: exoj emits →
 cocapn (Python mirror) verifies → quilt-dba stitches. Demo receipt:
 `node gan/demo.mjs` → `experiments/outputs/w69_bridge3_demo.json`.
+
+---------------
+
+## The Atlas Kit — wave-66 (how to do it again without them)
+
+Wave-66 decomposed 29 SuperInstance works (plus the external research they
+leaned on) into **elementary parts as spreadsheet logic** — 528 parts across
+five canonical layers (substrate / mechanism / policy / interface / evidence),
+401 gates, 127 observed holes — and then let **jevs walk the layers**: soft
+deformations for concrete gates, explicit recorded collapse only at holes
+(the ExoJ law). Six lane agents + a keeper produced the corpus.
+
+`atlas.mjs` is the **exoj of that process**: the method as an executable, so
+the next instance needs zero agents to re-run the wave.
+
+```bash
+node atlas.mjs verify        # re-verify the bundled artifact of record (6 checks)
+node atlas.mjs sweep         # re-run the pre-registered gate sweep (exoj policy=ledger)
+node atlas.mjs csv           # emit the spreadsheet logic as CSV (parts/gates/ideas/cells)
+node atlas.mjs protocol      # the 7-move runbook: REGISTRY → DECOMPOSE → PREREGISTER
+                             #   → SWEEP → READ THE MAP → COMPILE → SEAL
+node experiments/e_x8_atlas_gatesweep.mjs   # E-X8: kit replay == artifact of record
+```
+
+**E-X8 verdict (committed with this section): the kit's replay lands on the
+byte-identical chain tip (`13463fd0…`, 606 links) as the live wave — 29/29
+per-work verdict maps agree, gate-kind and layer histograms identical, two kit
+runs deterministic. Offline, keyless, deterministic, agent-free.**
+
+Bundled under `atlas-data/`: `corpus.json`, the 29 decomposition files
+(`parts/<family>/<work>.json`), `gate-map.json` + `sweep_field.json` (the
+judgment field, dunnable), and the wave's receipt ledgers. The rules are
+pre-registered in `atlas.mjs` itself — decision rules before the run, forever.

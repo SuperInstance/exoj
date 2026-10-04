@@ -1,0 +1,13 @@
+{"ts":"2026-10-04T07:08:23Z","exp":"e_x8","event":"prerun","detail":"rules pre-registered in atlas.mjs RULES and re-receipted here"}
+{"ts":"2026-10-04T07:08:23Z","exp":"e_x8","event":"rules","detail":"{\"R1_OPEN\":\"gate non-empty AND gate_kind non-null -> emit(g=0.75, e=0.25, d=0.50)\",\"R2_SOFT\":\"gate non-empty AND gate_kind null -> emit(g=0.50, e=0.50, d=0.50)\",\"R3_HOLE\":\"gate empty/null -> observe(d=0.20): explicit, recorded, LOCAL collapse\",\"R4_SEAL\":\"gate_kind seal|conservation -> extra reinforcing emit(g=0.85, e=0.15, d=0.50)\",\"R5_LAYERHOLE\":\"work missing any layer 0-4 -> observe at that layer cell\",\"R6_THIN\":\"work with <5 gated parts -> warning emit(g=0.35, e=0.65, d=0.50)\",\"geometry\":\"work i (sorted family,work) -> q=(i%7)-3 ; layer L -> r=L-2 ; radius 6 ; exoj policy=ledger\",\"backend\":\"atlas-sweep: deterministic structural judgment; no LLM, no network\"}"}
+{"ts":"2026-10-04T07:08:23Z","exp":"e_x8","event":"check_ok","detail":"R2 verifyKit"}
+{"ts":"2026-10-04T07:08:23Z","exp":"e_x8","event":"check_ok","detail":"R1 replay produced gate-map"}
+{"ts":"2026-10-04T07:08:23Z","exp":"e_x8","event":"check_ok","detail":"R1 totals.works — 29 vs 29"}
+{"ts":"2026-10-04T07:08:23Z","exp":"e_x8","event":"check_ok","detail":"R1 totals.parts — 528 vs 528"}
+{"ts":"2026-10-04T07:08:23Z","exp":"e_x8","event":"check_ok","detail":"R1 totals.gated — 401 vs 401"}
+{"ts":"2026-10-04T07:08:23Z","exp":"e_x8","event":"check_ok","detail":"R1 totals.OPEN/SOFT/HOLE — O/S/H 401/0/127 vs 401/0/127"}
+{"ts":"2026-10-04T07:08:23Z","exp":"e_x8","event":"check_ok","detail":"R1 gate_kind histogram"}
+{"ts":"2026-10-04T07:08:23Z","exp":"e_x8","event":"check_ok","detail":"R1 layer histogram"}
+{"ts":"2026-10-04T07:08:23Z","exp":"e_x8","event":"check_ok","detail":"R1 per-work verdict counts — 29/29 agree"}
+{"ts":"2026-10-04T07:08:23Z","exp":"e_x8","event":"check_ok","detail":"R1 replay chain verifies — links=606"}
+{"ts":"2026-10-04T07:08:23Z","exp":"e_x8","event":"check_ok","detail":"R3 deterministic replay — two kit runs over identical inputs land on the same chain tip"}

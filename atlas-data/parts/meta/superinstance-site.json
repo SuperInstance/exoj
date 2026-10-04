@@ -1,0 +1,327 @@
+{
+  "work": "superinstance-site",
+  "family": "meta",
+  "repo_path": "/home/z/my-project/download/superinstance",
+  "head": "c20c1c8",
+  "smoke": {
+    "cmd": "node -e \"extract <script> blocks from index.html\" && node --check /tmp/si-engine.js",
+    "verdict": "PASS",
+    "notes": "4 embedded script blocks extracted (4832/12981/21103/1988 bytes); largest parses clean under node --check. Full page NOT_RUN in DOM (needs headless Chromium; the QA harness scripts/superinstance/qa.mjs referenced by README.md is ABSENT from this local snapshot — honest negative). Path lives inside the my-project workspace repo (git toplevel /home/z/my-project, HEAD c20c1c8); no nested .git."
+  },
+  "essence": "the account's public face: brand, positioning map, QA manifesto — running cells instead of screenshots",
+  "ideas": [
+    {
+      "id": "superinstance-site-I1",
+      "name": "proof-by-running",
+      "statement": "The front door asks for nothing: the four sheets are literally alive before you scroll, consoles stream real engine events, and 'the receipts are the story' — every other spreadsheet company ships screenshots and asks for trust.",
+      "parts": ["superinstance-site-P01", "superinstance-site-P03", "superinstance-site-P04", "superinstance-site-P12", "superinstance-site-P18"]
+    },
+    {
+      "id": "superinstance-site-I2",
+      "name": "the honest map",
+      "statement": "Scored on the four things SuperInstance is actually about — not a claim of superiority everywhere, a claim of a different point on the map — with a plainly-worded panel of where Excel/Sheets/Airtable/Notion/Observable/Bloomberg/Hex still win today.",
+      "parts": ["superinstance-site-P09", "superinstance-site-P13"]
+    },
+    {
+      "id": "superinstance-site-I3",
+      "name": "brand bound to meaning",
+      "statement": "The 'deep tide' system binds every accent to a meaning (tide=life, signal=events, budget=economy, quantum=the quantum layer), never decoration: one glow per element, never rainbow, and the wordmark is a system font stack because self-containment is a feature.",
+      "parts": ["superinstance-site-P02", "superinstance-site-P10", "superinstance-site-P11", "superinstance-site-P14"]
+    },
+    {
+      "id": "superinstance-site-I4",
+      "name": "playtest receipts are the story",
+      "statement": "Four QA rounds each caught something real (ocean blew up to -7.2e+34, reversi never moved, hold'em shape froze at n=0, consoles unreadable, ocean looked dead), and the fixes are published next to the findings — iterating in public is the manifesto.",
+      "parts": ["superinstance-site-P15", "superinstance-site-P16"]
+    },
+    {
+      "id": "superinstance-site-I5",
+      "name": "learning is visible and replayable",
+      "statement": "Weights live in cells you can watch drift (reversi's loser re-weights after every game), a deterministic PRNG makes every reload replay honestly, and the page books its own provenance: 187 green checks, 12 engine patches, 36/36 upstream tests kept.",
+      "parts": ["superinstance-site-P05", "superinstance-site-P06", "superinstance-site-P07", "superinstance-site-P17"]
+    },
+    {
+      "id": "superinstance-site-I6",
+      "name": "perception costs something",
+      "statement": "In cards, in markets, in mines the odds are mechanical (pot odds cost 0 tokens — a formula) but judgment is metered: a signal is only a proposal, a confirmation cell is the gate, and entries can require a draw from a rationed quantum budget.",
+      "parts": ["superinstance-site-P08", "superinstance-site-P19"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "superinstance-site-P01",
+      "layer": 0,
+      "name": "single self-contained HTML substrate",
+      "essence": "One file, zero dependencies, works offline — the entire showcase (engine, four demos, landscape, manifesto, og assets) ships as index.html.",
+      "inputs": ["browser request for index.html"],
+      "outputs": ["a running page with four live sheets"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "any external dependency would break the offline promise",
+      "elementary": true,
+      "evidence": "index.html (1452 lines, 467KB incl. inline base64 art); README.md 'One file, zero dependencies, works offline'"
+    },
+    {
+      "part_id": "superinstance-site-P02",
+      "layer": 0,
+      "name": "deep-tide token palette",
+      "essence": "CSS custom properties --ink/--surface/--tide/--signal/--budget/--quantum define the entire visual substrate; accents are semantic, not stylistic.",
+      "inputs": ["brand/README.md palette table"],
+      "outputs": ["every surface, flash, meter and glow on the page"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "a color used decoratively breaks the meaning-binding rule",
+      "elementary": true,
+      "evidence": "index.html lines 12-19 (:root tokens); brand/README.md 'Palette — deep tide'"
+    },
+    {
+      "part_id": "superinstance-site-P03",
+      "layer": 1,
+      "name": "mini engine Sheet (value/formula/deps)",
+      "essence": "A ~120-line reactive engine embedded in the page: cell(id,value), def(id,deps,fn) with stale recompute, sameV deep-equality to suppress no-op cascades, errors captured as {__error}.",
+      "inputs": ["cell definitions from the four demo sheets"],
+      "outputs": ["cell values recomputed only when dependencies change"],
+      "gate": "formula re-eval is skipped when sameV(old,new) is true",
+      "gate_kind": "invariant",
+      "failure_mode": "deep mutation aliasing silently skips recompute (the hold'em n=0 freeze bug)",
+      "elementary": true,
+      "evidence": "index.html lines 648-684 (class Sheet, _eval, _set, sameV); README 'same semantics as the full quilt runtime'"
+    },
+    {
+      "part_id": "superinstance-site-P04",
+      "layer": 1,
+      "name": "Bus + watch listeners",
+      "essence": "A global Bus.emit fires on every value change; watch(target,fn) registers listeners; every mini-console in the page subscribes to real engine traffic.",
+      "inputs": ["Bus emit events {sheet,id,kind,old,v}"],
+      "outputs": ["listener actions: tide gauge lights foam, moves played, reads spoken"],
+      "gate": "every console line must originate from a real Bus emit, not synthesized text",
+      "gate_kind": "invariant",
+      "failure_mode": "theater consoles (scripted logs) would void the proof-by-running claim",
+      "elementary": true,
+      "evidence": "index.html lines 632-637 (Bus), 666 (watch), 683 (_set emits); demos intro 'real engine traffic, sampled, not theater'"
+    },
+    {
+      "part_id": "superinstance-site-P05",
+      "layer": 1,
+      "name": "cascade cycle-guard",
+      "essence": "The Sheet carries depth and dead flags so a cascade cannot re-enter itself infinitely; listeners firing mid-cascade are the documented hazard it guards.",
+      "inputs": ["any cascade of formula recomputes"],
+      "outputs": ["bounded, terminating cascades"],
+      "gate": "cascade depth bounded; dead sheet halts further _set propagation",
+      "gate_kind": "invariant",
+      "failure_mode": "unbounded listener->set->listener loops (the class of bug that blew up the ocean)",
+      "elementary": true,
+      "evidence": "index.html line 651 (this.depth/this.dead), 684 (if (this.dead) return); README '~120-line reactive engine ... cascade cycle-guard'"
+    },
+    {
+      "part_id": "superinstance-site-P06",
+      "layer": 1,
+      "name": "deterministic PRNG replay",
+      "essence": "Demos seed a deterministic PRNG 'so every reload replays honestly' — a reload is a re-run, not a new experiment.",
+      "inputs": ["fixed seed"],
+      "outputs": ["identical demo behavior across reloads"],
+      "gate": "reload N and reload N+1 must produce identical cell histories",
+      "gate_kind": "invariant",
+      "failure_mode": "Math.random() would make screenshots unreproducible and QA flaky",
+      "elementary": true,
+      "evidence": "index.html line 708 comment 'deterministic PRNG so every reload replays honestly'"
+    },
+    {
+      "part_id": "superinstance-site-P07",
+      "layer": 1,
+      "name": "visible weight drift (reversi loop)",
+      "essence": "TIDE (positional weights) vs TERRA (mobility) self-play reversi where the loser's weight cells drift after every game — the learning loop is watchable, not claimed.",
+      "inputs": ["finished game result"],
+      "outputs": ["mutated weight cells (visible drift)"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "weights updated in a hidden store would reduce the demo to theater",
+      "elementary": true,
+      "evidence": "README.md demo table row 02; index.html demo-02 section"
+    },
+    {
+      "part_id": "superinstance-site-P08",
+      "layer": 2,
+      "name": "gated entries on a rationed quantum budget",
+      "essence": "On the signal desk a signal is only a proposal; a confirmation cell is the gate; entries can require a draw from a rationed (mocked) quantum budget.",
+      "inputs": ["EMA-cross tape signal (proposal)"],
+      "outputs": ["entry only on confirmation + budget draw"],
+      "gate": "entry admitted only after confirmation cell AND quantum budget draw",
+      "gate_kind": "admission",
+      "failure_mode": "auto-entering on raw signal would contradict 'perception costs something'",
+      "elementary": true,
+      "evidence": "README.md demo table row 04; index.html demo-04 section"
+    },
+    {
+      "part_id": "superinstance-site-P09",
+      "layer": 2,
+      "name": "honest-landscape policy",
+      "essence": "The comparison table is scored only on the four axes SuperInstance is actually about, and the page must carry a plainly-worded panel of where the big players win today — a bounded claim, never universal superiority.",
+      "inputs": ["competitor capabilities (Excel+Copilot, Sheets+Gemini, Airtable, Notion, Observable, Bloomberg, Hex/Deepnote)"],
+      "outputs": ["yes/part/no scores per axis + 'where the big players win' panel"],
+      "gate": "the honest panel must exist and name concrete domains where competitors win",
+      "gate_kind": "invariant",
+      "failure_mode": "dropping the honest panel turns positioning into marketing",
+      "elementary": true,
+      "evidence": "index.html lines 507-541 (landscape table + .honest div)"
+    },
+    {
+      "part_id": "superinstance-site-P10",
+      "layer": 2,
+      "name": "accent discipline",
+      "essence": "Aqua leads; coral/amber/violet appear only where their meaning applies (events, economy, quantum); one glow per element, never rainbow — motion rules included ('nothing bounces; the tide moves').",
+      "inputs": ["any new UI element"],
+      "outputs": ["colored element whose color encodes its meaning"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "decorative color erodes the semantic palette",
+      "elementary": true,
+      "evidence": "brand/README.md 'Accent discipline' + Motion section"
+    },
+    {
+      "part_id": "superinstance-site-P11",
+      "layer": 2,
+      "name": "offline brand constraint",
+      "essence": "The wordmark is intentionally a system font stack — the brand must render inside one self-contained HTML file with zero font downloads; the constraint is stated as a feature.",
+      "inputs": ["brand kit (mark.svg, logo.svg, favicon.svg)"],
+      "outputs": ["identity that renders identically offline"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "a webfont dependency would silently break the self-containment law",
+      "elementary": true,
+      "evidence": "brand/README.md 'The wordmark is intentionally set in a system font stack'"
+    },
+    {
+      "part_id": "superinstance-site-P12",
+      "layer": 3,
+      "name": "four live demos as the argument",
+      "essence": "Ocean-as-a-Sheet (336 value cells, wave formula, tide gauge), self-playing Reversi, Hold'em reading the players, and the signal desk — each demo is one claim tested in a realm.",
+      "inputs": ["the mini engine"],
+      "outputs": ["four running sheets a stranger can watch"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "any demo degrading to a canned animation",
+      "elementary": true,
+      "evidence": "README.md demo table; index.html demos section (DEMO 01-04)"
+    },
+    {
+      "part_id": "superinstance-site-P13",
+      "layer": 3,
+      "name": "landscape table + positioning 2x2 SVG",
+      "essence": "The honest map is rendered twice: a scored HTML table and a standalone 2x2 SVG (static-to-living x human-driven-to-agentic) plotting all players with SuperInstance alone in the living+agentic quadrant.",
+      "inputs": ["the scored competitor axes"],
+      "outputs": ["the visual map (mirrored in images/positioning-map.png)"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "a map without the table's scores would be an unargued picture",
+      "elementary": true,
+      "evidence": "index.html lines 515-574 (svg viewBox 780x430, role=img aria-label 'Positioning map')"
+    },
+    {
+      "part_id": "superinstance-site-P14",
+      "layer": 3,
+      "name": "the watching cell brand kit",
+      "essence": "mark.svg = a quilt of four cells, three quiet, one lit and pulsing — 'the smallest honest diagram of the whole idea'; logo lockup + 64px favicon + og-card.",
+      "inputs": ["brand concept 'cells that watch back'"],
+      "outputs": ["mark.svg, logo.svg, favicon.svg, og-card.png"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "a logo the demos could not explain would be decoration",
+      "elementary": true,
+      "evidence": "brand/README.md; brand/mark.svg; brand/logo.svg; brand/favicon.svg; images/og-card.png"
+    },
+    {
+      "part_id": "superinstance-site-P15",
+      "layer": 4,
+      "name": "playtest findings-to-fixes ledger",
+      "essence": "The README publishes the four QA rounds as a finding->fix table: wrong two-step wave scheme (-7.2e+34), pre-listener evaluation stall, copy-then-mutate aliasing fix, flex-shrink squash, render-gain revival.",
+      "inputs": ["headless Chromium QA harness runs"],
+      "outputs": ["public ledger of caught bugs and their fixes"],
+      "gate": "every fix in the table must be traceable to a stated finding",
+      "gate_kind": "seal",
+      "failure_mode": "publishing fixes without findings launders the process",
+      "elementary": true,
+      "evidence": "README.md 'Playtest log — what iterating actually caught' (v1/v2/v3 table)"
+    },
+    {
+      "part_id": "superinstance-site-P16",
+      "layer": 4,
+      "name": "automated screenshot evidence",
+      "essence": "demo-*.png and qa-*.png are real screenshots captured by the automated playtest, not mockups — the image directory is a receipt archive.",
+      "inputs": ["QA harness per-demo screenshots"],
+      "outputs": ["images/demo-ocean.png, demo-reversi.png, demo-holdem.png, qa-*.png"],
+      "gate": "screenshots must come from real QA runs of the shipped file",
+      "gate_kind": "seal",
+      "failure_mode": "hand-made 'screenshots' would fake the demos",
+      "elementary": true,
+      "evidence": "README.md images section; images/ (demo-ocean.png, qa-manifesto.png, qa-ecosystem.png, ...)"
+    },
+    {
+      "part_id": "superinstance-site-P17",
+      "layer": 4,
+      "name": "live stats receipts",
+      "essence": "Hero stats book the engagement's provenance: 6 living projects, 187 green checks, 12 engine patches, 36/36 upstream tests kept — mirrored in the footer with a date.",
+      "inputs": ["fleet CI/patch history"],
+      "outputs": ["on-page counters (hero + footer '187 checks green · 12 patches · 2026-09-25')"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "stale counters would misstate the account's state",
+      "elementary": true,
+      "evidence": "index.html hero .stats block + footer line 622"
+    },
+    {
+      "part_id": "superinstance-site-P18",
+      "layer": 4,
+      "name": "zero-error console bar",
+      "essence": "Final QA state is 'zero console/page errors' with the hero canvas verified animating, reversi self-playing to 63 discs, hold'em reads climbing street by street — the acceptance receipt of the whole page.",
+      "inputs": ["full QA run"],
+      "outputs": ["a page whose console is clean"],
+      "gate": "zero console/page errors across the whole playthrough",
+      "gate_kind": "postcondition",
+      "failure_mode": "any uncaught page error voids proof-by-running",
+      "elementary": true,
+      "evidence": "README.md 'Final state: zero console/page errors...'"
+    },
+    {
+      "part_id": "superinstance-site-P19",
+      "layer": 2,
+      "name": "mechanical-vs-strategic split",
+      "essence": "Pot odds cost 0 tokens (a formula); opponent reads (shape.opp looseness/aggression/deception) are observations spoken by a listener, with a focus slider that fades your own cards into the environment.",
+      "inputs": ["game state (community cards, pot)"],
+      "outputs": ["free mechanical odds + metered observational reads"],
+      "gate": "mechanical computation must remain free (0 tokens)",
+      "gate_kind": "budget",
+      "failure_mode": "charging tokens for arithmetic would collapse the economy metaphor",
+      "elementary": true,
+      "evidence": "README.md demo table row 03 ('the odds are mechanical; the players are the game')"
+    }
+  ],
+  "sheet": {
+    "name": "superinstance-site-as-cells",
+    "cells": [
+      { "id": "palette.tide", "kind": "value", "expr": "#3FE0C5 (life)", "deps": [], "maps_to_part": "superinstance-site-P02" },
+      { "id": "palette.budget", "kind": "value", "expr": "#FFC46B (economy)", "deps": [], "maps_to_part": "superinstance-site-P02" },
+      { "id": "engine.sheet", "kind": "program", "expr": "class Sheet { cell/def/watch/get } ~120 lines", "deps": [], "maps_to_part": "superinstance-site-P03" },
+      { "id": "bus.emit", "kind": "listener", "expr": "on change -> {sheet,id,kind,old,v} to all watchers", "deps": ["engine.sheet"], "maps_to_part": "superinstance-site-P04" },
+      { "id": "guard.depth", "kind": "formula", "expr": "cascade depth bound; dead halts _set", "deps": ["engine.sheet"], "maps_to_part": "superinstance-site-P05" },
+      { "id": "rng.seed", "kind": "value", "expr": "deterministic PRNG, fixed seed", "deps": [], "maps_to_part": "superinstance-site-P06" },
+      { "id": "ocean.cells", "kind": "value", "expr": "336 value cells, (Σhₙ)/2 − h_prev, damp .99, clamp ±3", "deps": ["rng.seed"], "maps_to_part": "superinstance-site-P12" },
+      { "id": "gauge.light", "kind": "sensor", "expr": "tide gauge lights the foam on threshold", "deps": ["ocean.cells"], "maps_to_part": "superinstance-site-P04" },
+      { "id": "reversi.weights", "kind": "value", "expr": "TIDE positional weights drift on loss", "deps": ["bus.emit"], "maps_to_part": "superinstance-site-P07" },
+      { "id": "holdem.pot_odds", "kind": "formula", "expr": "pot odds, cost 0 tokens", "deps": ["ocean.cells"], "maps_to_part": "superinstance-site-P19" },
+      { "id": "desk.confirm", "kind": "program", "expr": "signal is proposal; confirm cell gates entry", "deps": ["holdem.pot_odds"], "maps_to_part": "superinstance-site-P08" },
+      { "id": "desk.quantum", "kind": "value", "expr": "rationed (mocked) quantum budget meter", "deps": [], "maps_to_part": "superinstance-site-P08" },
+      { "id": "landscape.table", "kind": "io", "expr": "scored yes/part/no vs 7 players + honest panel", "deps": [], "maps_to_part": "superinstance-site-P09" },
+      { "id": "map.svg", "kind": "io", "expr": "2x2 static-living x human-agentic plot", "deps": ["landscape.table"], "maps_to_part": "superinstance-site-P13" },
+      { "id": "qa.rounds", "kind": "io", "expr": "4 rounds, finding->fix table + screenshots", "deps": ["engine.sheet", "bus.emit"], "maps_to_part": "superinstance-site-P15" },
+      { "id": "stats.hero", "kind": "value", "expr": "6 projects · 187✓ · 12 patches · 36/36 tests", "deps": [], "maps_to_part": "superinstance-site-P17" }
+    ]
+  },
+  "layer_logic": {
+    "0": "substrate = one offline HTML file + a semantic token palette; the page cannot fall back on servers, fonts or frameworks",
+    "1": "mechanism = a ~120-line reactive engine (value/formula/listener/bus + cycle-guard + deterministic PRNG) with the same semantics as the full quilt runtime",
+    "2": "policy = honesty rules: score only what you are about and state where giants win; accents mean things; mechanical math is free, perception is metered",
+    "3": "interface = four live demos, the landscape table + 2x2 map, and the watching-cell brand kit — everything a stranger touches",
+    "4": "evidence = the playtest finding->fix ledger, automated screenshots, live counters, and a zero-error console bar as acceptance receipt"
+  }
+}

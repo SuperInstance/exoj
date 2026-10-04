@@ -1,0 +1,272 @@
+{
+  "work": "fleet-seeds",
+  "family": "garden",
+  "repo_path": "/home/z/my-project/fleet-seeds",
+  "head": "8d875df",
+  "smoke": {
+    "cmd": "node seedbox.mjs --selftest",
+    "verdict": "PASS (1 commit, SMOKE OK 3/3, tree clean after cleanup)",
+    "notes": "The offline mode exists: --selftest spawns a demo repo in .selftest/ (git init + first commit, no network), runs its smoke.mjs (3/3 green), then removes everything — `git status --porcelain` back to 0 lines. The NETWORKED path (pushing spawned repos to GitHub) was NOT exercised — out of scope for this lane's no-network rule. Repo itself is the fleet's memory hub (lode ledgers, FLEET.md map, tavern rounds, witness rollups) — studied read-only."
+  },
+  "essence": "the seedbox: seed.md -> rigor-at-birth repo whose first commit is charter law",
+  "ideas": [
+    {
+      "id": "fleet-seeds-I1",
+      "name": "Seed -> repo -> receipted experiment",
+      "statement": "A question is cheapest to answer at the moment it is asked: one seed markdown dropped into the hopper germinates a fully-scaffolded repo in one deterministic step — charter embedded VERBATIM as the first commit (the question is the first receipt), so rigor never depends on the mood of whoever is planting.",
+      "parts": ["fleet-seeds-P01", "fleet-seeds-P02", "fleet-seeds-P06", "fleet-seeds-P08", "fleet-seeds-P09"]
+    },
+    {
+      "id": "fleet-seeds-I2",
+      "name": "Rigor at birth, not retrofit",
+      "statement": "Every spawned repo is born with CI that runs a REAL smoke on every push (the check count in the final line is the contract CI enforces) plus the house doctrine block — paired arms, decision rules before the run, counterfactual measurement, honest negatives, replayable smoke — so no fleet repo ever becomes 'a script with no receipt'.",
+      "parts": ["fleet-seeds-P03", "fleet-seeds-P04", "fleet-seeds-P05", "fleet-seeds-P07"]
+    },
+    {
+      "id": "fleet-seeds-I3",
+      "name": "Fleet memory institutions",
+      "statement": "Beyond the seedbox, the repo keeps the fleet's append-only memory: the lode six-stage discovery loop (scout/extract/score/register/lane/fold — a mine becomes an experiment only when its falsifiable prediction is sealed), the Tap Tavern where every round is sealed with stone-v1, and registry.jsonl recording every pre-registered prediction set and its verdict.",
+      "parts": ["fleet-seeds-P11", "fleet-seeds-P12", "fleet-seeds-P13", "fleet-seeds-P16"]
+    },
+    {
+      "id": "fleet-seeds-I4",
+      "name": "Cross-chain evidence machinery",
+      "statement": "The evidence layer reaches across chains: FLEET.md regenerates the 17-repo/27-edge quilt fold map, the wave-46 witness-roller walks EVERY chain the fleet owns and parents them into ONE witness chain verified by the UNMODIFIED wave-44 module, and the wave-45 tool battery audits byte-by-byte truncate resistance — all zero-dep, node:crypto only, offline only.",
+      "parts": ["fleet-seeds-P10", "fleet-seeds-P14", "fleet-seeds-P15"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "fleet-seeds-P01",
+      "layer": 3,
+      "name": "seed intake (the hopper mouth)",
+      "essence": "seed markdown files (14 in seeds/, from seed1 to seed-story, including the seed-grok2 charter that spawned exoj) are the sole input format: a question written down before any repo exists.",
+      "inputs": ["seeds/*.md"],
+      "outputs": ["seed document for spawn"],
+      "gate": "spawn refuses an existing slug directory ('already exists — pick another slug')",
+      "gate_kind": "precondition",
+      "failure_mode": "overwriting an existing lane would destroy a charter of record",
+      "elementary": true,
+      "evidence": "README.md:L21-L27; seedbox.mjs:L74-L75"
+    },
+    {
+      "part_id": "fleet-seeds-P02",
+      "layer": 2,
+      "name": "charter injection (seed verbatim)",
+      "essence": "the CHARTER template wraps the seed unmodified under a fixed header: 'The seed below is the charter of record — it is versioned in this repo's first commit and never edited afterward. Every experiment here must carry its decision rules as receipts dated BEFORE the run.'",
+      "inputs": ["seed text"],
+      "outputs": ["README.md of the spawned repo"],
+      "gate": "seed text embedded verbatim (seed.trim() + newline only) — no editorial rewrite",
+      "gate_kind": "invariant",
+      "failure_mode": "a paraphrased charter would let the spawn drift from the asked question",
+      "elementary": true,
+      "evidence": "seedbox.mjs:L9-L37; seedbox.mjs:L77"
+    },
+    {
+      "part_id": "fleet-seeds-P03",
+      "layer": 2,
+      "name": "house doctrine block",
+      "essence": "every spawn inherits five non-optional laws verbatim: paired arms identical worlds; decision rules before the run; counterfactual measurement; honest negatives fail loudly; replayable smoke on every commit.",
+      "inputs": ["charter template"],
+      "outputs": ["doctrine section in every spawned README"],
+      "gate": "all five laws present in the template (structural: template constant)",
+      "gate_kind": "invariant",
+      "failure_mode": "a spawn without the doctrine block would repeat the pre-seedbox era of unreceipted scripts",
+      "elementary": true,
+      "evidence": "seedbox.mjs:L20-L31"
+    },
+    {
+      "part_id": "fleet-seeds-P04",
+      "layer": 3,
+      "name": "CI workflow at birth",
+      "essence": "each spawn gets .github/workflows/smoke.yml: node 22, `node smoke.mjs` on push and workflow_dispatch — the repo proves itself before any feature code exists.",
+      "inputs": ["template CI constant"],
+      "outputs": ["workflow file in spawn"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "a repo whose CI arrives late inherits undocumented breakage",
+      "elementary": true,
+      "evidence": "seedbox.mjs:L39-L49; seedbox.mjs:L79-L80"
+    },
+    {
+      "part_id": "fleet-seeds-P05",
+      "layer": 4,
+      "name": "smoke contract (count is the contract)",
+      "essence": "smoke.mjs template ships three real checks (sha256 of empty string KAT, randomBytes entropy, charter present), prints per-check marks, and the final 'SMOKE OK (n/n checks)' line with exit code is the contract CI enforces.",
+      "inputs": ["spawned repo state"],
+      "outputs": ["pass/fail verdict + exit code"],
+      "gate": "exit 0 iff fail === 0; the printed count is the CI-enforced contract",
+      "gate_kind": "postcondition",
+      "failure_mode": "a stub smoke with no real check would costume rigor",
+      "elementary": true,
+      "evidence": "seedbox.mjs:L51-L68"
+    },
+    {
+      "part_id": "fleet-seeds-P06",
+      "layer": 1,
+      "name": "deterministic scaffold + first commit",
+      "essence": "spawn() writes README/package.json/CI/smoke/.gitignore/outputs/ then git init + add + commit 'seed: charter committed verbatim — the question is the first receipt' — the first commit is law, before any experiment code.",
+      "inputs": ["seed path, repo slug"],
+      "outputs": ["scaffolded repo with 1 commit"],
+      "gate": "commit message fixed; commit exists before the lane ever runs",
+      "gate_kind": "seal",
+      "failure_mode": "a spawn whose charter commit comes after experiments has no law to appeal to",
+      "elementary": true,
+      "evidence": "seedbox.mjs:L72-L89"
+    },
+    {
+      "part_id": "fleet-seeds-P07",
+      "layer": 4,
+      "name": "selftest loop (offline dog-food)",
+      "essence": "--selftest writes a demo seed, spawns .selftest/, runs its smoke via execSync, prints commit count + 'smoke green -> PASS/FAIL', then removes both artifacts — the seedbox verifies its own germination.",
+      "inputs": ["demo seed string"],
+      "outputs": ["selftest verdict, cleaned tree"],
+      "gate": "PASS iff demo repo has 1 commit AND its smoke output includes 'SMOKE OK'; tree left clean (rmSync of dir + seed)",
+      "gate_kind": "postcondition",
+      "failure_mode": "a seedbox that could not prove its own spawn would be untrusted scaffolding",
+      "elementary": true,
+      "evidence": "seedbox.mjs:L91-L103"
+    },
+    {
+      "part_id": "fleet-seeds-P08",
+      "layer": 3,
+      "name": "dispatch contract",
+      "essence": "argv dispatch: '--selftest' runs the loop; '<seed> <slug>' spawns; anything else prints usage and exits 1.",
+      "inputs": ["argv"],
+      "outputs": ["spawn / selftest / usage+exit 1"],
+      "gate": "wrong arity -> usage line + exit 1 (never a half-spawn)",
+      "gate_kind": "precondition",
+      "failure_mode": "a partial spawn on bad args would litter half-scaffolded repos",
+      "elementary": true,
+      "evidence": "seedbox.mjs:L105-L108"
+    },
+    {
+      "part_id": "fleet-seeds-P09",
+      "layer": 2,
+      "name": "seed-to-charter identity (exoj lineage)",
+      "essence": "seeds/seed-grok2.md ('Category-theoretic investigation of the inverted field') appears VERBATIM as the charter in exoj's README — the living proof that spawned repos keep their seed as law, and the direct ancestor link in this decomposition lane (exoj is studied next to it in garden).",
+      "inputs": ["seed-grok2.md"],
+      "outputs": ["exoj charter of record"],
+      "gate": "charter text in the spawned repo == seed text byte-for-byte (verbatim claim checked by reading both)",
+      "gate_kind": "invariant",
+      "failure_mode": "a diverged charter would break the chain of custody from question to verdict",
+      "elementary": true,
+      "evidence": "seeds/seed-grok2.md:L1-L8; exoj (sibling work) README.md:L8-L12"
+    },
+    {
+      "part_id": "fleet-seeds-P10",
+      "layer": 4,
+      "name": "FLEET.md quilt fold map",
+      "essence": "the fleet map as mermaid graph — '17 repos, 27 edges. Regenerated by quilt-links.mjs --graph' — with typed edges (grown-on, consumes, related), the structural evidence of who leans on whom.",
+      "inputs": ["fleet repo inventory"],
+      "outputs": ["mermaid graph + edge list"],
+      "gate": "regenerable by tool, not hand-maintained prose",
+      "gate_kind": "postcondition",
+      "failure_mode": "a hand-edited map would drift from the repos it claims to describe",
+      "elementary": true,
+      "evidence": "FLEET.md:L1-L4"
+    },
+    {
+      "part_id": "fleet-seeds-P11",
+      "layer": 2,
+      "name": "lode six-stage discovery loop",
+      "essence": "scout -> extract -> score -> register -> lane -> fold, each with a law: no claim without a raw receipt file; Elo-scored mines with written reasons; a mine becomes an experiment ONLY when its falsifiable prediction is sealed (sha256 of exact prediction text in mines.jsonl) and the target lane's registration cites the mine id.",
+      "inputs": ["scout receipts, mines.jsonl"],
+      "outputs": ["registered, priced mines -> wave queue"],
+      "gate": "registration requires the sealed prediction hash + mine-id citation (admission into the fleet experiment queue)",
+      "gate_kind": "admission",
+      "failure_mode": "an unsealed 'prediction' would be a post-hoc bet, not a falsifiable one",
+      "elementary": true,
+      "evidence": "lode/PROTOCOL.md:L1-L16"
+    },
+    {
+      "part_id": "fleet-seeds-P12",
+      "layer": 4,
+      "name": "lode fail-closed validation",
+      "essence": "lode_validate.mjs enforces schema + hash + append-only on the ledgers, exit 2 on violation, with tamper self-tests; pre-* snapshot files (registry.jsonl.pre-a13, mines.jsonl.pre-m13 ...) preserve ledger history at each append.",
+      "inputs": ["registry/mines/lessons jsonl"],
+      "outputs": ["validation verdict / exit code"],
+      "gate": "append-only enforced fail-closed (exit 2); tamper self-tests included",
+      "gate_kind": "seal",
+      "failure_mode": "a rewritten ledger would erase what the fleet predicted and what happened",
+      "elementary": true,
+      "evidence": "lode/PROTOCOL.md:L13; lode/registry.jsonl.pre-pong49 (snapshot files in tree)"
+    },
+    {
+      "part_id": "fleet-seeds-P13",
+      "layer": 3,
+      "name": "Tap Tavern (sealed discourse)",
+      "essence": "'Not a chat room — a ledger': every round is sealed with the Stone (stone-v1 forward format), every voice speaks only from receipted artifacts, every claim carries refs a verifier can check; predictions/answers/ledger per round (round-11, round-12, ...).",
+      "inputs": ["round predictions + model answers"],
+      "outputs": ["sealed round ledgers + summaries"],
+      "gate": "every claim carries verifier-checkable refs (house rules header)",
+      "gate_kind": "postcondition",
+      "failure_mode": "unsealed rounds would let the fleet argue from memory instead of record",
+      "elementary": true,
+      "evidence": "tavern/TAVERN.md:L1-L7"
+    },
+    {
+      "part_id": "fleet-seeds-P14",
+      "layer": 4,
+      "name": "cross-chain witness rollup (46-e)",
+      "essence": "rollup.mjs walks EVERY chain the fleet owns (remote chains fetched at pinned commit shas labeled LIVE; local files labeled FIXTURE), emits one witness receipt per chain using the wave-44 grammar, parents them into ONE wave-46 witness chain, then verifies that chain with the UNMODIFIED wave-44 module in-process AND via its CLI.",
+      "inputs": ["all fleet chains"],
+      "outputs": ["one parented witness chain + per-chain receipts"],
+      "gate": "exit 0 IFF every target verified AND the wave-46 chain verifies (with the unmodified verifier — no verifier drift allowed)",
+      "gate_kind": "postcondition",
+      "failure_mode": "verifying with a patched verifier would let the rollup bless its own output",
+      "elementary": true,
+      "evidence": "playtest/wave46/witness-rollout/rollup.mjs:L1-L13"
+    },
+    {
+      "part_id": "fleet-seeds-P15",
+      "layer": 4,
+      "name": "tool verification battery (wave 45)",
+      "essence": "zero-dependency, node:crypto-only, offline-only tools: verify-fleet.mjs (kept untouched, additive imports only), truncate-audit.mjs (tests EVERY byte offset 0..len-1 of every chain for truncate resistance), moth-seal, wal-conformance — each with its own .test.mjs.",
+      "inputs": ["fleet chain files"],
+      "outputs": ["per-tool verdicts + receipts"],
+      "gate": "all artifacts offline only, zero deps, no keys (WAVE45 header law); truncate audit is exhaustive per byte offset",
+      "gate_kind": "postcondition",
+      "failure_mode": "a networked or keyed tool would not be runnable by any stranger at audit time",
+      "elementary": true,
+      "evidence": "tools/WAVE45.md:L1-L13"
+    },
+    {
+      "part_id": "fleet-seeds-P16",
+      "layer": 4,
+      "name": "registry of predictions (fleet memory)",
+      "essence": "registry.jsonl rows: {set_id, repo, commit, predictions, verdict, verdict_commit, registration_ref, ts} — every pre-registered prediction set across the repos, its verdict commit and status; append-only, sampled rows show JEPA-R4/R5 PASS with seal refs.",
+      "inputs": ["verdict commits across repos"],
+      "outputs": ["append-only registry rows"],
+      "gate": "append-only (enforced by P12's validator); each row cites its registration seal",
+      "gate_kind": "seal",
+      "failure_mode": "editing a verdict row would rewrite the fleet's memory of its own bets",
+      "elementary": true,
+      "evidence": "lode/registry.jsonl:L1-L2"
+    }
+  ],
+  "sheet": {
+    "name": "fleet-seeds-as-cells",
+    "cells": [
+      {"id": "f_seed", "kind": "io", "expr": "seeds/*.md -> seedbox hopper (14 charters of record on disk)", "deps": [], "maps_to_part": "fleet-seeds-P01"},
+      {"id": "f_charter", "kind": "formula", "expr": "README(spawn) = HEADER + seed.verbatim + DOCTRINE(5 laws) + first-lane checklist", "deps": ["f_seed"], "maps_to_part": "fleet-seeds-P02"},
+      {"id": "f_spawn", "kind": "program", "expr": "spawn(seed, slug): scaffold 6 files -> git init -> commit 'charter verbatim' (1 commit)", "deps": ["f_charter"], "maps_to_part": "fleet-seeds-P06"},
+      {"id": "f_ci", "kind": "listener", "expr": "on push: node smoke.mjs -> 'SMOKE OK (n/n)' + exit code", "deps": ["f_spawn"], "maps_to_part": "fleet-seeds-P05"},
+      {"id": "f_selftest", "kind": "sensor", "expr": "--selftest: spawn demo -> smoke green? -> cleanup -> PASS + clean tree", "deps": ["f_spawn", "f_ci"], "maps_to_part": "fleet-seeds-P07"},
+      {"id": "f_lineage", "kind": "value", "expr": "seed-grok2.md == exoj charter (byte-for-byte lineage proof)", "deps": ["f_charter"], "maps_to_part": "fleet-seeds-P09"},
+      {"id": "f_lode", "kind": "router", "expr": "scout -> extract -> score -> register(sealed prediction + mine id) -> lane -> fold", "deps": [], "maps_to_part": "fleet-seeds-P11"},
+      {"id": "f_validate", "kind": "formula", "expr": "lode_validate: schema + hash + append-only, exit 2 fail-closed, tamper self-tests", "deps": ["f_lode"], "maps_to_part": "fleet-seeds-P12"},
+      {"id": "f_registry", "kind": "io", "expr": "registry.jsonl: {set_id, repo, commit, verdict, seal ref, ts} append-only", "deps": ["f_validate"], "maps_to_part": "fleet-seeds-P16"},
+      {"id": "f_tavern", "kind": "program", "expr": "round: predictions -> answers -> stone-v1 sealed ledger + refs", "deps": ["f_registry"], "maps_to_part": "fleet-seeds-P13"},
+      {"id": "f_rollup", "kind": "program", "expr": "witness-roller: ALL fleet chains -> one parented witness chain verified by unmodified wave-44", "deps": ["f_registry"], "maps_to_part": "fleet-seeds-P14"},
+      {"id": "f_map", "kind": "sensor", "expr": "FLEET.md = quilt-links --graph: 17 repos, 27 typed edges", "deps": [], "maps_to_part": "fleet-seeds-P10"}
+    ]
+  },
+  "layer_logic": {
+    "0": "substrate is the seed document itself: a question written before any code exists, plus the fleet's shared hash-chain formats (fnv1a-64, stone-v1, wave-44 witness grammar) it references",
+    "1": "one deterministic transform: spawn() turns seed+slug into a six-file scaffold whose first commit already carries the law — no generation step is left to judgment",
+    "2": "policy is the doctrine block: paired arms, decision rules before the run, counterfactual measurement, honest negatives, replayable smoke — injected into every repo, plus lode's admission law (sealed falsifiable prediction or no experiment)",
+    "3": "interfaces: the hopper (seeds/), the dispatch contract, CI-on-push, the Tap Tavern's sealed rounds, and the witness rollup's LIVE-vs-FIXTURE labeling",
+    "4": "evidence: the SMOKE OK count contract, the selftest that leaves a clean tree, fail-closed lode validation with pre-* snapshots, the append-only registry of every prediction and verdict, and byte-offset-exhaustive truncate audits"
+  }
+}

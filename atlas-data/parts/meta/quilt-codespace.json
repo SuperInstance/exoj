@@ -1,0 +1,258 @@
+{
+  "work": "quilt-codespace",
+  "family": "meta",
+  "repo_path": "/home/z/my-project/quilt-codespace",
+  "head": "c8355d6",
+  "smoke": {
+    "cmd": "node --check /home/z/my-project/quilt-codespace/scripts/quilt-http-server.js",
+    "verdict": "PASS",
+    "notes": "The HTTP API server parses clean. Booting the three-service stack NOT_RUN: it is a Codespace deployment (ttyd + HTTP + dashboard via post-create.sh) and the script's @quilt/core import falls back to an in-memory engine only when the package resolves — out of scope offline. The script's own fallback path ('WARN: @quilt/core not found, using in-memory fallback') was verified by reading the source."
+  },
+  "essence": "codespace lane: quilt as a live token-authenticated federated runtime in a browser-terminal Codespace, subscribing to ESP32/Jetson/Cloud siblings",
+  "ideas": [
+    {
+      "id": "quilt-codespace-I1",
+      "name": "one runtime, three doors",
+      "statement": "A single Quilt engine exposes three doors from one box: a browser TUI on 7681 (ttyd running quilt serve), a REST+SSE HTTP API on 4096, and a federation dashboard on 8080.",
+      "parts": ["quilt-codespace-P03", "quilt-codespace-P04", "quilt-codespace-P06", "quilt-codespace-P07"]
+    },
+    {
+      "id": "quilt-codespace-I2",
+      "name": "federation is just a subscription",
+      "statement": "Multiple Quilt instances (Codespace, Jetson, ESP32, Cloudflare Worker) talk through the URI scheme quilt://[instance]/[sheet]#[cell]; the codespace subscribes to rudder, compass, wind and obstacle cells and pushes back PID tunables and audit decisions — 'Federation is just a subscription.'",
+      "parts": ["quilt-codespace-P08", "quilt-codespace-P09", "quilt-codespace-P10"]
+    },
+    {
+      "id": "quilt-codespace-I3",
+      "name": "the runtime knows its own tier",
+      "statement": "The in-process engine tolerates missing @quilt/core with an in-memory fallback, and @quilt/sdk's detectTier() returns tier, instanceId, platform, capabilities {async, network, llmApi, gpu} and sibling list — overridable with QUILT_TIER / QUILT_INSTANCE_ID.",
+      "parts": ["quilt-codespace-P02", "quilt-codespace-P13"]
+    },
+    {
+      "id": "quilt-codespace-I4",
+      "name": "ephemeral by default, honest about it",
+      "statement": "Codespaces are ephemeral: state in ~/.quilt/state is lost at shutdown, so the template states it plainly and provides the exits — token in ~/.quilt-env, seed.json for initial cells, sync long-lived state to a persistent tier.",
+      "parts": ["quilt-codespace-P11"]
+    },
+    {
+      "id": "quilt-codespace-I5",
+      "name": "template-as-product",
+      "statement": "The repo is a GitHub template: 'Use this template' -> 'Open in Codespace' -> post-create prints three URLs and a runtime token in 2-3 minutes — onboarding is a checklist, not a build.",
+      "parts": ["quilt-codespace-P01", "quilt-codespace-P05"]
+    },
+    {
+      "id": "quilt-codespace-I6",
+      "name": "tiers mapped to rooms",
+      "statement": "The cocapn five-room deployment model maps row-for-row onto quilt tiers: BareRoom(no_std)->esp32, EdgeRoom->jetson, CodespaceRoom(async)->codespace, SandboxRoom->cloudflare, Lighthouse(always-on)->persistent codespace + external storage.",
+      "parts": ["quilt-codespace-P12"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "quilt-codespace-P01",
+      "layer": 0,
+      "name": "devcontainer template substrate",
+      "essence": "A GitHub template repo whose .devcontainer post-create.sh auto-installs deps, starts the three services and prints URLs — the runtime begins at fork time.",
+      "inputs": ["'Use this template' + 'Open in Codespace'"],
+      "outputs": ["a booted 3-service Codespace in 2-3 minutes"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "a post-create that fails silently leaves a dead runtime with no token printed",
+      "elementary": true,
+      "evidence": "quilt-codespace/README.md Quick start + Scripts section (.devcontainer/post-create.sh)"
+    },
+    {
+      "part_id": "quilt-codespace-P02",
+      "layer": 0,
+      "name": "in-process engine with fallback",
+      "essence": "scripts/quilt-http-server.js imports @quilt/core when present and otherwise warns and uses a minimal in-memory implementation — the API surface survives without the real engine.",
+      "inputs": ["@quilt/core (optional)"],
+      "outputs": ["QuiltEngine + parseSheet (real or fallback)"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "fallback semantics diverging from core semantics without saying so (the WARN is the honest seam)",
+      "elementary": true,
+      "evidence": "quilt-codespace/scripts/quilt-http-server.js header comment + try/catch dynamic import"
+    },
+    {
+      "part_id": "quilt-codespace-P03",
+      "layer": 3,
+      "name": "three-service port layout",
+      "essence": "TUI (ttyd) :7681, HTTP API :4096, Dashboard :8080 — fixed ports with fixed jobs, all fed by the same engine.",
+      "inputs": ["one Quilt engine"],
+      "outputs": ["three concurrent doors"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "port drift breaking the printed-URL contract",
+      "elementary": true,
+      "evidence": "quilt-codespace/README.md ASCII diagram + 'What ships' table"
+    },
+    {
+      "part_id": "quilt-codespace-P04",
+      "layer": 1,
+      "name": "cell-grained HTTP API",
+      "essence": "GET/PUT /cells/:instance/:sheet/:cellPath, GET .../events (SSE stream of changes), POST /evaluate (force re-evaluation), GET /health, GET /meta (tier + capabilities).",
+      "inputs": ["HTTP requests with bearer token"],
+      "outputs": ["cell values, event streams, health, tier metadata"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "coarse whole-sheet endpoints would leak state and prevent cell-level federation",
+      "elementary": true,
+      "evidence": "quilt-codespace/scripts/quilt-http-server.js route documentation block (lines 1-19)"
+    },
+    {
+      "part_id": "quilt-codespace-P05",
+      "layer": 2,
+      "name": "bearer-token gate",
+      "essence": "Every request carries Authorization: Bearer $QUILT_TOKEN; the post-create script prints the token once for the operator to save.",
+      "inputs": ["HTTP request"],
+      "outputs": ["authorized or rejected"],
+      "gate": "missing/incorrect bearer token rejects the route",
+      "gate_kind": "admission",
+      "failure_mode": "an open runtime on a public githubpreview.dev URL",
+      "elementary": true,
+      "evidence": "quilt-codespace/README.md curl examples; quilt-http-server.js 'Token-authenticated via Authorization: Bearer <QUILT_TOKEN>'"
+    },
+    {
+      "part_id": "quilt-codespace-P06",
+      "layer": 3,
+      "name": "browser TUI (ttyd)",
+      "essence": "A terminal in the browser running `quilt serve` — the operator's door, zero local install.",
+      "inputs": ["quilt serve process"],
+      "outputs": ["interactive TUI at :7681"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "a headless runtime nobody can watch",
+      "elementary": true,
+      "evidence": "quilt-codespace/README.md 'What ships' table row TUI (ttyd)"
+    },
+    {
+      "part_id": "quilt-codespace-P07",
+      "layer": 3,
+      "name": "federation dashboard",
+      "essence": "A static landing page at :8080 showing the federation view — which siblings exist and what this instance subscribes to.",
+      "inputs": ["instance + subscription config"],
+      "outputs": ["human-readable federation view"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "a dashboard describing subscriptions that are not actually live",
+      "elementary": true,
+      "evidence": "quilt-codespace/README.md 'What ships' table row Dashboard"
+    },
+    {
+      "part_id": "quilt-codespace-P08",
+      "layer": 1,
+      "name": "fed-autopilot three-tier stack",
+      "essence": "examples/fed-autopilot/cell.yaml wires a 3-tier boat: ESP32 (sensors rudder/compass, motor actuators, local PID), Jetson (vision obstacles/wind, local LLM), Codespace (anomaly score, tuning, audit).",
+      "inputs": ["cell.yaml tier declarations"],
+      "outputs": ["one control loop spanning three hardware tiers"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "tight-loop control depending on the slow brain tier",
+      "elementary": true,
+      "evidence": "quilt-codespace/README.md 'The fed-autopilot example' tier table"
+    },
+    {
+      "part_id": "quilt-codespace-P09",
+      "layer": 2,
+      "name": "subscribe-down / push-up role split",
+      "essence": "The brain tier subscribes to sensor/perception cells (rudder, compass, wind, obstacles) and pushes back only tunables (algo.pid_kp) and audit records (autopilot.last_decision) — it advises, it never steers the tight loop.",
+      "inputs": ["subscribed sibling cell events"],
+      "outputs": ["PID tunable writes + audit trail writes"],
+      "gate": "the codespace may write only tunables and audit rows, never actuator cells",
+      "gate_kind": "precondition",
+      "failure_mode": "cloud latency steering a rudder",
+      "elementary": true,
+      "evidence": "quilt-codespace/README.md 'The codespace subscribes to... And pushes back...'"
+    },
+    {
+      "part_id": "quilt-codespace-P10",
+      "layer": 1,
+      "name": "federation URI scheme",
+      "essence": "quilt://[instance-id]/[sheet-id]#[cell-path] with wildcard and fleet-wide forms (quilt://*[/]/prod#x, quilt://esp32-fleet/+#rudder.angle) — addressing is a string, transport is pluggable.",
+      "inputs": ["cell reference strings"],
+      "outputs": ["resolvable, subscribable handles"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "ambiguous instance/sheet/cell parsing across tiers",
+      "elementary": true,
+      "evidence": "quilt-codespace/README.md Federation section (cites @quilt/sdk resolveCell/subscribeCell, federation landing page)"
+    },
+    {
+      "part_id": "quilt-codespace-P11",
+      "layer": 2,
+      "name": "ephemerality disclosure + exits",
+      "essence": "The template states that ~/.quilt/state is lost at Codespace shutdown, and names the exits: ~/.quilt-env for the token, seed.json for initial cells, sync to a persistent tier for long-lived state.",
+      "inputs": ["Codespace lifecycle"],
+      "outputs": ["documented persistence strategy"],
+      "gate": "shutdown loses state unless one of the named exits was taken",
+      "gate_kind": "postcondition",
+      "failure_mode": "assuming the Codespace is a persistent host",
+      "elementary": true,
+      "evidence": "quilt-codespace/README.md 'Persistent state' section"
+    },
+    {
+      "part_id": "quilt-codespace-P12",
+      "layer": 3,
+      "name": "cocapn room -> tier mapping",
+      "essence": "A five-row table maps the cocapn 5-tier deployment model (BareRoom -> EdgeRoom -> CodespaceRoom -> SandboxRoom -> Lighthouse) onto quilt tiers with the owning repos, and credits the adapted patterns (agent-workspace-template, codespace-worker, cocapn-runtime).",
+      "inputs": ["cocapn room model"],
+      "outputs": ["quilt tier table with repos"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "reninventing deployment tiers instead of mapping borrowed ones",
+      "elementary": true,
+      "evidence": "quilt-codespace/README.md 'Patterns adapted from the ecosystem' + mapping table"
+    },
+    {
+      "part_id": "quilt-codespace-P13",
+      "layer": 1,
+      "name": "tier auto-detection",
+      "essence": "@quilt/sdk detectTier() returns {tier: 'codespace', instanceId, platform, capabilities: {async, network, llmApi, gpu}, siblings}, overridable via QUILT_TIER / QUILT_INSTANCE_ID env vars.",
+      "inputs": ["runtime environment probes"],
+      "outputs": ["tier identity + capability flags"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "wrong tier guess silently disabling capabilities",
+      "elementary": true,
+      "evidence": "quilt-codespace/README.md 'Tier auto-detection' section with the literal JSON shape"
+    },
+    {
+      "part_id": "quilt-codespace-P14",
+      "layer": 4,
+      "name": "/health + /meta self-report",
+      "essence": "The server exposes GET /health and GET /meta (tier + capabilities), and the post-create script prints the three URLs plus the runtime token at boot — the runtime receipts which tier it is and that it is alive, to itself first.",
+      "inputs": ["running services"],
+      "outputs": ["health + tier metadata responses; printed URLs/token at boot"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "a runtime that cannot state its own tier or liveness",
+      "elementary": true,
+      "evidence": "quilt-codespace/scripts/quilt-http-server.js route block ('GET /health | server health', 'GET /meta | tier + capabilities'); README Quick start step 3 ('The terminal shows three URLs and a runtime token. Save the token.')"
+    }
+  ],
+  "sheet": {
+    "name": "quilt-codespace-as-cells",
+    "cells": [
+      { "id": "devcontainer.boot", "kind": "program", "expr": "post-create.sh installs, starts, prints 3 URLs + token", "deps": [], "maps_to_part": "quilt-codespace-P01" },
+      { "id": "engine.core", "kind": "value", "expr": "@quilt/core or in-memory fallback (WARN)", "deps": [], "maps_to_part": "quilt-codespace-P02" },
+      { "id": "api.cells", "kind": "api", "expr": "GET/PUT cell, /events SSE, /evaluate, /health, /meta", "deps": ["engine.core"], "maps_to_part": "quilt-codespace-P04" },
+      { "id": "api.token", "kind": "formula", "expr": "Authorization: Bearer $QUILT_TOKEN required", "deps": ["api.cells"], "maps_to_part": "quilt-codespace-P05" },
+      { "id": "tui.ttyd", "kind": "io", "expr": "quilt serve in browser at :7681", "deps": ["engine.core"], "maps_to_part": "quilt-codespace-P06" },
+      { "id": "dash.8080", "kind": "io", "expr": "federation view", "deps": ["api.cells"], "maps_to_part": "quilt-codespace-P07" },
+      { "id": "sdk.detectTier", "kind": "sensor", "expr": "{tier, instanceId, capabilities, siblings}", "deps": ["engine.core"], "maps_to_part": "quilt-codespace-P13" },
+      { "id": "fed.uri", "kind": "formula", "expr": "quilt://[instance]/[sheet]#[cell]", "deps": ["api.cells"], "maps_to_part": "quilt-codespace-P10" },
+      { "id": "autopilot.subs", "kind": "listener", "expr": "subscribe rudder/compass/wind/obstacles", "deps": ["fed.uri"], "maps_to_part": "quilt-codespace-P08" },
+      { "id": "autopilot.writes", "kind": "program", "expr": "write only pid_kp + last_decision", "deps": ["autopilot.subs"], "maps_to_part": "quilt-codespace-P09" },
+      { "id": "state.ephemeral", "kind": "value", "expr": "~/.quilt/state lost on shutdown; seed.json + sync exits", "deps": [], "maps_to_part": "quilt-codespace-P11" },
+      { "id": "rooms.map", "kind": "io", "expr": "BareRoom..Lighthouse -> esp32..codespace table", "deps": ["sdk.detectTier"], "maps_to_part": "quilt-codespace-P12" }
+    ]
+  },
+  "layer_logic": {
+    "0": "substrate = a forkable devcontainer template running an in-process engine (with an honest in-memory fallback)",
+    "1": "mechanism = cell-grained HTTP+SSE API over the engine, fed by a tier-detector and addressed by quilt:// URIs",
+    "2": "policy = bearer-token admission, the brain tier may only write tunables and audit rows, ephemerality is disclosed with named exits",
+    "3": "interface = three doors (TUI/API/dashboard), the fed-autopilot 3-tier example, and the cocapn room mapping table",
+    "4": "evidence = printed URLs + token at boot, /health and /meta self-reporting — the runtime proves which tier it is"
+  }
+}

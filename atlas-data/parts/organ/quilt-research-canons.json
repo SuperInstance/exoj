@@ -1,0 +1,246 @@
+{
+  "work": "quilt-research-canons",
+  "family": "organ",
+  "repo_path": "/home/z/my-project/quilt-research-canons",
+  "head": "3547d01",
+  "smoke": {
+    "cmd": "node -e (offline conformance check): for each sprints/*.py assert the 7 mandatory header sections (Sprint lineage / Author / Date / DOCTRINE / WHAT THIS SPRINT DOES / OUTPUT / NEXT-SPRINT SPEC) and the '>>> NEXT: write sprint-' trailer; JSON.parse research/jev-velocity.json, moth-fidelity-matrix.json, quantum-chaos-001.json",
+    "verdict": "PASS — 5/5 sprint scripts fully conform to the SPRINT-LINEAGE contract; 3/3 JSON artifacts parse",
+    "notes": "The sprint scripts themselves were NOT executed: they require API keys (env TYPESAFEAI_KEY etc.) and network calls to api.typesafe.ai / api.deepinfra.com (sprint-jev-001.py:36) — forbidden by lane rules; the contract-check + JSON-parse verification is the honest offline dog-food. Honest negatives found: (1) registry drift — README.md:35-39 lists 4 sprint frames and SPRINT-LINEAGE.md:35-41 lists 2 active lineages, but sprints/ holds 5 scripts (sprint-quantum-001.py is in neither list) — the canon's own law ('the roadmap is the directory') catches the README; (2) a stray nested duplicate directory quilt-research-canons/quilt-research-canons/research/ holds the contribution thesis; (3) sprint outputs reference /workspace/research/ paths (sandbox-local) while the repo copies live in research/."
+  },
+  "essence": "Research canon documents: sprint-lineage protocol, pre-registered predictions, witnesses declaring successors.",
+  "ideas": [
+    {
+      "id": "quilt-research-canons-I1",
+      "name": "the roadmap is the directory, not memory",
+      "statement": "Each sprint script ends with an embedded NEXT-SPRINT SPEC; the next agent reads the bottom of the prior file, writes the next file, runs it, embeds the spec for the third — the chain of files IS the roadmap, which is how the substrate-walker pattern survives a sandbox wipe (SPRINT-LINEAGE.md:9-11, 68-72).",
+      "parts": ["quilt-research-canons-P03", "quilt-research-canons-P04", "quilt-research-canons-P06", "quilt-research-canons-P12"]
+    },
+    {
+      "id": "quilt-research-canons-I2",
+      "name": "witness over description",
+      "statement": "Every artifact is a witness you can verify, not just describe: each sprint is a runnable stdlib+env-keys script whose output lands at a declared path, and each run is a substrate walker in miniature — walks a substrate, emits a witness, declares its successor (README.md:20, 73-76; SPRINT-LINEAGE.md:51-56).",
+      "parts": ["quilt-research-canons-P01", "quilt-research-canons-P02", "quilt-research-canons-P03"]
+    },
+    {
+      "id": "quilt-research-canons-I3",
+      "name": "pre-registered, falsifiable, honestly-verdicted",
+      "statement": "The method is fixed before running: (1) state a falsifiable hypothesis, (2) design a small experiment on existing fleet + stdlib + APIs, (3) record the verdict, (4) note new questions — and the verdicts are honest including refutation: H1 FALSIFIED then REFINED and the refinement confirmed; quantum-chaos Q1/Q2 FALSIFIED as posed with the control reported beside them (2026-09-24-novel-problems-report.md:15, 23-31; research/quantum-chaos-001.json verdict).",
+      "parts": ["quilt-research-canons-P08", "quilt-research-canons-P10", "quilt-research-canons-P13"]
+    },
+    {
+      "id": "quilt-research-canons-I4",
+      "name": "canon-promotion velocity as a measured gate",
+      "statement": "The JEV oracle is the canon-promotion gate, and the gate itself is measured: 5 questions × 20 trials compute 'first stable trial' (all remaining values within ±0.05 of mean); canon should stabilize FAST (don't ask 12 times when the first call says yes at p≥0.85) and speculation should stabilize SLOW (don't promote a 0.55 reading after 3 calls) — the velocity profile is the gate's calibration record (sprint-jev-001.py:9-14; research/jev-velocity.json).",
+      "parts": ["quilt-research-canons-P09", "quilt-research-canons-P11"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "quilt-research-canons-P01",
+      "layer": 0,
+      "name": "dated artifact file",
+      "essence": "The irreducible representation is a dated file in a git repo — md for arguments, json for measurements, py for runs; discoverability starts at the filesystem, not a memory or a chat log.",
+      "inputs": ["run outputs / session prose"],
+      "outputs": ["committed dated file"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "README.md:26-40 (tree); git log (commits e92e88a, 4cd55f1 dated artifacts)"
+    },
+    {
+      "part_id": "quilt-research-canons-P02",
+      "layer": 0,
+      "name": "JSON measurement records",
+      "essence": "jev-velocity.json {summary, questions}, moth-fidelity-matrix.json {timestamp, n_samples_per_clip, shots, schemes, clips, matrix}, quantum-chaos-001.json {refusals, quantum, jev, chain, summary, verdict} — machine-readable verdicts with parameters and outcomes co-located.",
+      "inputs": ["sprint runs"],
+      "outputs": ["parsable JSON artifacts"],
+      "gate": "must parse and carry its own provenance fields",
+      "gate_kind": "postcondition",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "research/*.json (all 3 JSON.parse-verified this lane)"
+    },
+    {
+      "part_id": "quilt-research-canons-P03",
+      "layer": 1,
+      "name": "sprint script as self-contained run",
+      "essence": "Each sprint-XXX-NNN.py is std-lib + env keys, re-runnable independently, and lands its output at a declared path — a witness that can be re-executed to re-derive its claim.",
+      "inputs": ["env keys", "API endpoints"],
+      "outputs": ["output JSON at the declared path"],
+      "gate": "file must be re-runnable without asking a human anything",
+      "gate_kind": "precondition",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "sprints/sprint-jev-001.py:33-40; SPRINT-LINEAGE.md:66"
+    },
+    {
+      "part_id": "quilt-research-canons-P04",
+      "layer": 1,
+      "name": "embedded NEXT-SPRINT SPEC",
+      "essence": "The mechanism that makes the chain self-extending: the header carries the spec for XXX-(NNN+1) — concrete questions/signals, output location, the 'voice memo' the next header should use, deliverables — plus the mandatory '>>> NEXT:' print trailer.",
+      "inputs": ["this sprint's results"],
+      "outputs": ["next sprint's specification"],
+      "gate": "spec must be specific enough to implement without clarification",
+      "gate_kind": "postcondition",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "sprints/sprint-jev-001.py:41-58; SPRINT-LINEAGE.md:24-33"
+    },
+    {
+      "part_id": "quilt-research-canons-P05",
+      "layer": 1,
+      "name": "output archive + lineage table",
+      "essence": "SPRINT-LINEAGE.md records which lineages are active and where outputs are archived (✅ archived at /workspace/research/…), so the chain's state is queryable from one table rather than by opening every file.",
+      "inputs": ["sprint states"],
+      "outputs": ["lineage table rows"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "registry drift observed this lane: sprint-quantum-001.py present in sprints/ but absent from both README's tree and SPRINT-LINEAGE's tables",
+      "elementary": true,
+      "evidence": "research/SPRINT-LINEAGE.md:35-47; README.md:35-39; sprints/ (5 files)"
+    },
+    {
+      "part_id": "quilt-research-canons-P06",
+      "layer": 2,
+      "name": "the sprint contract",
+      "essence": "Every sprint-XXX-NNN.py MUST carry the seven header sections (Sprint lineage, Author, Date, DOCTRINE, WHAT THIS SPRINT DOES ≤10 lines, OUTPUT, NEXT-SPRINT SPEC), end with the '>>> NEXT: write sprint-XXX-(NNN+1).py …' print, and NOT spawn sub-agents in its runtime (they routinely return without writing files — direct execution is the reliable path).",
+      "inputs": ["sprint file"],
+      "outputs": ["conformance | non-conformance"],
+      "gate": "all seven sections + trailer present; no sub-agent spawning",
+      "gate_kind": "admission",
+      "failure_mode": "non-conformant sprint — the next agent cannot proceed from it (checked this lane: 5/5 conform)",
+      "elementary": true,
+      "evidence": "research/SPRINT-LINEAGE.md:15-26"
+    },
+    {
+      "part_id": "quilt-research-canons-P07",
+      "layer": 2,
+      "name": "inter-relation requirement",
+      "essence": "The next sprint's voice memo MUST reference the prior sprint's filename so each sprint declares its dependency — the chain is inter-relational, not a pile of independent files.",
+      "inputs": ["prior sprint id"],
+      "outputs": ["successor header reference"],
+      "gate": "successor declares its dependency on the predecessor",
+      "gate_kind": "invariant",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "sprints/sprint-jev-001.py:56-58; SPRINT-LINEAGE.md:56"
+    },
+    {
+      "part_id": "quilt-research-canons-P08",
+      "layer": 2,
+      "name": "falsifiability method",
+      "essence": "Fixed method ordering across all problems: falsifiable hypothesis → small experiment on existing fleet + stdlib + available APIs → recorded verdict → new questions surfaced; hypotheses are written BEFORE results and kept visible even when falsified (H1 original shown struck-down beside H1 refined).",
+      "inputs": ["a research question"],
+      "outputs": ["hypothesis + experiment + verdict + new questions"],
+      "gate": "hypothesis must be stated before the experiment; verdict must be recorded whatever it is",
+      "gate_kind": "precondition",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "research/2026-09-24-novel-problems-report.md:15, 23-31"
+    },
+    {
+      "part_id": "quilt-research-canons-P09",
+      "layer": 2,
+      "name": "canon-promotion gate velocity",
+      "essence": "Canon moves FAST (first call yes at p≥0.85 → don't re-ask 12 times), speculation moves SLOW (a 0.55 reading never promotes after 3 calls); the gate's calibration is itself measured (first-stable-trial = index where remaining values stay within ±0.05 of mean).",
+      "inputs": ["oracle readings per question"],
+      "outputs": ["velocity profile"],
+      "gate": "promotion only after the stability criterion holds",
+      "gate_kind": "admission",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "sprints/sprint-jev-001.py:9-14, 19-21; research/jev-velocity.json (5q × 20 trials, most stable at trial 1)"
+    },
+    {
+      "part_id": "quilt-research-canons-P10",
+      "layer": 3,
+      "name": "README as agent-facing discoverability layer",
+      "essence": "The README is written for another agent: what the repo is, a literal how-to-use command block (head the sprint, grep the NEXT-SPRINT SPEC, run it, read the protocol), doctrine, cross-references, status — 'if you're another agent, read this README first'.",
+      "inputs": ["repo contents"],
+      "outputs": ["orientation for the next agent"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "README tree drift vs actual directory (honest negative recorded this lane)",
+      "elementary": true,
+      "evidence": "README.md:7, 44-61, 80-101"
+    },
+    {
+      "part_id": "quilt-research-canons-P11",
+      "layer": 3,
+      "name": "multi-voice sprint frames",
+      "essence": "Sprint frames span substrates and voices: jev (Typesafe), moth (quantumaudio fidelity matrix: QSM best continuous r=0.98-1.00, QPAM all-rounder r=0.73-0.87), zai (3-voice chord), deepinfra (6-model chord), quantum (certified-receipts → oracle votes) — each frame the same contract on a different substrate.",
+      "inputs": ["substrate APIs"],
+      "outputs": ["per-substrate measurement artifacts"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "chronic API issues stated honestly in the status block (ZAI 429 on rapid-fire, MOTH MSQPAM/MQSM unclear in 0.2.0, Kimi suspended)",
+      "elementary": true,
+      "evidence": "README.md:35-40, 93-100; research/moth-fidelity-matrix.md; sprints/sprint-quantum-001.py"
+    },
+    {
+      "part_id": "quilt-research-canons-P12",
+      "layer": 4,
+      "name": "wipe-survival doctrine",
+      "essence": "When the sandbox resets, the successor reads the most recent sprint's header (canon-stable today) + next-sprint spec (what to build next), re-runs, validates, writes the next — the pattern survives by writing itself into the filesystem, not into memory.",
+      "inputs": ["the sprint chain on disk"],
+      "outputs": ["continuity across wipes"],
+      "gate": "artifacts + intent-to-continue must both survive the wipe boundary",
+      "gate_kind": "invariant",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "research/SPRINT-LINEAGE.md:9, 68-72"
+    },
+    {
+      "part_id": "quilt-research-canons-P13",
+      "layer": 4,
+      "name": "verdict ledger with honest negatives",
+      "essence": "The canon's evidence layer: H1 FALSIFIED+REFINED (twin brews byte-identical under identical inputs), H2 CONFIRMED at ~85%, H3 CONFIRMED, bonus LIVE CANON-CHORD, and quantum-chaos 'FALSIFIED as posed — Q1=0.14, Q2=0.31, control=0.13' with its calibration against jev velocity recorded — refutation is canon, not shame.",
+      "inputs": ["experiment runs"],
+      "outputs": ["recorded verdicts"],
+      "gate": "no verdict is discarded for being negative",
+      "gate_kind": "seal",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "research/2026-09-24-novel-problems-report.md:23, 31, 59-63, 100-104, 143, 217; research/quantum-chaos-001.json (verdict block)"
+    },
+    {
+      "part_id": "quilt-research-canons-P14",
+      "layer": 4,
+      "name": "witness-chain fork evidence",
+      "essence": "The Fork experiment's recorded evidence table: same recipe + same inputs → chains byte-identical (both 8/8 tests); same recipe + different inputs → intact but distinct chains — the result that falsified the original H1, kept as the canon entry for fork semantics.",
+      "inputs": ["fork-A/fork-B runs + comparison runners"],
+      "outputs": ["evidence table + scratch artifacts"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "research/2026-09-24-novel-problems-report.md:33-52"
+    }
+  ],
+  "sheet": {
+    "name": "quilt-research-canons-as-cells",
+    "cells": [
+      {"id": "artifact", "kind": "value", "expr": "dated file in git (md | json | py)", "deps": [], "maps_to_part": "quilt-research-canons-P01"},
+      {"id": "runOutput", "kind": "io", "expr": "script writes JSON to its declared OUTPUT path", "deps": ["artifact"], "maps_to_part": "quilt-research-canons-P03"},
+      {"id": "nextSpec", "kind": "formula", "expr": "NEXT-SPRINT SPEC section + '>>> NEXT:' trailer derived from this run's results", "deps": ["runOutput"], "maps_to_part": "quilt-research-canons-P04"},
+      {"id": "lineageTable", "kind": "listener", "expr": "SPRINT-LINEAGE rows: sprint id / substrate / status / output / next", "deps": ["runOutput"], "maps_to_part": "quilt-research-canons-P05"},
+      {"id": "contractCheck", "kind": "sensor", "expr": "7 header sections + trailer + no-sub-agents (verified 5/5 this lane)", "deps": ["artifact", "nextSpec"], "maps_to_part": "quilt-research-canons-P06"},
+      {"id": "hypothesis", "kind": "value", "expr": "falsifiable statement written BEFORE the experiment", "deps": [], "maps_to_part": "quilt-research-canons-P08"},
+      {"id": "verdictRow", "kind": "value", "expr": "recorded outcome incl. FALSIFIED (H1, quantum-chaos) — never discarded", "deps": ["hypothesis", "runOutput"], "maps_to_part": "quilt-research-canons-P13"},
+      {"id": "velocityGate", "kind": "formula", "expr": "first_stable_trial = first index where all remaining values within ±0.05 of mean", "deps": ["runOutput"], "maps_to_part": "quilt-research-canons-P09"},
+      {"id": "readme", "kind": "router", "expr": "other-agent entrypoint: what/where/how-to-run/cross-refs/status", "deps": ["artifact", "lineageTable"], "maps_to_part": "quilt-research-canons-P10"},
+      {"id": "voiceMemo", "kind": "formula", "expr": "successor header MUST reference predecessor filename (inter-relation)", "deps": ["nextSpec"], "maps_to_part": "quilt-research-canons-P07"},
+      {"id": "substrateFrame", "kind": "program", "expr": "same contract instantiated per substrate (jev/moth/zai/deepinfra/quantum)", "deps": ["contractCheck"], "maps_to_part": "quilt-research-canons-P11"},
+      {"id": "wipeSurvival", "kind": "formula", "expr": "read most recent header → re-run → validate → write next (survives the wipe)", "deps": ["artifact", "nextSpec"], "maps_to_part": "quilt-research-canons-P12"}
+    ]
+  },
+  "layer_logic": {
+    "0": "Dated files in a git repo — md/json/py — are the substrate; the filesystem chain, not agent memory, is the canonical representation.",
+    "1": "Sprint scripts run, land outputs at declared paths, and embed the next spec: the mechanism is a self-extending chain of executable witnesses.",
+    "2": "Policy is the contract + the method: seven mandatory header sections, inter-relation to the predecessor, no sub-agents, falsifiable hypothesis before experiment, and a measured canon-promotion velocity gate.",
+    "3": "Interface = the README as another-agent entrypoint (how-to-run commands, cross-references, honest status) and per-substrate sprint frames speaking the same contract.",
+    "4": "Evidence = the verdict ledger where refutations are canon (H1, quantum-chaos), fork-semantics evidence tables, calibration JSONs, and the wipe-survival doctrine that makes the chain itself the artifact."
+  }
+}

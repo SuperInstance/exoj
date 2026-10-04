@@ -1,0 +1,285 @@
+{
+  "work": "si-fleet",
+  "family": "meta",
+  "repo_path": "/home/z/my-project/si-fleet",
+  "head": "c20c1c8",
+  "smoke": {
+    "cmd": "cd /home/z/my-project/si-fleet/tidepool && npm test",
+    "verdict": "PASS",
+    "notes": "tidepool suite runs fully offline on mocks: 'tide-pool smoke: 18 passed, 0 failed' + node:test 13/13 pass (98ms) covering JEV gate floor refusal, sigma agreement mass, fail-closed on malformed JEV input, gate-off default bit-identity. Syntax checks on other subprojects not needed (no standalone runners). Path is inside the my-project workspace repo (toplevel /home/z/my-project, HEAD c20c1c8); no nested .git."
+  },
+  "essence": "fleet infrastructure as one monorepo of lanes: a shared context ocean, edge quilt runtimes, AI cells, canon headers",
+  "ideas": [
+    {
+      "id": "si-fleet-I1",
+      "name": "the shared context ocean",
+      "statement": "Every agent's context window is a tide pool that drains each session; tidepool is the ocean behind it — WRITE at task end (distill <=200 words, fire-and-forget), READ at task start (recall-prime top 3), absence is information.",
+      "parts": ["si-fleet-P03", "si-fleet-P04", "si-fleet-P06"]
+    },
+    {
+      "id": "si-fleet-I2",
+      "name": "honest degrade as law",
+      "statement": "Unbound bindings report themselves in /health and route responses — degrade honest, never 502; unlabeled artifacts are distrusted; absence of measurement is stated, not papered over.",
+      "parts": ["si-fleet-P05", "si-fleet-P07"]
+    },
+    {
+      "id": "si-fleet-I3",
+      "name": "a conscience on the recall path",
+      "statement": "Recall can carry a schema-bounded JEV gate: every scored row gets a typed decision {surface|suppress|abstain, confidence, reasons}, certified by sigma = sqrt(c_emb * c_jev), below-floor pairings refuse as typed abstain, and off-by-default responses are bit-identical to the ungated pool.",
+      "parts": ["si-fleet-P09"]
+    },
+    {
+      "id": "si-fleet-I4",
+      "name": "the same cell model at every tier",
+      "statement": "One abstraction deployed three ways — quilt on Cloudflare's edge (Workers/D1/Vectorize/KV), AI as first-class cell kinds across 4 providers with a router that spends only when it must, and the agent itself as a sheet (memory=value cells, tools=api cells, reasoning=program cells).",
+      "parts": ["si-fleet-P10", "si-fleet-P11", "si-fleet-P12"]
+    },
+    {
+      "id": "si-fleet-I5",
+      "name": "coordination by canon, not meetings",
+      "statement": "Each lane declares itself in a CANON.md front-matter (mission, family, vessel, feeds, owed_by, verified date) and the monorepo groups five sub-fleets under one HEAD — the organizational substrate is files with declared debts and feeds.",
+      "parts": ["si-fleet-P01", "si-fleet-P13"]
+    },
+    {
+      "id": "si-fleet-I6",
+      "name": "prove the substrate everywhere",
+      "statement": "Polyformalism: the same fnv1a primitive is proven identical across Python, C, Rust (plus Haskell/Mercury ports) — a receipt that the fleet's hash-basis is language-independent, backed by a fully mocked offline test suite.",
+      "parts": ["si-fleet-P15", "si-fleet-P14", "si-fleet-P16"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "si-fleet-P01",
+      "layer": 0,
+      "name": "monorepo of fleet lanes",
+      "essence": "Five subprojects under one repo — tidepool (shared memory), quilt-cloudflare (edge runtime), jev-quilt (Python JEV engine + polyform ports), quilt-ai (AI cells), quilt-agent (agent-as-sheet) — infrastructure and coordination live together.",
+      "inputs": ["fleet repos"],
+      "outputs": ["one HEAD coordinating five lanes"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "divergent copies of the cell model across lanes",
+      "elementary": true,
+      "evidence": "si-fleet/ directory listing (tidepool/, quilt-cloudflare/, jev-quilt/, quilt-ai/, quilt-agent/)"
+    },
+    {
+      "part_id": "si-fleet-P02",
+      "layer": 0,
+      "name": "tidepool dual-index stores",
+      "essence": "Cloudflare D1 journal for artifacts + two Vectorize indexes: 16-dim 'native' domain fingerprint and 768-dim BGE semantic embedding written at store time.",
+      "inputs": ["POST /api/remember {kind, author, title, body, native?, repo?, run?}"],
+      "outputs": ["journaled + embedded artifacts recallable by vector or text"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "an unbound binding (no D1/Vectorize) must degrade honestly, not throw",
+      "elementary": true,
+      "evidence": "si-fleet/tidepool/README.md routes table + provision commands"
+    },
+    {
+      "part_id": "si-fleet-P03",
+      "layer": 1,
+      "name": "WRITE at task end",
+      "essence": "Distill the task to <=200 words — what was decided, learned, and what gap remains — and POST it fire-and-forget so it never blocks the lane.",
+      "inputs": ["finished task"],
+      "outputs": ["one distilled artifact in the ocean"],
+      "gate": "distillation <= 200 words",
+      "gate_kind": "budget",
+      "failure_mode": "unbounded dumping would turn the ocean into a log dump",
+      "elementary": true,
+      "evidence": "si-fleet/tidepool/README.md 'WRITE at task end, fire-and-forget, never blocks'"
+    },
+    {
+      "part_id": "si-fleet-P04",
+      "layer": 1,
+      "name": "READ at task start",
+      "essence": "Recall-prime the top 3 relevant artifacts into context: hybrid semantic recall with an honest text fallback, a recent mode when no query is given, and /api/recall/similar for neighbors of an artifact or a raw native vector.",
+      "inputs": ["task context / query q"],
+      "outputs": ["top-3 artifacts primed into the working context"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "silent semantic-only failure (the text fallback exists because embeddings can be empty)",
+      "elementary": true,
+      "evidence": "si-fleet/tidepool/README.md routes table 'GET /api/recall?q=...'"
+    },
+    {
+      "part_id": "si-fleet-P05",
+      "layer": 2,
+      "name": "provenance discipline",
+      "essence": "Never secrets; every result carries author and ts; prefer recent; distrust unlabeled — the same rule as memory files, applied to the shared ocean.",
+      "inputs": ["any artifact write"],
+      "outputs": ["artifact with author+ts stamps"],
+      "gate": "a write without author/ts is distrusted by policy",
+      "gate_kind": "precondition",
+      "failure_mode": "unlabeled artifacts polluting recall",
+      "elementary": true,
+      "evidence": "si-fleet/tidepool/README.md protocol bullets 'Never secrets', 'Every result carries author and ts'"
+    },
+    {
+      "part_id": "si-fleet-P06",
+      "layer": 2,
+      "name": "absence is information",
+      "essence": "If recall returns nothing, that emptiness is a finding: write the first stone — the protocol turns empty memory into an obligation to seed it.",
+      "inputs": ["empty recall result"],
+      "outputs": ["the first artifact on that topic"],
+      "gate": "empty recall obligates a first write",
+      "gate_kind": "postcondition",
+      "failure_mode": "treating empty recall as 'nothing to see' and moving on",
+      "elementary": true,
+      "evidence": "si-fleet/tidepool/README.md 'Absence is information — if recall returns nothing, write the first stone'"
+    },
+    {
+      "part_id": "si-fleet-P07",
+      "layer": 2,
+      "name": "honest degrade, never 502",
+      "essence": "Unbound bindings report themselves in /health and in route responses; the service degrades honestly instead of erroring — infrastructure that admits what it lacks.",
+      "inputs": ["any request against unbound D1/Vectorize/AI"],
+      "outputs": ["self-describing degraded response, health report"],
+      "gate": "the pool must never return 502; degradation is declared, not hidden",
+      "gate_kind": "invariant",
+      "failure_mode": "a hard error page would hide which binding is missing",
+      "elementary": true,
+      "evidence": "si-fleet/tidepool/README.md 'Degrade honest, never 502 — unbound bindings report themselves in /health'"
+    },
+    {
+      "part_id": "si-fleet-P08",
+      "layer": 2,
+      "name": "privacy-preserving rate limit",
+      "essence": "45/min/IP sliding window where the IP exists only as an fnv1a fingerprint — the meter works without storing identities.",
+      "inputs": ["incoming request stream"],
+      "outputs": ["admission decisions + 429s inside the window"],
+      "gate": "max 45 requests/min per IP fingerprint",
+      "gate_kind": "budget",
+      "failure_mode": "storing raw IPs would violate the never-secrets rule",
+      "elementary": true,
+      "evidence": "si-fleet/tidepool/README.md 'Rate limit: 45/min/IP sliding window, fnv1a(ip) fingerprints only'; smoke check '429s engage inside the window'"
+    },
+    {
+      "part_id": "si-fleet-P09",
+      "layer": 1,
+      "name": "JEV recall gate",
+      "essence": "Optional schema-bounded conscience on the recall path: typed surface/suppress/abstain with confidence, agreement mass sigma = sqrt(c_emb * c_jev) across two local witnesses, TIDEPOOL_JEV_FLOOR (default 0.5) refuses below-floor pairings as typed abstain; deterministic mock without an endpoint.",
+      "inputs": ["scored recall row + embedding confidence + JEV verdict"],
+      "outputs": ["annotated row with typed decision"],
+      "gate": "pairings below the floor refuse as a typed abstain; untyped JEV input fails closed",
+      "gate_kind": "admission",
+      "failure_mode": "malformed body / network error must fail closed to typed abstain (tested)",
+      "elementary": true,
+      "evidence": "si-fleet/tidepool/README.md 'JEV gate (four-model psyche)' section; si-fleet/tidepool/src/jev.mjs"
+    },
+    {
+      "part_id": "si-fleet-P10",
+      "layer": 3,
+      "name": "quilt at the edge",
+      "essence": "quilt-cloudflare: the same cell model and YAML sheets persisted in D1, searchable via Vectorize, cached in KV, fan-out at the edge; /run loads a sheet, /cell/:id reads a cell.",
+      "inputs": ["YAML sheet body"],
+      "outputs": ["a running Quilt engine per Workers deployment"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "edge/state divergence if D1 persistence is skipped",
+      "elementary": true,
+      "evidence": "si-fleet/quilt-cloudflare/README.md 'The same cell model, the same YAML sheets...'; src/worker.ts, src/tide.ts, src/ocean.ts"
+    },
+    {
+      "part_id": "si-fleet-P11",
+      "layer": 3,
+      "name": "AI as cell kinds + router",
+      "essence": "@quilt/ai: 4 providers (zai, kimi, deepseek, cloudflare), 8 cell kinds, one uniform interface; the mermaid diagram's rule — 'the router spending tokens only when it must' — with budget.over as the router input.",
+      "inputs": ["cell calls with provider keys"],
+      "outputs": ["LLM/embedding/image results as reactive cells"],
+      "gate": "router escalates to expensive providers only when the cheap path or budget says so",
+      "gate_kind": "budget",
+      "failure_mode": "indiscriminate premium-model calls burning the budget",
+      "elementary": true,
+      "evidence": "si-fleet/quilt-ai/README.md '4 providers. 8 cell kinds. 1 uniform interface.' + mermaid router diagram; src/providers/*.ts"
+    },
+    {
+      "part_id": "si-fleet-P12",
+      "layer": 3,
+      "name": "agent-as-sheet",
+      "essence": "quilt-agent: the agent IS a sheet — memory is value cells, tools are api cells, reasoning is program cells, goals are listener cells, conversation history is a growing value cell, the prompt is a formula over it.",
+      "inputs": ["YAML agent sheet (input.task, memory, tool.search, tool.llm, reasoning.prompt...)"],
+      "outputs": ["an agent whose every capability is an inspectable cell"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "hidden agent state outside cells breaks inspectability",
+      "elementary": true,
+      "evidence": "si-fleet/quilt-agent/README.md 'The agent is a sheet...' + examples/research-agent.yaml"
+    },
+    {
+      "part_id": "si-fleet-P13",
+      "layer": 2,
+      "name": "CANON.md identity headers",
+      "essence": "Each lane declares canon front-matter — mission, state, family, vessel, born_from, feeds, owed_by, canonical_docs, ledger, verified date — identity and debts as parseable metadata.",
+      "inputs": ["lane self-description"],
+      "outputs": ["machine-readable coordination contract"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "a lane with no declared feeds/owed_by is uncoordinated by construction",
+      "elementary": true,
+      "evidence": "si-fleet/tidepool/CANON.md (canon: 1, mission, feeds: [quilt-studio, duke-lab], owed_by, verified: 2026-09-22)"
+    },
+    {
+      "part_id": "si-fleet-P14",
+      "layer": 4,
+      "name": "fully mocked offline test wall",
+      "essence": "tidepool's 18-check smoke + 13 node tests run with mocked D1/Vectorize/AI and deterministic embeddings — including fail-closed, floor refusal, and gate-off bit-identity checks — green with zero network.",
+      "inputs": ["npm test"],
+      "outputs": ["18+13 passing checks"],
+      "gate": "gate-off responses must remain bit-identical to ungated ones",
+      "gate_kind": "invariant",
+      "failure_mode": "an opt-in gate that silently changes default behavior",
+      "elementary": true,
+      "evidence": "si-fleet/tidepool/tests/tidepool.smoke.mjs, tests/jev.test.mjs; this lane's run: 18 passed + 13 pass, 0 fail"
+    },
+    {
+      "part_id": "si-fleet-P15",
+      "layer": 1,
+      "name": "polyformalism ports",
+      "essence": "One primitive (fnv1a) written in python, c, rust, plus polyform Cell in Haskell and bookkeeper in Mercury — the claim 'same semantics in every substrate' made executable.",
+      "inputs": ["fnv1a spec"],
+      "outputs": ["language-identical hashes across 5 substrates"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "substrate-specific drift in the hash basis (the thing crab-traps depends on)",
+      "elementary": true,
+      "evidence": "si-fleet/jev-quilt/polyformalism/fnv1a_python.py, fnv1a_c.c, fnv1a_rust.rs, polyform/haskell/Cell.hs, polyform/mercury/bookkeeper.m"
+    },
+    {
+      "part_id": "si-fleet-P16",
+      "layer": 4,
+      "name": "deployability receipts",
+      "essence": "Every subproject ships its own deploy path: wrangler.toml bindings, DEPLOY.md steps, a committed dist/ worker bundle, MIT/Apache licenses — 'you can run this' is part of the artifact.",
+      "inputs": ["worker source"],
+      "outputs": ["deploy commands + built bundle"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "docs that promise a deploy the repo cannot perform",
+      "elementary": true,
+      "evidence": "si-fleet/tidepool/worker/wrangler.toml; si-fleet/quilt-cloudflare/DEPLOY.md + dist/worker.js; package.json files present in each lane"
+    }
+  ],
+  "sheet": {
+    "name": "si-fleet-as-cells",
+    "cells": [
+      { "id": "lanes.monorepo", "kind": "value", "expr": "5 subprojects @ HEAD c20c1c8", "deps": [], "maps_to_part": "si-fleet-P01" },
+      { "id": "tidepool.stores", "kind": "io", "expr": "D1 journal + Vectorize 16d native / 768d semantic", "deps": ["lanes.monorepo"], "maps_to_part": "si-fleet-P02" },
+      { "id": "tidepool.remember", "kind": "program", "expr": "distill <=200w, POST fire-and-forget", "deps": ["tidepool.stores"], "maps_to_part": "si-fleet-P03" },
+      { "id": "tidepool.recall", "kind": "api", "expr": "top-3 hybrid semantic->text fallback", "deps": ["tidepool.stores"], "maps_to_part": "si-fleet-P04" },
+      { "id": "tidepool.jev_gate", "kind": "ai", "expr": "sigma=sqrt(c_emb*c_jev); floor 0.5 -> typed abstain", "deps": ["tidepool.recall"], "maps_to_part": "si-fleet-P09" },
+      { "id": "tidepool.health", "kind": "sensor", "expr": "/health reports unbound bindings honestly", "deps": ["tidepool.stores"], "maps_to_part": "si-fleet-P07" },
+      { "id": "tidepool.limit", "kind": "formula", "expr": "45/min/IP over fnv1a(ip)", "deps": [], "maps_to_part": "si-fleet-P08" },
+      { "id": "canon.frontmatter", "kind": "value", "expr": "mission/feeds/owed_by/verified", "deps": ["lanes.monorepo"], "maps_to_part": "si-fleet-P13" },
+      { "id": "edge.worker", "kind": "api", "expr": "quilt on Workers/D1/KV, /run + /cell/:id", "deps": ["lanes.monorepo"], "maps_to_part": "si-fleet-P10" },
+      { "id": "ai.router", "kind": "router", "expr": "4 providers, spend only when budget.over", "deps": ["edge.worker"], "maps_to_part": "si-fleet-P11" },
+      { "id": "agent.sheet", "kind": "program", "expr": "memory=value, tools=api, reasoning=program cells", "deps": ["ai.router"], "maps_to_part": "si-fleet-P12" },
+      { "id": "polyform.fnv1a", "kind": "formula", "expr": "identical hash in py/c/rs/hs/mercury", "deps": [], "maps_to_part": "si-fleet-P15" },
+      { "id": "tests.mocked", "kind": "listener", "expr": "18 smoke + 13 node tests, 0 network", "deps": ["tidepool.jev_gate", "tidepool.limit"], "maps_to_part": "si-fleet-P14" }
+    ]
+  },
+  "layer_logic": {
+    "0": "substrate = five co-located lanes + a D1/Vectorize ocean whose records always name their author and time",
+    "1": "mechanism = distill-then-recall over shared artifacts, a typed JEV conscience on recall, and one hash primitive proven in five languages",
+    "2": "policy = honesty laws: never 502, absence obligates a first stone, no secrets, rate-limited fingerprints, canon headers declare debts",
+    "3": "interface = the same cell model at the edge (Workers), as AI cells behind a budget router, and as the agent's own body",
+    "4": "evidence = an offline mocked test wall (31 checks) plus per-lane deploy paths — infra that receipts its own honesty"
+  }
+}

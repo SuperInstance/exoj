@@ -1,0 +1,417 @@
+{
+  "work": "quilt-upstream",
+  "family": "meta",
+  "repo_path": "/home/z/my-project/quilt-upstream-main",
+  "head": "fdfed69",
+  "smoke": {
+    "cmd": "cd /home/z/my-project/quilt-upstream-main/packages/core && npx vitest run",
+    "verdict": "PASS",
+    "notes": "Upstream engine core: 4 test files, 36/36 passed in 954ms, fully offline (vitest resolved from the repo's own node_modules). Also python3 -m py_compile quilt-kernel.py -> PASS. Note: `npx vitest run --reporter=basic` fails in this snapshot (custom reporter load error) — plain `npx vitest run` is the working invocation. 36/36 also cross-corroborates superinstance-site's hero claim '36/36 upstream tests kept'."
+  },
+  "essence": "the upstream quilt repo (external origin, Lucineer): the engine core the fleet knows, plus an out-of-superinstance idea corpus of essays and papers",
+  "ideas": [
+    {
+      "id": "quilt-upstream-I1",
+      "name": "the living spreadsheet",
+      "statement": "The spreadsheet is alive: 7 cell types, 6 evolutionary formulas, cells that are agents not numbers — and the keystone law that binds it all is conservation, not balance: gamma (ghost weight of past decisions) + eta (breath of current ambition) = budget, no more, no less; a neuron is merely the special case of a cell whose function is a fixed weighted sum.",
+      "parts": ["quilt-upstream-P01", "quilt-upstream-P02", "quilt-upstream-P03", "quilt-upstream-P04", "quilt-upstream-P22", "quilt-upstream-P24"]
+    },
+    {
+      "id": "quilt-upstream-I2",
+      "name": "the first voyage",
+      "statement": "A junior developer goes from `pip install quilt-cell` to a shipped, working three-cell system (feeling -> history -> guide) in under one hour with no framework, no server, no build — 'There were four cells, and the cells were the system' — and ships it to friends as a single pocketable .qzt vessel.",
+      "parts": ["quilt-upstream-P05", "quilt-upstream-P06"]
+    },
+    {
+      "id": "quilt-upstream-I3",
+      "name": "evolution as outgrown beliefs",
+      "statement": "Quilt's history is told stage-wise (v0.1 the 8 primitives, v0.2 the 4 endpoints, v0.3 the Fascia, v0.4 the 6 nervous systems, v0.5 Q-space, v0.6 the Echogram, v0.7/v0.8 the impossibility proofs, v0.9 the 6 frontier frameworks) where each stage is a belief the cell outgrows: it believed it was a grid, then an API, then a current.",
+      "parts": ["quilt-upstream-P07"]
+    },
+    {
+      "id": "quilt-upstream-I4",
+      "name": "murmur is the cell's gossip",
+      "statement": "Thought is gossip, not declarations: a nameless murmur-agent thinks all night without purpose, and its five strategies are life-moves not tools — Explore (Z_in), Connect (Graph), Contradict (JEPA), Synthesize (DoubleEntry), Question (Vibe) — 'the gossip is the thought.'",
+      "parts": ["quilt-upstream-P08"]
+    },
+    {
+      "id": "quilt-upstream-I5",
+      "name": "two implementations, one law",
+      "statement": "The same idea on different decks wears different names but carries the same weight: spreadsheet cells, the Quilt's primitives, and the noether-guard all hold the conservation of meaning — they are 'not copies... versions' — and what is preserved in both is the integrity of the idea.",
+      "parts": ["quilt-upstream-P09"]
+    },
+    {
+      "id": "quilt-upstream-I6",
+      "name": "the polyglot reduction",
+      "statement": "Unlambda (combinators), Brainfuck (register machine) and APL (arrays) — all Turing-complete, all minimal — each compile to a cell graph; 22 opcodes reduce to the 8 Quilt primitives; gamma+eta=1 is conserved in all three and the impossibility proofs hold in all three.",
+      "parts": ["quilt-upstream-P10"]
+    },
+    {
+      "id": "quilt-upstream-I7",
+      "name": "the Hodge lens on learning",
+      "statement": "An agent's acquired signal is a 1-form on its cell graph; the discrete Hodge decomposition splits it orthogonally into exact (gradient exploration), coexact (instruction) and harmonic (innate priors), with R_exp + R_expt + R_prior = 1 defining a dominant mode — and the Fifth Impossibility: measuring the signal injects a coexact observation term, so perfectly non-invasive telemetry of a learning agent is impossible.",
+      "parts": ["quilt-upstream-P11", "quilt-upstream-P12"]
+    },
+    {
+      "id": "quilt-upstream-I8",
+      "name": "every notebook is a quilt",
+      "statement": "The A2A-native notebook is not like a quilt, it IS one — page=cell, hyperlinks=cell graph, capture/synthesize/contradict/consistency = Z_in/Z_out/JEPA/DoubleEntry, a writing session = a sequence of kernel ticks — 'The mapping is not a metaphor but a specification.'",
+      "parts": ["quilt-upstream-P13"]
+    },
+    {
+      "id": "quilt-upstream-I9",
+      "name": "the API iterator",
+      "statement": "Agent growth is the closed loop call(API) -> integrate -> assess, closed under iteration — recursively (sub-task spawning), in parallel (the Council: 6 lenses — analyst, critic, synthesizer, optimizer, explorer, validator), as a bootstrap FSM, and autoexpand (integration discovers new work): 'not merely a technical pattern but a philosophical framework for agent evolution.'",
+      "parts": ["quilt-upstream-P14"]
+    },
+    {
+      "id": "quilt-upstream-I10",
+      "name": "two nervous systems",
+      "statement": "Intelligence needs both: a discrete per-cell CNS over 8 primitives (Z_in, Z_out, JEPA, DoubleEntry, Vibe, GC, Murmur, Graph) and a continuous inter-cell Fascia (FasciaJEPA predictive gradients, FasciaDoubleEntry gamma-flow trades) — the voltmeter/walkie-talkie duality — because no single nervous system can achieve precision, scalability and adaptability at once.",
+      "parts": ["quilt-upstream-P15", "quilt-upstream-P16"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "quilt-upstream-P01",
+      "layer": 0,
+      "name": "cell graph as universal substrate",
+      "essence": "A cell is a node in a directed graph receiving inputs, computing any function, exposing its value — exactly the message-passing pattern under modern neural architectures, generalized: v_i = f_i({v_j}) where the neuron's f is one special case.",
+      "inputs": ["any computable node function"],
+      "outputs": ["a cell graph"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "fixing f to weighted-sum would collapse the generalization",
+      "elementary": true,
+      "evidence": "NEURAL-CELLS-RESEARCH.md 'The core insight' (Quilt cell vs neuron equations)"
+    },
+    {
+      "part_id": "quilt-upstream-P02",
+      "layer": 1,
+      "name": "the 8 primitives as per-cell ops",
+      "essence": "Z_in (input), Z_out (output), JEPA (prediction), DoubleEntry (balanced state updates), Vibe (phenomenological mood), GC (pruning), Murmur (noise injection), Graph (self-model) — the discrete computational core each cell runs.",
+      "inputs": ["cell events"],
+      "outputs": ["cell state transitions"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "a primitive dropped breaks the CNS completeness claim",
+      "elementary": true,
+      "evidence": "essays/paper-53-two-nervous.md section 2 (numbered primitive list)"
+    },
+    {
+      "part_id": "quilt-upstream-P03",
+      "layer": 1,
+      "name": "conservation law gamma + eta = budget",
+      "essence": "The total of gamma (ghost weight of past decisions) and eta (breath of current ambition) must equal the budget — 'Not balance, not equilibrium. Conservation.' The budget is time, attention, the fuel of the ship.",
+      "inputs": ["every decision spending gamma or eta"],
+      "outputs": ["an invariant total"],
+      "gate": "gamma + eta = budget at all times; no more, no less",
+      "gate_kind": "conservation",
+      "failure_mode": "unrecorded spending breaks the keystone law",
+      "elementary": true,
+      "evidence": "essays/essay-26-the-living-spreadsheet.md lines 15 and 55 ('gamma + eta = budget')"
+    },
+    {
+      "part_id": "quilt-upstream-P04",
+      "layer": 2,
+      "name": "watching as the primitive act",
+      "essence": "The watch is not a device but the act of looking: witnessing, not judging — 'I am not judging. I am witnessing... The watch is the act of being there'; the observer is part of the system it watches.",
+      "inputs": ["system state"],
+      "outputs": ["witnessed, participatory observation"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "detached metrics dashboards replacing the gaze",
+      "elementary": true,
+      "evidence": "essays/essay-26-the-living-spreadsheet.md lines 31, 57 ('the watch is the act of looking')"
+    },
+    {
+      "part_id": "quilt-upstream-P05",
+      "layer": 1,
+      "name": "ship as .qzt vessel",
+      "essence": "`quilt ship mood.qzt` bundles cells + manifest into one small file — a vessel you can put in a pocket and pass to the next hand.",
+      "inputs": ["a sheet's cells + manifest"],
+      "outputs": ["one .qzt artifact"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "deployment pipelines replacing a copyable artifact",
+      "elementary": true,
+      "evidence": "essays/essay-110-first-voyage.md line 25 ('She typed quilt ship mood.qzt... It was a vessel')"
+    },
+    {
+      "part_id": "quilt-upstream-P06",
+      "layer": 2,
+      "name": "zero-dependency onboarding claim",
+      "essence": "2:22 PM pip install -> 2:41 first cascade ('the cells were talking to each other... no server, no API, no build, no pipeline') -> 3:15 shipped — the essay argues onboarding cost is itself the design object.",
+      "inputs": ["quilt init/add/watch/ship CLI"],
+      "outputs": ["a working multi-cell system in <1 hour"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "framework-style onboarding (React components, state management) the essay's heroine abandons",
+      "elementary": true,
+      "evidence": "essays/essay-110-first-voyage.md lines 11-29 (timestamped build narrative)"
+    },
+    {
+      "part_id": "quilt-upstream-P07",
+      "layer": 2,
+      "name": "stage-wise belief outgrowth",
+      "essence": "Each version arc is framed as a belief the cell outgrows: 'It believed it was a grid' (v0.1), 'It believed it was an API... But truth is not a port' (v0.2), onward to impossibility proofs as 'salt — not to break, but to preserve' (v0.7).",
+      "inputs": ["version history"],
+      "outputs": ["a narrative where limitations are load-bearing"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "changelog-as-list instead of changelog-as-meaning",
+      "elementary": true,
+      "evidence": "essays/essay-204-the-evolution-of-quilt.md v0.1-v0.9 section headers (lines 17-253)"
+    },
+    {
+      "part_id": "quilt-upstream-P08",
+      "layer": 1,
+      "name": "murmur-agent + five gossip strategies",
+      "essence": "A guest in the bilge 'thinks all night. Not with purpose, not with gain' — mapping the ocean via five moves named as primitives: Explore=Z_in, Connect=Graph, Contradict=JEPA, Synthesize=DoubleEntry, Question=Vibe; the Knowledge Tensor is 'the pattern of murmurs'.",
+      "inputs": ["idle cycles"],
+      "outputs": ["an ocean map grown from purposeless thought"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "instrumenting idle thought until it becomes purposeful labor",
+      "elementary": true,
+      "evidence": "essays/essay-205-murmur-is-the-cells-gossip.md lines 9-23"
+    },
+    {
+      "part_id": "quilt-upstream-P09",
+      "layer": 2,
+      "name": "law survives reimplementation",
+      "essence": "The spreadsheet, the Quilt and the noether-guard hold the same law in different forms: 'They are not copies. They are versions' — two sails from the same bolt of canvas; the guard 'does not detect error. It forbids it.'",
+      "inputs": ["one conservation law"],
+      "outputs": ["many substrates, one invariant"],
+      "gate": "the integrity of the idea must hold in every implementation",
+      "gate_kind": "invariant",
+      "failure_mode": "reimplementations drifting from the conserved law",
+      "elementary": true,
+      "evidence": "essays/essay-207-two-implementations.md lines 18-32"
+    },
+    {
+      "part_id": "quilt-upstream-P10",
+      "layer": 1,
+      "name": "polyglot opcode union",
+      "essence": "8 combinator opcodes (K,S,I,B,C,Y + composition, fixed-point) + 8 register opcodes (INC,DEC,RIGHT,LEFT,PRINT,READ,LOOP,END) + 6 array opcodes (IOTA,RHO,ADD,MUL,RED,SCAN,OUT,TAKE,DROP,TRANS) = 22 opcodes, 'All mapping to the 8 Quilt primitives. All substrate-agnostic.'",
+      "inputs": ["Unlambda / Brainfuck / APL programs"],
+      "outputs": ["cell graphs over one opcode union"],
+      "gate": "gamma + eta = 1 conserved in all three embeddings",
+      "gate_kind": "conservation",
+      "failure_mode": "a language whose embedding breaks the conservation accounting",
+      "elementary": true,
+      "evidence": "essays/essay-208-the-polyglot.md lines 19-28"
+    },
+    {
+      "part_id": "quilt-upstream-P11",
+      "layer": 1,
+      "name": "Hodge decomposition of the learning signal",
+      "essence": "Model the signal as a 1-form omega on the cell graph; discrete exterior derivative d and codifferential delta yield omega = d(alpha) + delta(beta) + h — exploration, instruction, priors — with squared-norm ratios summing to 1 and a dominant-mode diagnosis; implemented via CellGraph/Signal1Form/HodgeDecomposer in qspace.py.",
+      "inputs": ["edge-weight deltas of the cell graph"],
+      "outputs": ["three orthogonal components + three ratios"],
+      "gate": "R_exp + R_expt + R_prior = 1 by construction",
+      "gate_kind": "conservation",
+      "failure_mode": "correlated (non-orthogonal) components double-counting a learning source",
+      "elementary": true,
+      "evidence": "essays/paper-50-hodge-agents.md sections 4-6, 9"
+    },
+    {
+      "part_id": "quilt-upstream-P12",
+      "layer": 2,
+      "name": "Fifth Impossibility (observer effect)",
+      "essence": "Measuring the signal omega injects an instructional term delta(beta)_obs into the next period's signal (omega' = omega + delta(beta)_obs), so the 'true' pre-observation ratios are unknowable — formalizing that perfectly non-invasive telemetry of a learning agent is impossible.",
+      "inputs": ["any observation of a learning agent"],
+      "outputs": ["contaminated post-observation ratios"],
+      "gate": "pre-observation ratios are declared unknowable in principle",
+      "gate_kind": "postcondition",
+      "failure_mode": "claiming clean telemetry of a learning system",
+      "elementary": true,
+      "evidence": "essays/paper-50-hodge-agents.md section 8 (proof sketch steps 1-4)"
+    },
+    {
+      "part_id": "quilt-upstream-P13",
+      "layer": 1,
+      "name": "notebook-to-quilt isomorphism",
+      "essence": "Page=cell (bounded context with local state), page graph=cell graph, four cognitive ops map to Z_in (capture/register), Z_out (synthesize/express), JEPA (cross-page prediction, analogy validation), DoubleEntry (non-contradiction forcing reconciliation); each cognitive event is a kernel tick.",
+      "inputs": ["notebook pages + links"],
+      "outputs": ["a Quilt instance with an emergent Q-space agent"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "treating the mapping as loose analogy (the paper insists: 'not a metaphor but a specification')",
+      "elementary": true,
+      "evidence": "essays/paper-51-a2a-notebook.md sections 1-2"
+    },
+    {
+      "part_id": "quilt-upstream-P14",
+      "layer": 1,
+      "name": "API iterator pattern family",
+      "essence": "Loop { call(API); integrate; assess } closed under iteration; recursive form spawns sub-iterators (hierarchical planning); Council runs 6 parallel lenses; Bootstrap embeds the loop in a goal-directed FSM; Autoexpand spawns iterators for work discovered mid-integration.",
+      "inputs": ["external computational resources (LLMs, DBs, services)"],
+      "outputs": ["iteratively refined agent state"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "unclosed loops (assess skipped) turning growth into drift",
+      "elementary": true,
+      "evidence": "essays/paper-52-api-iterator.md sections 1-5"
+    },
+    {
+      "part_id": "quilt-upstream-P15",
+      "layer": 1,
+      "name": "CNS + Fascia split",
+      "essence": "CNS: discrete, per-cell, 8 primitives. Fascia: continuous, inter-cell gradients — FasciaJEPA (cells subscribe to each other's predictions, a predictive field) and FasciaDoubleEntry (continuous gamma trades, a resource economy); voltmeter/walkie-talkie analogy separates the modalities.",
+      "inputs": ["cell states + gradients"],
+      "outputs": ["precision (CNS) + ambient coordination (Fascia)"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "conflating discrete messaging with gradient sensing in one channel",
+      "elementary": true,
+      "evidence": "essays/paper-53-two-nervous.md sections 3-4"
+    },
+    {
+      "part_id": "quilt-upstream-P16",
+      "layer": 2,
+      "name": "specialization impossibility",
+      "essence": "Proof by contradiction: a unified system prioritizing discrete signals becomes brittle at scale; prioritizing continuous signals loses precision; therefore no single nervous system achieves precision + scalability + adaptability — the duality resolves it by specialization.",
+      "inputs": ["assumed unified system U"],
+      "outputs": ["necessity of the two-system architecture"],
+      "gate": "no unified system claim may assert all three properties",
+      "gate_kind": "invariant",
+      "failure_mode": "architecture claims ignoring the trade-off",
+      "elementary": true,
+      "evidence": "essays/paper-53-two-nervous.md section 5 (5th impossibility proof)"
+    },
+    {
+      "part_id": "quilt-upstream-P17",
+      "layer": 4,
+      "name": "release v0.2.0 receipts",
+      "essence": "2026-08-18: engine hardening (sensor `default` field seeds values at load; defineCell reads YAML value/default), 15 tests passing, 10 working examples (weather-monitor, chat-router, ab-test-router with FNV-1a split, iot-dashboard, ...).",
+      "inputs": ["engine + examples"],
+      "outputs": ["production-grade release notes"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "examples that demo but do not run",
+      "elementary": true,
+      "evidence": "RELEASE-v0.2.0.md ('9 core engine tests + 6 new example tests = 15 tests pass', 10 examples listed)"
+    },
+    {
+      "part_id": "quilt-upstream-P18",
+      "layer": 1,
+      "name": "federation release v0.5.0",
+      "essence": "8 SDK primitives; new resolveCell(uri, transport), subscribeCell(uri, transport, cb), CellRouter; parseCellRef for quilt://[instance]/[sheet]#[cell] incl. wildcard and fleet-wide forms; Local/Http transports; detectTier() for esp32/jetson/codespace/cloudflare/server/browser; 33 new tests (61 total); 3-tier Codespaces template.",
+      "inputs": ["multi-instance quilts"],
+      "outputs": ["cross-instance addressing + subscription"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "the siloed runtime ('the end of the siloed runtime' is the release subtitle)",
+      "elementary": true,
+      "evidence": "RELEASE-v0.5.0.md (primitive table, URI scheme examples, test counts)"
+    },
+    {
+      "part_id": "quilt-upstream-P19",
+      "layer": 1,
+      "name": "federated store + MQTT release v0.6.0",
+      "essence": "FederatedArtifactStore: content-addressed, hot(memory <1ms, 64MB LRU) -> warm(filesystem <10ms) -> cold(R2 ~100ms), best-effort R2, hotStats(); MqttCellTransport: MQTT 5.0, retained messages replay on reconnect, dead instances detected <1s; 79/79 tests (18 new), SHIPPED 2026-08-19.",
+      "inputs": ["artifacts + cell events"],
+      "outputs": ["cross-tier cache hierarchy + IoT pub/sub"],
+      "gate": "R2 failures are best-effort — puts must not break when cold tier is down",
+      "gate_kind": "postcondition",
+      "failure_mode": "a cold-tier outage corrupting local persistence",
+      "elementary": true,
+      "evidence": "RELEASE-v0.6.0.md (tier table, 'failures are best-effort (don't break puts)', test count)"
+    },
+    {
+      "part_id": "quilt-upstream-P20",
+      "layer": 2,
+      "name": "coordination protocol with Lucineer",
+      "essence": "'The watch proposes. The Lucineer routes. The Captain coordinates. The work moves.' — 5 bets (room-as-cell Tap, elephant d_mu as Vibe, crab-traps wire contract, schema-driven RAG corpus, fleet-radio ambient voice), 6 handoffs (H1-H6 incl. schema-as-source-of-truth, kernel, lifecycle orchestrator), hermes bridge answered with a Python companion, and lane discipline: the watch never pushes code to lanes that are not its own.",
+      "inputs": ["the two fleets' positions"],
+      "outputs": ["a division of labor with named bridges"],
+      "gate": "no code pushed to another lane's repos; issues with [SYNERGY] label are the channel",
+      "gate_kind": "admission",
+      "failure_mode": "lane violations eroding the federation",
+      "elementary": true,
+      "evidence": "COORDINATION_WITH_LUCINEER.md (opening protocol paragraph, bets 1-5, H1-H6, 'The watch doesn't push code to quilt repos that aren't its lane')"
+    },
+    {
+      "part_id": "quilt-upstream-P21",
+      "layer": 4,
+      "name": "unfiled SYNERGY issue stubs",
+      "essence": "synergy-issues/SYNERGY-1.md through SYNERGY-8.md are eight byte-identical stubs — 'to be posted to https://github.com/SuperInstance/quilt/issues', body deferring entirely to COORDINATION_WITH_LUCINEER.md ('bet / handoff #6') — the coordination scaffold exists in the repo but was never actually filed on the tracker.",
+      "inputs": ["coordination letter"],
+      "outputs": ["8 stub issue files"],
+      "gate": "a SYNERGY issue only counts once actually posted to the tracker",
+      "gate_kind": "seal",
+      "failure_mode": "coordination that lives only in a letter — no public thread, no notification, no tracking (the current state of all 8)",
+      "elementary": true,
+      "evidence": "synergy-issues/SYNERGY-1.md ... SYNERGY-8.md (all identical, verified by this lane reading all 8 heads)"
+    },
+    {
+      "part_id": "quilt-upstream-P22",
+      "layer": 4,
+      "name": "ten-architecture mapping table",
+      "essence": "One table maps MPNN, Hopfield, Transformers/attention, MoE, Capsules, Mamba/SSM, Diffusion, Neural ODEs, Predictive coding, and Neural CAs onto quilt analogues (listener=boolean attention head, router=MoE gate, sheet tick=reverse diffusion step, etc.) — the meta-architecture claim made checkable row by row.",
+      "inputs": ["10 published architectures"],
+      "outputs": ["per-architecture quilt analogue"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "hand-wavy 'it's all message passing' without the row-by-row mapping",
+      "elementary": true,
+      "evidence": "NEURAL-CELLS-RESEARCH.md '10 architectures mapped to Quilt' + synthesis table"
+    },
+    {
+      "part_id": "quilt-upstream-P23",
+      "layer": 4,
+      "name": "filename/content drift in the essay corpus",
+      "essence": "The file essays/essay-26-the-living-spreadsheet.md opens 'Essay 206: The Spreadsheet That Thinks' — filenames and essay numbers disagree (also: paper-50/51/52/53 live under essays/ while a parallel papers/ tree holds other papers, some duplicated). Citations by filename can misattribute content.",
+      "inputs": ["essay corpus"],
+      "outputs": ["attribution hazard, receipted"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "citing 'essay-26' and receiving essay 206; duplicated paper trees drifting apart",
+      "elementary": true,
+      "evidence": "essays/essay-26-the-living-spreadsheet.md line 1 vs its own filename; essays/paper-5x-*.md coexisting with papers/paper-5x-*.md (both trees listed in the repo)"
+    },
+    {
+      "part_id": "quilt-upstream-P24",
+      "layer": 0,
+      "name": "nine cell-kind modules",
+      "essence": "packages/core/src/cells/ holds exactly nine modules — value, sensor, formula, listener, api, program, router, io, ai — the TypeScript core's type taxonomy of what a cell can be; the same nine appear as the cell kinds in the fleet's decomposition sheets.",
+      "inputs": ["cell semantics"],
+      "outputs": ["the nine-kind type system"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "ad-hoc cell kinds outside the nine breaking portability",
+      "elementary": true,
+      "evidence": "packages/core/src/cells/ directory listing (value.ts, sensor.ts, formula.ts, listener.ts, api.ts, program.ts, router.ts, io.ts, ai.ts)"
+    }
+  ],
+  "sheet": {
+    "name": "quilt-upstream-as-cells",
+    "cells": [
+      { "id": "core.cells9", "kind": "value", "expr": "value/sensor/formula/listener/api/program/router/io/ai modules", "deps": [], "maps_to_part": "quilt-upstream-P24" },
+      { "id": "core.graph", "kind": "formula", "expr": "v_i = f_i({v_j}), f arbitrary", "deps": ["core.cells9"], "maps_to_part": "quilt-upstream-P01" },
+      { "id": "cns.primitives", "kind": "program", "expr": "Z_in, Z_out, JEPA, DoubleEntry, Vibe, GC, Murmur, Graph", "deps": ["core.cells9"], "maps_to_part": "quilt-upstream-P02" },
+      { "id": "law.gamma_eta", "kind": "formula", "expr": "gamma + eta = budget (conserved)", "deps": ["cns.primitives"], "maps_to_part": "quilt-upstream-P03" },
+      { "id": "watch.gaze", "kind": "listener", "expr": "observation as participatory act", "deps": ["law.gamma_eta"], "maps_to_part": "quilt-upstream-P04" },
+      { "id": "fascia.gradients", "kind": "sensor", "expr": "FasciaJEPA + FasciaDoubleEntry continuous fields", "deps": ["cns.primitives"], "maps_to_part": "quilt-upstream-P15" },
+      { "id": "polyglot.opcodes", "kind": "router", "expr": "22 opcodes -> 8 primitives, gamma+eta=1", "deps": ["core.cells9"], "maps_to_part": "quilt-upstream-P10" },
+      { "id": "hodge.decomp", "kind": "formula", "expr": "omega = d(a)+d(b)+h; ratios sum to 1", "deps": ["core.graph"], "maps_to_part": "quilt-upstream-P11" },
+      { "id": "hodge.observer", "kind": "listener", "expr": "measurement injects delta(b)_obs", "deps": ["hodge.decomp"], "maps_to_part": "quilt-upstream-P12" },
+      { "id": "notebook.map", "kind": "io", "expr": "page=cell, links=graph, tick=cognitive event", "deps": ["core.cells9"], "maps_to_part": "quilt-upstream-P13" },
+      { "id": "iterator.loop", "kind": "program", "expr": "call -> integrate -> assess (recursive/council/bootstrap)", "deps": ["core.cells9"], "maps_to_part": "quilt-upstream-P14" },
+      { "id": "voyage.qzt", "kind": "io", "expr": "quilt ship mood.qzt — pocketable vessel", "deps": ["core.cells9"], "maps_to_part": "quilt-upstream-P05" },
+      { "id": "murmur.idle", "kind": "ai", "expr": "night-thinking agent, 5 gossip strategies", "deps": ["cns.primitives"], "maps_to_part": "quilt-upstream-P08" },
+      { "id": "sdk.federation", "kind": "api", "expr": "resolveCell/subscribeCell/CellRouter, quilt:// URIs", "deps": ["core.cells9"], "maps_to_part": "quilt-upstream-P18" },
+      { "id": "store.tiers", "kind": "io", "expr": "hot/warm/cold R2 + MQTT transport", "deps": ["sdk.federation"], "maps_to_part": "quilt-upstream-P19" },
+      { "id": "coord.letter", "kind": "router", "expr": "watch proposes, Lucineer routes, Captain coordinates", "deps": [], "maps_to_part": "quilt-upstream-P20" },
+      { "id": "synergy.stubs", "kind": "value", "expr": "8 identical unposted stubs", "deps": ["coord.letter"], "maps_to_part": "quilt-upstream-P21" }
+    ]
+  },
+  "layer_logic": {
+    "0": "substrate = the cell graph (any node function, nine kinds) with a conservation law (gamma + eta = budget) as its constitution",
+    "1": "mechanism = 8 per-cell CNS primitives over discrete signals + Fascia gradients between cells; Hodge decomposition reads what changed; the API iterator grows agents; federation primitives link instances",
+    "2": "policy = watching is participation (Fifth Impossibility), laws must survive reimplementation, no unified system gets precision+scale+adaptability, lanes are not to be crossed with code",
+    "3": "interface = .qzt vessels, quilt:// URIs, the notebook-isomorphism, and a coordination protocol addressed to the other fleet",
+    "4": "evidence = release receipts (15/61/79 tests), a ten-row architecture mapping, eight unposted SYNERGY stubs receipted honestly, and a filename/content drift hazard in the essay corpus"
+  }
+}

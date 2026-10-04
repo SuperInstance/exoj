@@ -25,7 +25,12 @@
   "scripts": {
     "smoke": "node smoke.mjs",
     "test": "node --test lab/*.test.mjs",
-    "gate": "node tools/spec_gate.mjs"
+    "gate": "node tools/spec_gate.mjs",
+    "atlas": "node atlas.mjs verify",
+    "atlas:sweep": "node atlas.mjs sweep",
+    "atlas:csv": "node atlas.mjs csv",
+    "atlas:protocol": "node atlas.mjs protocol",
+    "e_x8": "node experiments/e_x8_atlas_gatesweep.mjs"
   },
   "license": "MIT",
   "repository": {

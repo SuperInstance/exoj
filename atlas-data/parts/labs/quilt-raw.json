@@ -1,0 +1,251 @@
+{
+  "work": "quilt-raw",
+  "family": "labs",
+  "repo_path": "/home/z/my-project/download/quilt-raw",
+  "head": "e759163",
+  "smoke": {
+    "cmd": "node experiments/smoke_raw.mjs",
+    "verdict": "PASS (18/18 checks sealed)",
+    "notes": "Covers q32 arithmetic vs reference (i128>>32 wrap mul, truncating div, exact isqrt), tick 7-ops + ledger, transactional breach halt with ledger bit-unchanged, 50-event rewind seed bit-equals origin with per-event exact inverses, R1-R5 sealed verdicts, receipt chain verifies from re-read file (10 links), float64 rewind-contrast DRIFT-NONZERO with finite drift numbers, egg closed shell + nursery growth, field render determinism."
+  },
+  "essence": "v -> L -> G -> v' in exact integer arithmetic: seven ops, exact rewind, no search.",
+  "ideas": [
+    {
+      "id": "quilt-raw-I1",
+      "name": "One line at every scale",
+      "statement": "Velocity produces ledger, ledger constrains gate, gate produces velocity — the same seven ops (measure, commit, consume, check, cross, force, integrate) at reflex, decision, plan, philosophy scale.",
+      "parts": ["quilt-raw-P03", "quilt-raw-P06"]
+    },
+    {
+      "id": "quilt-raw-I2",
+      "name": "Conservation with transactional honesty",
+      "statement": "commit/consume are STAGED and written only if gamma'+eta' <= C; a breach halts with no write, no event, no clock advance — the only reading that keeps every tick reversible. Measurements write nothing.",
+      "parts": ["quilt-raw-P04", "quilt-raw-P05"]
+    },
+    {
+      "id": "quilt-raw-I3",
+      "name": "Exact inversion by construction",
+      "statement": "Every event stores the full post-state {t,p,v,gamma,eta}; the pre-state is four undos recomputing the SAME pure substrate products, so add/sub cancel exactly — one deterministic fold, zero search, zero fitting.",
+      "parts": ["quilt-raw-P07", "quilt-raw-P11", "quilt-raw-P12", "quilt-raw-P14"]
+    },
+    {
+      "id": "quilt-raw-I4",
+      "name": "Shapes that grow and close",
+      "statement": "Tokens glue along shared boundary ids, a closed shape (empty boundary) becomes an egg, the nursery loop grows the interior, and break emits a Mode whose deltas render into a topology field.",
+      "parts": ["quilt-raw-P08", "quilt-raw-P09", "quilt-raw-P10"]
+    },
+    {
+      "id": "quilt-raw-I5",
+      "name": "Substrate decides exactness",
+      "statement": "The loop is generic over arithmetic substrate A; Q32 BigInt is exact, float64 exists ONLY as the R2 contrast arm proving drift is a property of the substrate, not the code path.",
+      "parts": ["quilt-raw-P01", "quilt-raw-P02", "quilt-raw-P13"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "quilt-raw-P01",
+      "layer": 0,
+      "name": "Q32 fixed-point integer substrate",
+      "essence": "BigInt i64.32 fixed point: truncating mul/div ((i128>>32) wrap), exact integer floor isqrt, ONE/HALF/LOG2_3 matching seed-arch verbatim — the hot path has no floats.",
+      "inputs": ["integers"],
+      "outputs": ["exact products, quotients, square roots"],
+      "gate": "mul must match the (i128>>32, wrap) reference; isqrt must be the exact floor",
+      "gate_kind": "invariant",
+      "failure_mode": "Any rounding would destroy the bit-equal rewind guarantee",
+      "elementary": true,
+      "evidence": "q32.mjs:1-91; raw/loop.mjs:45-52"
+    },
+    {
+      "part_id": "quilt-raw-P02",
+      "layer": 0,
+      "name": "Substrate injection seam",
+      "essence": "The loop is generic over substrate A ({add,sub,mul,div,sqrt,le,isZero,...}); Q32A is the hot path, F64A exists only so the R2 contrast runs the IDENTICAL code path and op order.",
+      "inputs": ["substrate choice"],
+      "outputs": ["same loop semantics on either substrate"],
+      "gate": "R2 contrast must be SUBSTRATE-ONLY: identical code path, identical op order",
+      "gate_kind": "invariant",
+      "failure_mode": "A divergent code path would make the float contrast vacuous",
+      "elementary": true,
+      "evidence": "raw/loop.mjs:40-69"
+    },
+    {
+      "part_id": "quilt-raw-P03",
+      "layer": 1,
+      "name": "The seven-op tick",
+      "essence": "Per tick: measure curvature kappa (pure), stage commit |v|^2*dt and consume H(p)*dt, conservation check, gate crossing test, force v -= grad*dt, integrate p += v'*dt, record Evt={t,p,v,g,e}. Nothing else.",
+      "inputs": ["state {p,v,g,e,t,vPrev}", "cfg {dt,C,gate}"],
+      "outputs": ["new state + journal event + optional decision"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "An eighth hidden op would break the seed's claim and the inverse algebra",
+      "elementary": true,
+      "evidence": "raw/loop.mjs:112-154"
+    },
+    {
+      "part_id": "quilt-raw-P04",
+      "layer": 1,
+      "name": "Transactional conservation halt",
+      "essence": "commit/consume are staged and written only if the check passes; on breach: no write, no event, no clock advance — the ledger is bit-identical to pre-tick, so every tick stays reversible.",
+      "inputs": ["staged g2,e2", "C"],
+      "outputs": ["commit or halted:true with untouched ledger"],
+      "gate": "On breach the ledger must be bit-unchanged (mini-R1 sealed check)",
+      "gate_kind": "conservation",
+      "failure_mode": "A plain abort after write would leave a dirty, irreversible ledger",
+      "elementary": true,
+      "evidence": "raw/loop.mjs:17-23,120-128"
+    },
+    {
+      "part_id": "quilt-raw-P05",
+      "layer": 1,
+      "name": "Measurements write nothing",
+      "essence": "kappa (op 1) and the crossing decision d (op 5) are pure reads — they therefore need no inverse in rewind, keeping the inversion algebra to exactly four undos.",
+      "inputs": ["v, vPrev, gate eval"],
+      "outputs": ["kappa, decision point"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "A measurement that wrote state would need its own inverse and break the count",
+      "elementary": true,
+      "evidence": "raw/loop.mjs:25-31; raw/journal.mjs:28-31"
+    },
+    {
+      "part_id": "quilt-raw-P06",
+      "layer": 1,
+      "name": "Gates as signed-distance functionals",
+      "essence": "Gate = {f:Vec->R, theta}: 'well' (harmonic, grad=(px,py)) and 'wall' (half-space, grad=(n)); crossing = sign flip of eval between p and p+v*dt; rising = grad.v > 0 strictly; zero joins the positive side (receipted).",
+      "inputs": ["position, velocity, gate spec"],
+      "outputs": ["crossing && rising decision"],
+      "gate": "A decision requires BOTH sign flip AND rising slope",
+      "gate_kind": "admission",
+      "failure_mode": "Sign flip without rising would admit falling exits as decisions",
+      "elementary": true,
+      "evidence": "raw/loop.mjs:36-38,78-96,131-138"
+    },
+    {
+      "part_id": "quilt-raw-P07",
+      "layer": 1,
+      "name": "Exact rewind: four undos, zero search",
+      "essence": "rewind(j) inverts each event from its recorded post-state: p0 = p - v*dt, v0 = v + grad(p0)*dt, g0 = g - |v0|^2*dt, e0 = e - H(p0)*dt; each recomputed product is bit-identical to its forward twin, so compose or restart folds are exact in Q32.",
+      "inputs": ["journal of {t,p,v,g,e} events", "cfg", "substrate"],
+      "outputs": ["seed state + all per-event pre-states"],
+      "gate": "rewind(50 events) must bit-equal the origin seed (integer equality, no tolerance)",
+      "gate_kind": "postcondition",
+      "failure_mode": "Approximate inversion (least-squares, search) is forbidden by the charter",
+      "elementary": true,
+      "evidence": "raw/journal.mjs:8-38,51-78"
+    },
+    {
+      "part_id": "quilt-raw-P08",
+      "layer": 1,
+      "name": "Token gluing grammar",
+      "essence": "Tok = {r: invariant id, d: boundary ids, k: kappa}; glue(t1,t2) unions boundaries iff they intersect; shell(S) = ids appearing in exactly one token boundary (odd-degree cancellation); close(S) iff shell is empty.",
+      "inputs": ["token sets"],
+      "outputs": ["glued shapes, boundary, closedness verdict"],
+      "gate": "glueAll returns null on any disjoint pair — the shape must stay connected",
+      "gate_kind": "precondition",
+      "failure_mode": "Gluing disconnected tokens would fake a closed shape",
+      "elementary": true,
+      "evidence": "raw/egg.mjs:29-59"
+    },
+    {
+      "part_id": "quilt-raw-P09",
+      "layer": 1,
+      "name": "Egg lifecycle",
+      "essence": "egg(S) requires close(S); the nursery N starts as the interior and GROWS by adding each nursery-tick decision's 2^-4 lattice id; break fires when |N| > theta, emitting the live Mode {p,v,kappa,gamma,eta} and marking the shell open.",
+      "inputs": ["closed shape", "nursery loop decisions"],
+      "outputs": ["Mode emission on break"],
+      "gate": "The shell boundary must stay empty up to the break (R3 asserts exactly this)",
+      "gate_kind": "precondition",
+      "failure_mode": "Breaking an unclosed egg would emit from a non-interior",
+      "elementary": true,
+      "evidence": "raw/egg.mjs:1-26"
+    },
+    {
+      "part_id": "quilt-raw-P10",
+      "layer": 1,
+      "name": "Field render: deltas to topology",
+      "essence": "emit(m) returns the Mode's five fields verbatim; render quantizes deltas to 2^-4 lattice cells, glues same-cell deltas into nodes, links nodes at Chebyshev distance <= R=2, takes union-find components; canonically sorted, topoHash = sha256.",
+      "inputs": ["emitted deltas"],
+      "outputs": ["{nodes, edges, components, topoHash}"],
+      "gate": "render is pure: same journal -> same topology, hash-checked (R4)",
+      "gate_kind": "postcondition",
+      "failure_mode": "Hidden state in render would break replay determinism",
+      "elementary": true,
+      "evidence": "raw/field.mjs:8-57"
+    },
+    {
+      "part_id": "quilt-raw-P11",
+      "layer": 3,
+      "name": "Journal as lineage",
+      "essence": "Evt = exactly {t, p, v, gamma, eta}; record appends; fork(j,t) = prefix slice = new lineage; the journal is the gapless state trajectory (contiguous t asserted).",
+      "inputs": ["tick events"],
+      "outputs": ["lineage that can branch at any t"],
+      "gate": "Event t values must be contiguous 0..n-1 — a gap means an unrecorded write",
+      "gate_kind": "invariant",
+      "failure_mode": "Extra fields or gaps would break the four-undo inversion contract",
+      "elementary": true,
+      "evidence": "raw/journal.mjs:3-6,45-46"
+    },
+    {
+      "part_id": "quilt-raw-P12",
+      "layer": 4,
+      "name": "Canonical bytes and hashes",
+      "essence": "jline serializes events with Q32 as exact decimal integers and f64 via shortest-round-trip JSON; jhash = sha256 over newline-joined lines; topology likewise canonically hashed — R4/R5 replay checks compare bytes.",
+      "inputs": ["journal / topology"],
+      "outputs": ["deterministic byte strings, sha256 digests"],
+      "gate": "Same state must always produce the same bytes (deterministic serialization)",
+      "gate_kind": "seal",
+      "failure_mode": "Locale or float-format drift would produce different hashes for identical state",
+      "elementary": true,
+      "evidence": "raw/journal.mjs:80-88; raw/field.mjs:55-56"
+    },
+    {
+      "part_id": "quilt-raw-P13",
+      "layer": 4,
+      "name": "Charter law: decision rules before the run",
+      "essence": "The seed charter (first commit, never edited) demands paired arms on identical worlds, verdict rules receipted BEFORE the run, counterfactual measurement with the mechanism zeroed, loud honest negatives, and green smoke on every commit.",
+      "inputs": ["charter text"],
+      "outputs": ["experiment discipline for every lane here"],
+      "gate": "No post-hoc verdicts — the rule must precede the numbers in the receipt chain",
+      "gate_kind": "precondition",
+      "failure_mode": "Post-hoc verdicts would make every sealed result unfalsifiable",
+      "elementary": true,
+      "evidence": "README.md:1-6,172-182"
+    },
+    {
+      "part_id": "quilt-raw-P14",
+      "layer": 4,
+      "name": "Float64 contrast arm",
+      "essence": "The R2 experiment runs the identical loop on f64 and receipts DRIFT-NONZERO: compose-mode seed deviation 7.48e-17, max 1.04e-16 — proving exactness is a property of the Q32 substrate, not a lucky code path.",
+      "inputs": ["same journals on both substrates"],
+      "outputs": ["finite drift numbers in the sealed summary"],
+      "gate": "The contrast must show NONZERO float drift while Q32 stays bit-equal",
+      "gate_kind": "postcondition",
+      "failure_mode": "If float were also exact, the substrate claim would collapse",
+      "elementary": true,
+      "evidence": "raw/loop.mjs:54-56; experiments/outputs/e_r1_summary.json:11,22-28"
+    }
+  ],
+  "sheet": {
+    "name": "quilt-raw-as-cells",
+    "cells": [
+      {"id": "q32.ONE", "kind": "value", "expr": "1<<32 — fixed-point unity, seed-arch verbatim", "deps": [], "maps_to_part": "quilt-raw-P01"},
+      {"id": "A", "kind": "router", "expr": "substrate selector: Q32A (hot path) | F64A (contrast arm only)", "deps": [], "maps_to_part": "quilt-raw-P02"},
+      {"id": "gate.well", "kind": "formula", "expr": "eval = (px^2+py^2)/2 - theta; grad = (px,py)", "deps": [], "maps_to_part": "quilt-raw-P06"},
+      {"id": "loop.tick", "kind": "program", "expr": "kappa; staged commit/consume; check; cross; force; integrate; record", "deps": ["A", "gate.well"], "maps_to_part": "quilt-raw-P03"},
+      {"id": "halt.flag", "kind": "listener", "expr": "breach => halted:true, ledger bit-unchanged, clock frozen", "deps": ["loop.tick"], "maps_to_part": "quilt-raw-P04"},
+      {"id": "journal.rows", "kind": "value", "expr": "append-only Evt={t,p,v,g,e} — the lineage", "deps": ["loop.tick"], "maps_to_part": "quilt-raw-P11"},
+      {"id": "rewind.seed", "kind": "formula", "expr": "fold invert(j[n])..invert(j[0]) — four undos per event, no search", "deps": ["journal.rows"], "maps_to_part": "quilt-raw-P07"},
+      {"id": "egg.shell", "kind": "formula", "expr": "odd-degree boundary ids; close(S) iff empty", "deps": [], "maps_to_part": "quilt-raw-P08"},
+      {"id": "egg.break", "kind": "program", "expr": "|N| > theta => emit Mode {p,v,kappa,g,e}, shell opens", "deps": ["egg.shell"], "maps_to_part": "quilt-raw-P09"},
+      {"id": "field.topo", "kind": "program", "expr": "lattice glue + Chebyshev adjacency + union-find + topoHash", "deps": ["egg.break"], "maps_to_part": "quilt-raw-P10"},
+      {"id": "jhash", "kind": "io", "expr": "sha256 over canonical jline bytes — tamper evidence", "deps": ["journal.rows"], "maps_to_part": "quilt-raw-P12"}
+    ]
+  },
+  "layer_logic": {
+    "0": "Substrate is the arithmetic itself: Q32 BigInt fixed point with an injected seam so the identical loop can also run on f64 — the choice of substrate IS the exactness guarantee.",
+    "1": "Mechanisms are seven ops per tick plus three lifecycle transforms: token gluing, egg growth/break, delta rendering — each one pure, deterministic, and reversible.",
+    "2": "Policy is thin and hard: the staged conservation check (halt transactionally), the crossing-and-rising admission for decisions, and the charter's no-post-hoc-verdicts law.",
+    "3": "Interface is the journal: exactly five fields per event, append-only, fork by prefix — the lineage is the only thing the outside world ever touches.",
+    "4": "Evidence is byte-level: canonical serialization, sha256 of journals and topologies, sealed R1-R5 verdicts, and the float64 contrast arm that proves exactness is substrate-borne."
+  }
+}

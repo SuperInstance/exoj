@@ -1,0 +1,297 @@
+{
+  "work": "breakthrough-prospector",
+  "family": "meta",
+  "repo_path": "/home/z/my-project/breakthrough-prospector",
+  "head": "f0034fd",
+  "smoke": {
+    "cmd": "cd /home/z/my-project/breakthrough-prospector && python3 tools/score.py",
+    "verdict": "PASS",
+    "notes": "The scorer RAN offline and emitted the live table: E1 80 RUN (bug-injection self-play), E6 64 RUN, E3 60 RUN with '! F cap: external dependency (Casey)', E7 60 RUN, E5 50 wait with '! V x0.5: target metric has no current measurement', E2 48 RUN (same V cap), E8 48 RUN, E9 40 RUN, E4 36 wait — 9 experiments, gate column computed, anti-gaming warnings printed at runtime. Exit 0."
+  },
+  "essence": "a pipeline that turns frontier scouting into pre-registered, receipt-backed experiments — crossing abstractions systematically instead of by luck at 3am",
+  "ideas": [
+    {
+      "id": "breakthrough-prospector-I1",
+      "name": "scout to receipt pipeline",
+      "statement": "SCOUT -> CARD -> SCORE -> PRE-REGISTER -> RUN -> RECEIPT -> LADDER-CLAIM is one continuous pipeline: scouts mine sources, claims become abstraction cards, top cards become pre-registered experiments, experiments produce receipts, receipts update the cards, and the loop runs continuously.",
+      "parts": ["breakthrough-prospector-P01", "breakthrough-prospector-P03", "breakthrough-prospector-P05", "breakthrough-prospector-P08", "breakthrough-prospector-P11", "breakthrough-prospector-P16"]
+    },
+    {
+      "id": "breakthrough-prospector-I2",
+      "name": "crossing abstractions",
+      "statement": "Breakthroughs come from crossing abstractions — noticing that system A's mechanism, transplanted into repo B's harness, does something nobody in A or B anticipated — so the registry holds each abstraction as a card with cited instances, the fleet instance, the gap, and the experiment hook.",
+      "parts": ["breakthrough-prospector-P02", "breakthrough-prospector-P03"]
+    },
+    {
+      "id": "breakthrough-prospector-I3",
+      "name": "honesty tags as data",
+      "statement": "Every claim carries a honesty tag — VERIFIED (we reproduced or the source shows evidence), REPORTED (strong source, untouched), UNVERIFIED (hearsay) — and the scout protocol enforces 'cite or it didn't happen' with a smallest-build bias and a 25-minute reporting budget.",
+      "parts": ["breakthrough-prospector-P01", "breakthrough-prospector-P04"]
+    },
+    {
+      "id": "breakthrough-prospector-I4",
+      "name": "multiplicative score with a gate",
+      "statement": "B = V x F x S (value x feasibility x surprise, 1-5 each) is multiplicative because a zero in any factor zeroes the product; the run gate is B >= 40 AND F >= 3 AND >= 1 VERIFIED citation, with anti-gaming caps (S<=3 for single-lab clustering, V x0.5 unmeasured metrics, F<=2 when Casey must act first).",
+      "parts": ["breakthrough-prospector-P05", "breakthrough-prospector-P06", "breakthrough-prospector-P07"]
+    },
+    {
+      "id": "breakthrough-prospector-I5",
+      "name": "pre-registration as anti-laundering",
+      "statement": "The interpretation is written down BEFORE the run — what would confirm, refute, or bore — sealed pre-draw at a commit with the runner's sha256, arms drawn from a receipted quantum-random channel, and the decide step replayable byte-identically: no pin, no run.",
+      "parts": ["breakthrough-prospector-P08", "breakthrough-prospector-P09", "breakthrough-prospector-P10"]
+    },
+    {
+      "id": "breakthrough-prospector-I6",
+      "name": "the honest negative is a finding",
+      "statement": "E6 slice-2's verdict of record is FAIL — mutation_space_inert: true, cost rule NOT_PAID, no arm met the sealed threshold M >= 1.05 x baseline = 7.4277... AND totalF >= 15, no threshold surgery, no post-hoc metric revision, the 5 frozen-unmeasured arms never peeked — 'an honest negative is a finding, not a gain.'",
+      "parts": ["breakthrough-prospector-P11", "breakthrough-prospector-P12", "breakthrough-prospector-P13"]
+    },
+    {
+      "id": "breakthrough-prospector-I7",
+      "name": "ladder honesty",
+      "statement": "State the RSI position honestly (card C12): most fleet systems are L0; anything claiming L1 needs a held-out gate saying so — a ladder claim without a held-out gate is marketing.",
+      "parts": ["breakthrough-prospector-P14"]
+    },
+    {
+      "id": "breakthrough-prospector-I8",
+      "name": "scores become lanes with build sizes",
+      "statement": "Scored claims enter the account snowball queue, and DELTAS.md converts registry mechanisms into per-repo deltas with P0/P1/P2 priority and a named first build size (e.g. D1 bug-injection loop: 'one evening, stdlib only') — prospecting ends in scheduled work, not vibes.",
+      "parts": ["breakthrough-prospector-P15", "breakthrough-prospector-P16"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "breakthrough-prospector-P01",
+      "layer": 0,
+      "name": "scout log substrate",
+      "essence": "Raw claims as blocks: Source (URL/owner+repo+path/commit), Claim (one falsifiable sentence), Evidence (what the source shows), Honesty tag, Abstraction fit, Fleet resonance, Suggested experiment.",
+      "inputs": ["papers, repos, trending systems"],
+      "outputs": ["dated claim blocks in sources/scout-log.md"],
+      "gate": "no URL/commit, no claim",
+      "gate_kind": "precondition",
+      "failure_mode": "uncited claims entering the registry",
+      "elementary": true,
+      "evidence": "breakthrough-prospector/protocols/scout-protocol.md claim format + rule 1; sources/scout-log.md"
+    },
+    {
+      "part_id": "breakthrough-prospector-P02",
+      "layer": 0,
+      "name": "abstraction card substrate",
+      "essence": "Numbered cards (C01 frozen-driver ceiling ~2.5 meta-levels, C02 harness-over-weights, ...) each with statement, cited instances, what it explains, our-fleet instance, the gap, the experiment hook; cards are living documents updated by receipts.",
+      "inputs": ["deduped claims"],
+      "outputs": ["abstractions/registry.md cards"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "a card without a cited instance is speculation (the repo's own one-rule)",
+      "elementary": true,
+      "evidence": "breakthrough-prospector/abstractions/registry.md header + C01/C02 as read"
+    },
+    {
+      "part_id": "breakthrough-prospector-P03",
+      "layer": 1,
+      "name": "distill and dedup move",
+      "essence": "Before filing, check whether an existing card covers the mechanism; add the instance to the card instead of opening a parallel claim — memory grows by accretion, not duplication.",
+      "inputs": ["new claim"],
+      "outputs": ["new card OR instance appended to existing card"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "parallel claims for one mechanism fragmenting the registry",
+      "elementary": true,
+      "evidence": "breakthrough-prospector/protocols/scout-protocol.md rule 4 'Feed cards, don't duplicate them'"
+    },
+    {
+      "part_id": "breakthrough-prospector-P04",
+      "layer": 2,
+      "name": "scout discipline rules",
+      "essence": "Cite or it didn't happen; tag the honesty; one claim per block; smallest-build bias (name the cheapest settling experiment or the claim isn't ready); report by minute 25 even if incomplete; scouts never push — output lands via PR.",
+      "inputs": ["scout session"],
+      "outputs": ["protocol-compliant claim blocks"],
+      "gate": "scout reports what it verified by minute 25 even if incomplete",
+      "gate_kind": "budget",
+      "failure_mode": "endless audits that never report, or scouts committing to fleet repos",
+      "elementary": true,
+      "evidence": "breakthrough-prospector/protocols/scout-protocol.md rules 1-7"
+    },
+    {
+      "part_id": "breakthrough-prospector-P05",
+      "layer": 1,
+      "name": "B = V x F x S scorer",
+      "essence": "tools/score.py computes the table from a single embedded source-of-truth and enforces scoring.md's anti-gaming rules as printed warnings; scores live in the registry's experiment tables and hand-edited scores must carry a why line.",
+      "inputs": ["EXPERIMENTS table (id, name, cards, V, F, S, verified_citations, needs_casey, metric_measured, why)"],
+      "outputs": ["ranked table with B, gate column, warnings"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "hand-edited scores without a why line",
+      "elementary": true,
+      "evidence": "breakthrough-prospector/tools/score.py header + this lane's live run output"
+    },
+    {
+      "part_id": "breakthrough-prospector-P06",
+      "layer": 2,
+      "name": "candidate run gate",
+      "essence": "Run an experiment only when B >= 40 AND F >= 3 AND the claim carries >= 1 VERIFIED citation; B >= 60 enters the snowball queue top; 40-59 queued; < 40 stays in the scout log.",
+      "inputs": ["scored experiment"],
+      "outputs": ["RUN / wait / log triage"],
+      "gate": "B >= 40 AND F >= 3 AND >= 1 VERIFIED citation",
+      "gate_kind": "admission",
+      "failure_mode": "running hearsay-backed or low-feasibility experiments",
+      "elementary": true,
+      "evidence": "breakthrough-prospector/README.md pipeline step 3; scoring.md 'Gate' section"
+    },
+    {
+      "part_id": "breakthrough-prospector-P07",
+      "layer": 2,
+      "name": "anti-gaming caps",
+      "essence": "S capped at 3 when the only instances are one lab or one arxiv week (clustering is not consensus); V discounted x0.5 when the metric has no current measurement; F capped at 2 if Casey must do something first; every cap emitted as a visible warning.",
+      "inputs": ["raw V/F/S inputs"],
+      "outputs": ["capped scores + warnings"],
+      "gate": "caps applied deterministically by the scorer, visible in output",
+      "gate_kind": "invariant",
+      "failure_mode": "hype-inflated S or unmeasurable V passing the gate",
+      "elementary": true,
+      "evidence": "breakthrough-prospector/scoring.md 'Anti-gaming notes'; live run warnings '! F cap: external dependency (Casey)', '! V x0.5: target metric has no current measurement'"
+    },
+    {
+      "part_id": "breakthrough-prospector-P08",
+      "layer": 1,
+      "name": "sealed pre-registration",
+      "essence": "registration.json + registration.md sealed pre-draw at a named commit (e6-slice-2: commit e3f003f, pushed BEFORE any external call) with the runner of record fixed by sha256; the interpretation is written before the run.",
+      "inputs": ["experiment hypothesis + metric"],
+      "outputs": ["sealed registration + runner hash"],
+      "gate": "registration sealed and pushed before any external call / draw",
+      "gate_kind": "seal",
+      "failure_mode": "post-hoc interpretation laundering (the repo's named sin)",
+      "elementary": true,
+      "evidence": "breakthrough-prospector/experiments/e6-slice-2/verdict.md header; registration.json + registration.md present in both slice dirs"
+    },
+    {
+      "part_id": "breakthrough-prospector-P09",
+      "layer": 1,
+      "name": "receipted quantum arm draw",
+      "essence": "Arms are drawn from a rationed quantum-random channel with a seal receipt (qrng-seal.json, qrng-seal-raw.json), an attempts ledger (qrng-attempts.jsonl), and a channel-health probe receipt documenting a RECOVERED channel — the draw itself is evidence.",
+      "inputs": ["sealed registration"],
+      "outputs": ["drawn arm order + channel receipts"],
+      "gate": "draw attempts and channel health are receipted per attempt",
+      "gate_kind": "budget",
+      "failure_mode": "unlogged draw retries enabling cherry-picking",
+      "elementary": true,
+      "evidence": "breakthrough-prospector/experiments/e6-slice-2/receipts/qrng-seal.json, qrng-attempts.jsonl, channel-health-probe-w63.json + provenance.md"
+    },
+    {
+      "part_id": "breakthrough-prospector-P10",
+      "layer": 1,
+      "name": "deterministic decide + replay check",
+      "essence": "decide.json is produced by a deterministic local replay and decide --check reproduces it byte-identically modulo timestamp, with determinism.json recording TRUE — the measurement can be re-run, not just trusted.",
+      "inputs": ["receipt bundle"],
+      "outputs": ["decide.json + decide-check.json + determinism.json"],
+      "gate": "decide --check must be byte-identical modulo timestamp",
+      "gate_kind": "invariant",
+      "failure_mode": "non-reproducible verdicts (unauditable decisions)",
+      "elementary": true,
+      "evidence": "breakthrough-prospector/experiments/e6-slice-2/receipts/{decide.json, decide-check.json, determinism.json}; verdict.md 'decide --check byte-identical modulo timestamp, determinism receipt TRUE'"
+    },
+    {
+      "part_id": "breakthrough-prospector-P11",
+      "layer": 4,
+      "name": "per-slice receipt bundle",
+      "essence": "Each experiment directory carries baseline.json, decide.json, decide-check.json, determinism.json, witness.json, usage.jsonl, health-gate.json, qrng receipts, registration.md/json, arms.json, verdict.md — the run is its own archive.",
+      "inputs": ["run artifacts"],
+      "outputs": ["complete receipt directory"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "verdicts without the receipts that produced them",
+      "elementary": true,
+      "evidence": "breakthrough-prospector/experiments/e6-slice-1/receipts/ and e6-slice-2/receipts/ (14 files listed in both)"
+    },
+    {
+      "part_id": "breakthrough-prospector-P12",
+      "layer": 4,
+      "name": "verdict of record with sealed threshold",
+      "essence": "The verdict states FAIL with verbatim numbers: baseline M=7.07407..., best arm A5 +1.0471% vs gate M >= 7.42777... (= 1.05 x baseline) AND totalF >= 15; every measured arm kept totalF exactly 15; no threshold surgery; 5 frozen-unmeasured arms stay frozen and never peeked.",
+      "inputs": ["measured arms vs sealed gate"],
+      "outputs": ["verdict.md FAIL/FAIL/FAIL-of-record"],
+      "gate": "threshold fixed at registration; measured-but-failed arms published verbatim",
+      "gate_kind": "seal",
+      "failure_mode": "moving the threshold after seeing the numbers",
+      "elementary": true,
+      "evidence": "breakthrough-prospector/experiments/e6-slice-2/verdict.md 'Verdict of record' + arm table"
+    },
+    {
+      "part_id": "breakthrough-prospector-P13",
+      "layer": 2,
+      "name": "honest-negative filing rule",
+      "essence": "An honest negative is filed in the owning repo's FINDINGS.md and said so — doctrine inherited: honest negatives, collapse receipts, 3-root replication, never overclaim the ladder.",
+      "inputs": ["FAIL verdict"],
+      "outputs": ["public finding, not a quiet burial"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "deleting failed runs (the anti-pattern this rule exists to kill)",
+      "elementary": true,
+      "evidence": "breakthrough-prospector/README.md doctrine line + step 6 'Honest negative? File it...'; verdict.md 'An honest negative is a finding, not a gain.'"
+    },
+    {
+      "part_id": "breakthrough-prospector-P14",
+      "layer": 2,
+      "name": "ladder-claim rule",
+      "essence": "State the RSI ladder position honestly (card C12): most systems are L0; L1 requires a held-out gate saying so — a ladder claim without a held-out gate is marketing.",
+      "inputs": ["system self-assessment"],
+      "outputs": ["stated ladder position"],
+      "gate": "an L1 claim requires a held-out gate receipt",
+      "gate_kind": "admission",
+      "failure_mode": "RSI-position inflation",
+      "elementary": true,
+      "evidence": "breakthrough-prospector/README.md pipeline step 7; abstractions/registry.md C12 reference; DELTAS.md D5 'Ladder positions in README'"
+    },
+    {
+      "part_id": "breakthrough-prospector-P15",
+      "layer": 3,
+      "name": "DELTAS per-repo delta ledger",
+      "essence": "Account-wide self-improvement deltas applying registry mechanisms (Weco/AIDE^2 + frontier abstractions) to each repo: mechanism -> concrete change -> owning repo -> first build size, prioritized P0/P1/P2.",
+      "inputs": ["registry cards + fleet repo map"],
+      "outputs": ["DELTAS.md (e.g. D1 bug-injection self-play [P0] 'one evening, stdlib only')"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "deltas with no owning repo or no named first build",
+      "elementary": true,
+      "evidence": "breakthrough-prospector/DELTAS.md header + MicroMoth-quilt section (D1-D5 as read)"
+    },
+    {
+      "part_id": "breakthrough-prospector-P16",
+      "layer": 3,
+      "name": "snowball queue handoff",
+      "essence": "queue/snowball.md defines how scored claims enter the account snowball queue — the interface between prospecting and the lanes that will run the work.",
+      "inputs": ["gate-passing scores"],
+      "outputs": ["queued, prioritized experiments for lanes"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "scored claims rotting in the registry with no route to a lane",
+      "elementary": true,
+      "evidence": "breakthrough-prospector/queue/snowball.md; README.md 'What lives where' table"
+    }
+  ],
+  "sheet": {
+    "name": "breakthrough-prospector-as-cells",
+    "cells": [
+      { "id": "scout.log", "kind": "value", "expr": "dated claim blocks, honesty-tagged", "deps": [], "maps_to_part": "breakthrough-prospector-P01" },
+      { "id": "registry.cards", "kind": "value", "expr": "C01.. cards: statement/instances/gap/hook", "deps": ["scout.log"], "maps_to_part": "breakthrough-prospector-P02" },
+      { "id": "dedup.append", "kind": "program", "expr": "instance joins card, no parallel claim", "deps": ["registry.cards"], "maps_to_part": "breakthrough-prospector-P03" },
+      { "id": "score.b", "kind": "formula", "expr": "B = V x F x S with caps as warnings", "deps": ["registry.cards"], "maps_to_part": "breakthrough-prospector-P05" },
+      { "id": "gate.run", "kind": "listener", "expr": "B>=40 AND F>=3 AND >=1 VERIFIED -> RUN", "deps": ["score.b"], "maps_to_part": "breakthrough-prospector-P06" },
+      { "id": "register.seal", "kind": "program", "expr": "interpretation pinned pre-draw @ commit", "deps": ["gate.run"], "maps_to_part": "breakthrough-prospector-P08" },
+      { "id": "qrng.draw", "kind": "api", "expr": "rationed draw, seal + attempts ledger", "deps": ["register.seal"], "maps_to_part": "breakthrough-prospector-P09" },
+      { "id": "decide.check", "kind": "listener", "expr": "replay byte-identical modulo ts", "deps": ["qrng.draw"], "maps_to_part": "breakthrough-prospector-P10" },
+      { "id": "receipts.dir", "kind": "io", "expr": "baseline/decide/witness/usage/health per slice", "deps": ["decide.check"], "maps_to_part": "breakthrough-prospector-P11" },
+      { "id": "verdict.record", "kind": "value", "expr": "FAIL mutation_space_inert, threshold sealed", "deps": ["receipts.dir"], "maps_to_part": "breakthrough-prospector-P12" },
+      { "id": "ladder.claim", "kind": "formula", "expr": "L0 default; L1 needs held-out gate", "deps": ["verdict.record"], "maps_to_part": "breakthrough-prospector-P14" },
+      { "id": "deltas.ledger", "kind": "io", "expr": "P0/P1/P2 deltas with first-build sizes", "deps": ["registry.cards"], "maps_to_part": "breakthrough-prospector-P15" },
+      { "id": "queue.snowball", "kind": "router", "expr": "B>=60 -> queue top; 40-59 queued", "deps": ["gate.run"], "maps_to_part": "breakthrough-prospector-P16" }
+    ]
+  },
+  "layer_logic": {
+    "0": "substrate = two ledgers: an honesty-tagged scout log and a card registry where every abstraction carries cited instances",
+    "1": "mechanism = score (B=VxF*S), seal (pre-registration @ commit), draw (receipted QRNG), measure (deterministic replay + check)",
+    "2": "policy = admission gate B>=40/F>=3/VERIFIED, anti-gaming caps, 25-minute scout budget, ladder-claim rule, negatives are findings",
+    "3": "interface = DELTAS.md per-repo deltas with build sizes and the snowball queue that hands work to lanes",
+    "4": "evidence = per-slice receipt bundles (14 files), sealed thresholds, byte-identical decide --check, and a published FAIL verdict"
+  }
+}

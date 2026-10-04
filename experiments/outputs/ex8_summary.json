@@ -1,0 +1,7 @@
+{
+  "exp": "e_x8_atlas_gatesweep",
+  "date": "2026-10-04T07:08:23Z",
+  "failures": 0,
+  "verdict": "PASS",
+  "claim": "the atlas kit reproduces the wave-66 gate sweep from bundled decompositions with zero agents, offline, deterministically; the artifact of record re-verifies"
+}

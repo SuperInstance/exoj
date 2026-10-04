@@ -1,0 +1,304 @@
+{
+  "work": "quilt-pincher",
+  "family": "swarm",
+  "repo_path": "/home/z/my-project/quilt-pincher",
+  "head": "15fcd53",
+  "smoke": {
+    "cmd": "tsx --test test/*.test.ts (tsx binary borrowed from sibling repo quilt-playtest/node_modules/.bin/tsx — this repo ships no node_modules/dist)",
+    "verdict": "12/12 tests pass, 0 fail (5.2s, offline)",
+    "notes": "node:test runner via tsx; covers direct-hit tier, confirm tier, compile tier (mock compiler), veto paths, confidence climb, PincherSheet composition, and the three platform sheets incl. .nail loading on ESP32 defaults. Fully offline; the AI compiler cell is exercised only through a mock Compiler."
+  },
+  "essence": "Reflex engine built entirely from quilt cells: pinch, match, veto, execute — three latency tiers, LLM only as compiler",
+  "ideas": [
+    {
+      "id": "quilt-pincher-I1",
+      "name": "the whole reflex engine is a sheet of cells",
+      "statement": "Every layer of the reflex arc is declared as a cell — pinch (formula), match (program), execute (program), veto (listener), compile (ai), store (vector_store) — so federation, subscription, audit and persistence are inherited from the cell runtime instead of rebuilt per engine.",
+      "parts": ["quilt-pincher-P01", "quilt-pincher-P02", "quilt-pincher-P13", "quilt-pincher-P15"]
+    },
+    {
+      "id": "quilt-pincher-I2",
+      "name": "three-tier escalation on match score",
+      "statement": "One pinch, three clocks: score >= 0.80 executes directly (<50ms, no LLM), 0.55-0.80 executes through the confirm tier, below 0.55 with no match the SLOW tier compiles a new reflex via the LLM and stores it — the reflex database grows only at the moments the fast world fails.",
+      "parts": ["quilt-pincher-P05", "quilt-pincher-P06", "quilt-pincher-P09", "quilt-pincher-P11", "quilt-pincher-P12"]
+    },
+    {
+      "id": "quilt-pincher-I3",
+      "name": "the veto is a cell-level gate, not an afterthought",
+      "statement": "Before any execution — hit, confirm, or freshly compiled — the veto listener checks the pinch's safety hints (sandbox/network/filesystem) against the reflex's declared constraints; escalation of privilege is refused with a reason, and the refusal is a first-class result kind.",
+      "parts": ["quilt-pincher-P10", "quilt-pincher-P07", "quilt-pincher-P17"]
+    },
+    {
+      "id": "quilt-pincher-I4",
+      "name": "confidence is earned economics for reflexes",
+      "statement": "A reflex starts at confidence 0.5 and climbs logarithmically toward 0.99 with hits (0.5 + 0.49*log10(1+hits)); usage history (hits, lastHitAt) plus embedding make reflexes tensors with weight/gravity/distance — hot reflexes live near the agent, cold ones far.",
+      "parts": ["quilt-pincher-P08", "quilt-pincher-P02", "quilt-pincher-P03"]
+    },
+    {
+      "id": "quilt-pincher-I5",
+      "name": "portable agent state: the .nail bundle",
+      "statement": "The engine serializes to a content-addressed .nail (reflexes, veto rules, compile history, provenance) that an ESP32-class offline engine loads directly — the same sheet runs on cloud, workstation, and no_std edge, with LLM-dependent cells no-oping without keys.",
+      "parts": ["quilt-pincher-P14", "quilt-pincher-P15", "quilt-pincher-P18"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "quilt-pincher-P01",
+      "layer": 0,
+      "name": "the pinch envelope",
+      "essence": "Input atom: {trigger, context?, safety?} — a raw trigger string plus optional context and safety hints (sandbox/network/filesystem/timeoutMs) that the veto will check against the reflex's own constraints.",
+      "inputs": ["trigger string", "context object", "SafetyHints"],
+      "outputs": ["Pinch record"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "src/core/types.ts:L13-L32"
+    },
+    {
+      "part_id": "quilt-pincher-P02",
+      "layer": 0,
+      "name": "the reflex record",
+      "essence": "Learned pattern: {id, embedding, intent, action, safety, confidence, hits, createdAt, lastHitAt, provenance?} — the unit stored, scored, and executed; provenance records who compiled it and (optionally) its parent reflex.",
+      "inputs": ["compiled intent + action", "embedding vector", "safety constraints"],
+      "outputs": ["Reflex stored in the reflex store"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "src/core/types.ts:L35-L56"
+    },
+    {
+      "part_id": "quilt-pincher-P03",
+      "layer": 1,
+      "name": "brute-force cosine reflex store with upstream federation",
+      "essence": "MemoryReflexStore scores every entry by cosine similarity and returns top-k; up to ~10K reflexes this beats an HNSW index because the search fits in L2; an optional upstream store mirrors every insert/delete (the federation hook).",
+      "inputs": ["query embedding", "k", "reflex entries"],
+      "outputs": ["top-k {reflex, score} list"],
+      "gate": "cosine returns 0 on dimension mismatch (never throws mid-match)",
+      "gate_kind": "precondition",
+      "failure_mode": "dimension-mismatched embeddings silently score 0 (safe but invisible without an audit cell)",
+      "elementary": true,
+      "evidence": "src/adapters/memory-store.ts:L1-L57,L59-L68"
+    },
+    {
+      "part_id": "quilt-pincher-P04",
+      "layer": 1,
+      "name": "trigger embedding (pluggable embedder)",
+      "essence": "run() step 1: embed(pinch.trigger); three implementations — CloudflareAIEmbedder (remote), QuiltAIEmbedder, OfflineEmbedder — plus HashEmbedder, a deterministic character-histogram embedder for tests/demos/offline use.",
+      "inputs": ["trigger text"],
+      "outputs": ["normalized vector"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "hash embedder is semantic-free: two different triggers can collide; fine for tests, not for production matching",
+      "elementary": true,
+      "evidence": "src/core/engine.ts:L38-L39,L189-L200; src/adapters/embedding-adapter.ts:L12-L35"
+    },
+    {
+      "part_id": "quilt-pincher-P05",
+      "layer": 1,
+      "name": "top-5 match query",
+      "essence": "run() step 2: store.query(embedding, 5) — the reflex database is consulted before anything else; empty results fall through to the compile tier.",
+      "inputs": ["query embedding"],
+      "outputs": ["ranked candidate reflexes"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "src/core/engine.ts:L41-L42"
+    },
+    {
+      "part_id": "quilt-pincher-P06",
+      "layer": 1,
+      "name": "three-way tier router",
+      "essence": "Routing law: matches[0].score < confirmThreshold -> compile tier; >= hitThreshold -> direct execute (FAST); else confirm-and-execute (MEDIUM). The tier is returned in the result kind so latency budgets are observable per pinch.",
+      "inputs": ["top match score", "hitThreshold", "confirmThreshold"],
+      "outputs": ["route to executeDirectly | confirmAndExecute | compileAndStore"],
+      "gate": "score >= 0.80 for direct hit; 0.55 <= score < 0.80 for confirm",
+      "gate_kind": "precondition",
+      "failure_mode": "an embedding drift that drops all scores below 0.55 silently converts every pinch into an LLM compile (cost spike) — threshold tuning is operational policy",
+      "elementary": true,
+      "evidence": "src/core/engine.ts:L35-L57; README.md:L62-L66"
+    },
+    {
+      "part_id": "quilt-pincher-P07",
+      "layer": 1,
+      "name": "reflex execution with timeout",
+      "essence": "The reflex's action string is evaluated as an async JS expression via new Function with the pinch in scope, raced against a 5s executionTimeoutMs; failures become 'Execution failed: ...' errors.",
+      "inputs": ["reflex.action", "pinch context"],
+      "outputs": ["output value or thrown error"],
+      "gate": "Promise.race against executionTimeoutMs (default 5000) — a hung reflex cannot hang the engine",
+      "gate_kind": "budget",
+      "failure_mode": "HONEST RISK (comment in code): 'In production this would be sandboxed' — today the action runs unsandboxed via eval-in-Function; the veto checks declared hints, not real effects",
+      "elementary": true,
+      "evidence": "src/core/engine.ts:L121-L136"
+    },
+    {
+      "part_id": "quilt-pincher-P08",
+      "layer": 1,
+      "name": "confidence climb (logarithmic hit economics)",
+      "essence": "Every executed reflex bumps hits and lastHitAt and recomputes confidence = min(0.99, 0.5 + 0.49*log10(1+hits)) — trust in a reflex grows with reuse and saturates below certainty.",
+      "inputs": ["reflex id (from store)"],
+      "outputs": ["updated reflex (hits, lastHitAt, confidence)"],
+      "gate": "confidence clamped to [0.5 start, 0.99 ceiling] — invariant band",
+      "gate_kind": "invariant",
+      "failure_mode": "confidence measures FREQUENCY not CORRECTNESS: a confidently wrong reflex that keeps matching climbs the same curve",
+      "elementary": true,
+      "evidence": "src/core/engine.ts:L138-L147"
+    },
+    {
+      "part_id": "quilt-pincher-P09",
+      "layer": 1,
+      "name": "compile-and-store (the LLM as compiler)",
+      "essence": "SLOW tier: compiler.compile(pinch) returns {intent, action}; the new reflex is created at confidence 0.5 with provenance compiledBy:'compiler', veto-checked, inserted, then executed once for the caller — future identical pinches hit the FAST tier.",
+      "inputs": ["unmatched pinch", "Compiler implementation"],
+      "outputs": ["new Reflex persisted", "compiled result"],
+      "gate": "veto check runs on the FRESH reflex before insert+execute (a compiled reflex can be born vetoed)",
+      "gate_kind": "admission",
+      "failure_mode": "without a compiler configured the tier returns an error result rather than hallucinating an action (fail-closed)",
+      "elementary": true,
+      "evidence": "src/core/engine.ts:L92-L119"
+    },
+    {
+      "part_id": "quilt-pincher-P10",
+      "layer": 2,
+      "name": "veto gate (safety before execution)",
+      "essence": "DefaultVeto compares the pinch's SafetyHints to the reflex's declared constraints and refuses escalation: pinch wants network 'any' but reflex is restricted -> refused; pinch wants filesystem 'any' but reflex restricted -> refused; pinch wants sandbox 'none' but reflex requires wasm -> refused. Every tier (hit/confirm/compiled) passes through it.",
+      "inputs": ["reflex.safety", "pinch.safety"],
+      "outputs": ["{ok: true} | {ok: false, reason}"],
+      "gate": "no execution without veto.ok — refusal reason becomes the result's 'vetoed' kind",
+      "gate_kind": "admission",
+      "failure_mode": "the default veto compares DECLARED hints only; an action that lies about its needs is not caught at this layer",
+      "elementary": true,
+      "evidence": "src/core/engine.ts:L63-L71,L202-L217"
+    },
+    {
+      "part_id": "quilt-pincher-P11",
+      "layer": 2,
+      "name": "tier thresholds as configuration",
+      "essence": "hitThreshold (0.80) and confirmThreshold (0.55) are constructor policy — the same engine can be tuned more paranoid (raise both) or more reflexive (lower them) without code changes.",
+      "inputs": ["PincherConfig"],
+      "outputs": ["engine routing policy"],
+      "gate": "thresholds are read once at construction — mid-flight policy changes are not possible (deterministic per engine instance)",
+      "gate_kind": "precondition",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "src/core/engine.ts:L24-L32; src/core/types.ts:L92-L103"
+    },
+    {
+      "part_id": "quilt-pincher-P12",
+      "layer": 2,
+      "name": "no-compiler fail-closed path",
+      "essence": "If the match fails and no Compiler is configured (the ESP32/offline case), run() returns {kind:'error', error:'No match and no compiler configured'} — the engine never invents an action it cannot source.",
+      "inputs": ["empty/weak matches", "compiler presence"],
+      "outputs": ["error PinchResult with latencyMs"],
+      "gate": "compile tier requires this.compiler !== undefined",
+      "gate_kind": "precondition",
+      "failure_mode": "on the edge this surfaces as an error result rather than a silent fallback — visible in the result stream",
+      "elementary": true,
+      "evidence": "src/core/engine.ts:L43-L48,L93-L96"
+    },
+    {
+      "part_id": "quilt-pincher-P13",
+      "layer": 3,
+      "name": "PincherSheet descriptor (engine as cells)",
+      "essence": "PincherSheet(config) builds the engine AND declares the six cells {pinch:formula, match:program, execute:program, veto:listener, compile:ai, store:vector_store} with descriptions — the sheet is the public architecture diagram, loadable into any QuiltEngine.",
+      "inputs": ["PincherSheetConfig"],
+      "outputs": ["{name, engine, cells descriptor}"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "HONEST GAP: the descriptor declares the cells but runPinch still drives sheet.engine.run directly — the cell graph is the architecture contract, not yet the execution path",
+      "elementary": true,
+      "evidence": "src/cells/sheet.ts:L37-L57"
+    },
+    {
+      "part_id": "quilt-pincher-P14",
+      "layer": 3,
+      "name": ".nail bundle export + ESP32 loadNail",
+      "essence": "exportNail(name, tier) packages agent state {version, reflexes, vetoRules, compileHistory, metadata}; buildNail produces the EmbeddedNail and ESP32Engine.loadNail boots an offline engine from it — reflexes become available with no LLM and no network.",
+      "inputs": ["engine state", "tier label"],
+      "outputs": ["NailBundle / EmbeddedNail", "booted ESP32Engine"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "HONEST GAP: exportNail returns allReflexes() which is currently a demo stub returning [] (engine.ts:L155-L160) — bundles exported through this path are empty; esp32's buildNail is the working path",
+      "elementary": true,
+      "evidence": "src/core/engine.ts:L154-L182; src/platforms/esp32.ts:L18-L36,L71; src/index.ts:L36-L39"
+    },
+    {
+      "part_id": "quilt-pincher-P15",
+      "layer": 3,
+      "name": "platform sheets (cloud / workstation / esp32 defaults)",
+      "essence": "cloudSheet, workstationSheet (SQLite + sqlite-vec), esp32Sheet (in-memory, no LLM) return the same sheet with tier-appropriate stores and embedders — one code path, three compute tiers, matching the README's latency table.",
+      "inputs": ["tier choice"],
+      "outputs": ["configured PincherSheet"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "src/index.ts:L36-L39; README.md:L37-L45"
+    },
+    {
+      "part_id": "quilt-pincher-P16",
+      "layer": 4,
+      "name": "node:test suite (12 checks)",
+      "essence": "test/reflex.test.ts covers direct hit, trigger variation, confirm tier, compile tier with a mock compiler, veto refusals, confidence climb, sheet composition, and the three platform sheets incl. .nail loading — the repo's dog-food gate.",
+      "inputs": ["PincherEngine + MemoryReflexStore + HashEmbedder + DefaultVeto"],
+      "outputs": ["pass/fail per check (12/12 on run)"],
+      "gate": "assert.equal(result.kind, 'hit') etc. — tier outcomes are the contract",
+      "gate_kind": "postcondition",
+      "failure_mode": "repo ships without node_modules/dist; tests need tsx from a sibling checkout (local-only workaround used for this audit)",
+      "elementary": true,
+      "evidence": "test/reflex.test.ts:L10-L72; package.json scripts"
+    },
+    {
+      "part_id": "quilt-pincher-P17",
+      "layer": 4,
+      "name": "result kinds + latency telemetry",
+      "essence": "Every run returns a discriminated PinchResult — hit | confirm | compiled | vetoed | error — each carrying latencyMs measured from pinch start; the tier, the reason, and the cost are always observable downstream.",
+      "inputs": ["run() outcome"],
+      "outputs": ["{kind, reflex?, output?, reason?, latencyMs}"],
+      "gate": "latencyMs recorded on EVERY outcome incl. errors and vetoes",
+      "gate_kind": "postcondition",
+      "failure_mode": "a vetoed or errored pinch still consumes the embedding call — latency telemetry shows it but does not refund it",
+      "elementary": true,
+      "evidence": "src/core/types.ts:L59-L64; src/core/engine.ts:L35-L61"
+    },
+    {
+      "part_id": "quilt-pincher-P18",
+      "layer": 0,
+      "name": "embedder degradation ladder",
+      "essence": "Embedder implementations form a degradation ladder: CloudflareAIEmbedder (network + key), QuiltAIEmbedder (quilt-ai), OfflineEmbedder, HashEmbedder — the same sheet runs with or without keys because the embedder is an interface, not a service.",
+      "inputs": ["text", "optional provider credentials"],
+      "outputs": ["vector"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "switching embedders changes the geometry: reflexes embedded by one model do not cosine-match queries embedded by another (store must be re-embedded)",
+      "elementary": true,
+      "evidence": "src/adapters/embedding-adapter.ts:L12-L35; src/index.ts:L29"
+    }
+  ],
+  "sheet": {
+    "name": "quilt-pincher-as-cells",
+    "cells": [
+      { "id": "pinch.in", "kind": "io", "expr": "{trigger, context, safety} arrives from the platform", "deps": [], "maps_to_part": "quilt-pincher-P01" },
+      { "id": "pinch.emb", "kind": "formula", "expr": "embedder.embed(pinch.trigger)", "deps": ["pinch.in"], "maps_to_part": "quilt-pincher-P04" },
+      { "id": "match.top5", "kind": "program", "expr": "store.query(pinch.emb, 5) -> [{reflex, score}]", "deps": ["pinch.emb", "store.db"], "maps_to_part": "quilt-pincher-P05" },
+      { "id": "match.route", "kind": "router", "expr": "score>=0.80 ? HIT : score>=0.55 ? CONFIRM : COMPILE", "deps": ["match.top5"], "maps_to_part": "quilt-pincher-P06" },
+      { "id": "veto.gate", "kind": "listener", "expr": "watches execute paths; refuses escalation (network/filesystem/sandbox) before any run", "deps": ["match.route"], "maps_to_part": "quilt-pincher-P10" },
+      { "id": "execute.fn", "kind": "program", "expr": "new Function('pinch', action) raced vs executionTimeoutMs=5000", "deps": ["veto.gate", "match.top5"], "maps_to_part": "quilt-pincher-P07" },
+      { "id": "compile.ai", "kind": "ai", "expr": "compiler.compile(pinch) -> {intent, action} (no-op / error when keyless)", "deps": ["match.route"], "maps_to_part": "quilt-pincher-P09" },
+      { "id": "store.db", "kind": "io", "expr": "MemoryReflexStore(+upstream mirror) | SqliteReflexStore | EmbeddedNail", "deps": [], "maps_to_part": "quilt-pincher-P03" },
+      { "id": "reflex.conf", "kind": "formula", "expr": "min(0.99, 0.5 + 0.49*log10(1+hits))", "deps": ["store.db"], "maps_to_part": "quilt-pincher-P08" },
+      { "id": "result.out", "kind": "io", "expr": "{kind: hit|confirm|compiled|vetoed|error, latencyMs}", "deps": ["execute.fn", "compile.ai", "veto.gate"], "maps_to_part": "quilt-pincher-P17" },
+      { "id": "nail.export", "kind": "api", "expr": "exportNail()/buildNail() -> content-addressed .nail bundle", "deps": ["store.db"], "maps_to_part": "quilt-pincher-P14" },
+      { "id": "tier.sheet", "kind": "value", "expr": "platform default: cloud | workstation | esp32", "deps": [], "maps_to_part": "quilt-pincher-P15" }
+    ]
+  },
+  "layer_logic": {
+    "0": "Substrate = two records and one geometry: the pinch envelope, the reflex record, and the embedding vector space every reflex lives in; all three are plain data so any tier (cloud to ESP32) can hold them.",
+    "1": "Mechanisms = the reflex arc: embed -> query top-k -> route by score -> execute under timeout; plus the two learning loops — confidence climbs with hits, and the compile tier writes new reflexes so the fast tier grows.",
+    "2": "Policy = the gates: 0.80/0.55 tier thresholds (routing), the veto's escalation refusals (admission to execution), the no-compiler fail-closed error, and the 5s execution budget — four pass/fail conditions the JEV sweep can walk.",
+    "3": "Interface = PincherSheet's six-cell descriptor, runPinch, the three platform sheets, and the .nail bundle that ships the reflex database to offline engines.",
+    "4": "Evidence = the discriminated result kind + latencyMs on every outcome, and the 12-check node:test suite; honest gaps recorded: allReflexes() stub returns [] so engine.exportNail exports empty bundles, and execute() is unsandboxed by its own admission."
+  }
+}

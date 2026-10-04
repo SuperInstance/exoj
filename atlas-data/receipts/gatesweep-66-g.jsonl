@@ -1,0 +1,32 @@
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"PRE-REGISTER","event":"rules","detail":"{\"R1_OPEN\":\"gate non-empty AND gate_kind non-null -> emit(g=0.75,e=0.25,d=0.50)\",\"R2_SOFT\":\"gate non-empty AND gate_kind null -> emit(g=0.50,e=0.50,d=0.50)\",\"R3_HOLE\":\"gate empty/null -> observe(d=0.20) explicit local collapse\",\"R4_SEAL\":\"gate_kind in {seal,conservation} -> extra emit(g=0.85,e=0.15,d=0.50)\",\"R5_LAYERHOLE\":\"work missing any layer 0..4 -> observe at that layer cell\",\"R6_THIN\":\"work with <5 gated parts -> warning emit(g=0.35,e=0.65,d=0.50)\",\"geometry\":\"work i -> q=(i%7)-3 ; layer L -> r=L-2 ; radius 6 ; policy ledger\",\"backend\":\"atlas-sweep (deterministic structural judgment; no LLM, no network)\"}"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"exoj","event":"swept","detail":"parts=26 OPEN=24 SOFT=0 HOLE=2 seal2x=5 missingLayers=[] fm=24"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"fleet-seeds","event":"swept","detail":"parts=16 OPEN=15 SOFT=0 HOLE=1 seal2x=3 missingLayers=[0] fm=16"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"jev-garden","event":"swept","detail":"parts=26 OPEN=26 SOFT=0 HOLE=0 seal2x=2 missingLayers=[] fm=26"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"jeviter","event":"swept","detail":"parts=24 OPEN=24 SOFT=0 HOLE=0 seal2x=5 missingLayers=[] fm=24"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"cot-quilt","event":"swept","detail":"parts=12 OPEN=9 SOFT=0 HOLE=3 seal2x=2 missingLayers=[] fm=12"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"MicroMoth-quilt","event":"swept","detail":"parts=13 OPEN=10 SOFT=0 HOLE=3 seal2x=3 missingLayers=[] fm=13"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"moth-research","event":"swept","detail":"parts=10 OPEN=6 SOFT=0 HOLE=4 seal2x=1 missingLayers=[] fm=10"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"quilt-dba","event":"swept","detail":"parts=15 OPEN=15 SOFT=0 HOLE=0 seal2x=3 missingLayers=[] fm=15"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"quilt-quant","event":"swept","detail":"parts=14 OPEN=13 SOFT=0 HOLE=1 seal2x=2 missingLayers=[] fm=14"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"quilt-raw","event":"swept","detail":"parts=14 OPEN=12 SOFT=0 HOLE=2 seal2x=2 missingLayers=[2] fm=14"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"breakthrough-prospector","event":"swept","detail":"parts=16 OPEN=9 SOFT=0 HOLE=7 seal2x=2 missingLayers=[] fm=16"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"craftmind-study","event":"swept","detail":"parts=16 OPEN=5 SOFT=0 HOLE=11 seal2x=0 missingLayers=[] fm=16"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"external-scouts","event":"swept","detail":"parts=17 OPEN=5 SOFT=0 HOLE=12 seal2x=2 missingLayers=[] fm=17"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"quilt-atlas","event":"swept","detail":"parts=12 OPEN=6 SOFT=0 HOLE=6 seal2x=0 missingLayers=[] fm=12"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"quilt-codespace","event":"swept","detail":"parts=14 OPEN=3 SOFT=0 HOLE=11 seal2x=0 missingLayers=[] fm=14"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"quilt-upstream","event":"swept","detail":"parts=24 OPEN=9 SOFT=0 HOLE=15 seal2x=4 missingLayers=[3] fm=24"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"si-fleet","event":"swept","detail":"parts=16 OPEN=8 SOFT=0 HOLE=8 seal2x=0 missingLayers=[] fm=16"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"superinstance-site","event":"swept","detail":"parts=19 OPEN=10 SOFT=0 HOLE=9 seal2x=2 missingLayers=[] fm=19"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"quilt-jev-toolkit","event":"swept","detail":"parts=25 OPEN=25 SOFT=0 HOLE=0 seal2x=10 missingLayers=[] fm=23"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"quilt-mcp-receipts","event":"swept","detail":"parts=16 OPEN=16 SOFT=0 HOLE=0 seal2x=2 missingLayers=[] fm=11"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"quilt-organ-workers","event":"swept","detail":"parts=20 OPEN=19 SOFT=0 HOLE=1 seal2x=1 missingLayers=[] fm=14"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"quilt-research-canons","event":"swept","detail":"parts=14 OPEN=9 SOFT=0 HOLE=5 seal2x=1 missingLayers=[] fm=4"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"jev-quilt","event":"swept","detail":"parts=20 OPEN=18 SOFT=0 HOLE=2 seal2x=2 missingLayers=[] fm=11"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"qthe","event":"swept","detail":"parts=22 OPEN=21 SOFT=0 HOLE=1 seal2x=3 missingLayers=[] fm=11"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"quilt-jepa","event":"swept","detail":"parts=18 OPEN=15 SOFT=0 HOLE=3 seal2x=2 missingLayers=[] fm=11"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"quilt-qcells","event":"swept","detail":"parts=21 OPEN=20 SOFT=0 HOLE=1 seal2x=6 missingLayers=[] fm=13"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"crab-traps","event":"swept","detail":"parts=22 OPEN=16 SOFT=0 HOLE=6 seal2x=4 missingLayers=[] fm=20"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"quilt-murmur","event":"swept","detail":"parts=28 OPEN=23 SOFT=0 HOLE=5 seal2x=3 missingLayers=[] fm=26"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"quilt-pincher","event":"swept","detail":"parts=18 OPEN=10 SOFT=0 HOLE=8 seal2x=0 missingLayers=[] fm=13"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"POST-RUN","event":"aggregate","detail":"{\"works\":29,\"parts\":528,\"gated\":401,\"OPEN\":401,\"SOFT\":0,\"HOLE\":127,\"gated_pct\":75.9,\"gate_kind_histogram\":{\"invariant\":100,\"postcondition\":87,\"seal\":52,\"conservation\":20,\"admission\":67,\"precondition\":50,\"budget\":25},\"layer_histogram\":[75,170,128,69,86],\"deformations\":474,\"observations\":130,\"prob_open\":0.14,\"zone\":0.0571,\"chain_tip\":\"13463fd02be3ac4fd18dce7c9c530d547fdda360b09d25999418b6b1301070b0\",\"chain_verify\":{\"ok\":true,\"links\":606,\"tip\":\"13463fd02be3ac4fd18dce7c9c530d547fdda360b09d25999418b6b1301070b0\"}}"}
+{"ts":"2026-10-04T06:59:27Z","lane":"66-g","work":"POST-RUN","event":"verify","detail":"chain ok=true links=606 tip=13463fd02be3ac4fd18dce7c9c530d547fdda360b09d25999418b6b1301070b0"}

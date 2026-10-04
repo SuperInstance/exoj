@@ -1,0 +1,231 @@
+{
+  "work": "MicroMoth-quilt",
+  "family": "labs",
+  "repo_path": "/home/z/my-project/MicroMoth-quilt",
+  "head": "b23055c",
+  "smoke": {
+    "cmd": "python3 -m pytest tests/test_import_baseline.py tests/test_cell_mapping.py tests/test_collapse_ledger.py -q",
+    "verdict": "PARTIAL (19 passed, 1 failed)",
+    "notes": "Honest negative, and the failure is the design working: test_manifest_exists_and_matches FAILED because the tracked tree drifted AFTER the import-baseline manifest was sealed (new receipts/exp013-curriculum*, exp012-root-replication* files are not in the sealed digest set) — the pin caught the drift loudly and names the fix (regenerate via tools/import_manifest.py, never edit by hand). All cell-mapping and collapse-ledger pins pass: id re-derivation, tamper naming, live re-execution of sealed receipts, Bell check."
+  },
+  "essence": "Smallest quantum framework taught to keep receipts: circuit = hash-chained cell ledger.",
+  "ideas": [
+    {
+      "id": "MicroMoth-quilt-I1",
+      "name": "The smallest quantum framework",
+      "statement": "MicroMoth (a maintained MicroQiskit fork) is pure stdlib Python readable in an afternoon; a zero-dependency JavaScript port plus a quantum-wow plugin bring click-and-play quantum randomness to any web page, degrading honestly from real hardware to simulation.",
+      "parts": ["MicroMoth-quilt-P01", "MicroMoth-quilt-P11"]
+    },
+    {
+      "id": "MicroMoth-quilt-I2",
+      "name": "A circuit is already a ledger",
+      "statement": "QuantumCircuit.data IS a cell chain: every gate a fnv1a-64-chained BIND cell, moments are TICK cells, and sugar ops decompose at append time so the chain never contains them — edit one gate and every downstream id moves.",
+      "parts": ["MicroMoth-quilt-P02", "MicroMoth-quilt-P03", "MicroMoth-quilt-P04", "MicroMoth-quilt-P07"]
+    },
+    {
+      "id": "MicroMoth-quilt-I3",
+      "name": "Collapse is an event, not a state",
+      "statement": "Seeded per-shot outcomes are EFFECT cells ({shot, outcome, seed}) that never mutate gate cells; each simulate() view is a receipted VIEW cell; an unseeded run is refused a seal — a collapse receipt is a re-executable claim, not a histogram number.",
+      "parts": ["MicroMoth-quilt-P05", "MicroMoth-quilt-P06", "MicroMoth-quilt-P08"]
+    },
+    {
+      "id": "MicroMoth-quilt-I4",
+      "name": "Sealed provenance and pins",
+      "statement": "The import baseline (sha256 per tracked file) is sealed and pinned by tests that re-run the Bell check on every invocation; the fork is self-governing (upstream 404'd) with claims tagged VERIFIED vs RECORDED; the quantum-ops-as-cells premise is coordinated with quilt-qcells via a sibling-port gate, not duplicated.",
+      "parts": ["MicroMoth-quilt-P09", "MicroMoth-quilt-P10", "MicroMoth-quilt-P12", "MicroMoth-quilt-P13"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "MicroMoth-quilt-P01",
+      "layer": 0,
+      "name": "MicroMoth statevector core",
+      "essence": "The template micromoth.py (289 lines, stdlib only): QuantumCircuit with h/x/rx/rz/cx/crx/swap + decomposed y/z/ry, simulate() with counts/memory/probability_dictionary/statevector views; ports in Lua/C#/JS/Arduino.",
+      "inputs": ["circuits"],
+      "outputs": ["measurement distributions and statevectors"],
+      "gate": "Upstream tree untouched — the fleet adds only receipts around it",
+      "gate_kind": "invariant",
+      "failure_mode": "Editing the baseline would break every sha256 pin downstream",
+      "elementary": true,
+      "evidence": "README.md:7-9,39; micromoth.py:1-289"
+    },
+    {
+      "part_id": "MicroMoth-quilt-P02",
+      "layer": 0,
+      "name": "Circuit-as-ledger identity",
+      "essence": "One QuantumCircuit.data list IS a cell ledger — the ordered gate list already has the shape of an append-only chain ending in measurement events.",
+      "inputs": ["circuit append operations"],
+      "outputs": ["a hash-chained cell interpretation of the circuit"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "Any out-of-band mutation of qc.data would desync ledger from circuit",
+      "elementary": true,
+      "evidence": "docs/CELL-MAPPING.md:36-42"
+    },
+    {
+      "part_id": "MicroMoth-quilt-P03",
+      "layer": 1,
+      "name": "BIND/LINK gate chaining",
+      "essence": "Every gate application becomes a BIND cell {kind:'gate', args:{op, qubits, theta?}}; first gate's prev is genesis 0x0, later prevs are fnv1a-64 of the preceding cell; one explicit LINK per circuit boundary (simulator version, shots plan).",
+      "inputs": ["gate appends"],
+      "outputs": ["tamper-evident gate chain"],
+      "gate": "Edit one gate and every downstream id moves — the tamper-evidence property",
+      "gate_kind": "invariant",
+      "failure_mode": "Silent gate edits are caught by id re-derivation in the pins",
+      "elementary": true,
+      "evidence": "docs/CELL-MAPPING.md:40-50; tools/collapse_ledger.py:59-80"
+    },
+    {
+      "part_id": "MicroMoth-quilt-P04",
+      "layer": 1,
+      "name": "Primitives, not sugar",
+      "essence": "y/z/ry decompose into rx/rz/x at append time (micromoth.py methods), so a circuit cell chain never contains them; the wrapper keeps a SUGAR set whose presence in qc.data would mean a hand-built, unbaseline chain.",
+      "inputs": ["user gate calls"],
+      "outputs": ["canonical primitive-only chains"],
+      "gate": "Sugar ops in a chain are a refuse condition (sugar never ledgers)",
+      "gate_kind": "admission",
+      "failure_mode": "Non-canonical chains would be unverifiable against the baseline",
+      "elementary": true,
+      "evidence": "docs/CELL-MAPPING.md:19-22; tools/collapse_ledger.py:61-63"
+    },
+    {
+      "part_id": "MicroMoth-quilt-P05",
+      "layer": 1,
+      "name": "Collapse as EFFECT cells",
+      "essence": "Each shot outcome is an EFFECT cell {kind:'collapse', shot:i, outcome:bitstring, seed}; noise_model entries are EFFECT parameters, not silent edits — measurement is an event, never a mutation of gate cells.",
+      "inputs": ["seeded simulate() shots"],
+      "outputs": ["per-shot collapse receipts"],
+      "gate": "A collapse event must never alter the gate chain",
+      "gate_kind": "invariant",
+      "failure_mode": "Conflating measurement with mutation would destroy replayability",
+      "elementary": true,
+      "evidence": "docs/CELL-MAPPING.md:51-55"
+    },
+    {
+      "part_id": "MicroMoth-quilt-P06",
+      "layer": 1,
+      "name": "VIEW cells over the same chain",
+      "essence": "simulate(qc, shots, get=...) is literally a VIEW cell {args:{shots,get}}; counts, statevector and probabilities_dict are three views of the SAME circuit chain — 'we looked at counts' is itself receipted and re-derivable.",
+      "inputs": ["circuit chain", "view choice"],
+      "outputs": ["view receipts"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "Unreceipted views would make analysis claims unreplayable",
+      "elementary": true,
+      "evidence": "docs/CELL-MAPPING.md:56-60"
+    },
+    {
+      "part_id": "MicroMoth-quilt-P07",
+      "layer": 1,
+      "name": "TICK: moments as layers",
+      "essence": "The gate chain partitions into qubit-disjoint layers; a TICK cell closes each moment; depth = number of TICKs — coarse-grained time without touching gate order.",
+      "inputs": ["gate chain"],
+      "outputs": ["moment boundaries, circuit depth"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "Reordering gates within a moment would invalidate the depth claim",
+      "elementary": true,
+      "evidence": "docs/CELL-MAPPING.md:61-64"
+    },
+    {
+      "part_id": "MicroMoth-quilt-P08",
+      "layer": 2,
+      "name": "Seal policy for collapse runs",
+      "essence": "simulate() takes NO seed argument and reads module-global random — the wrapper plumbs a seed through exactly that source (seed -> simulate -> restore), records the plumbing as the EFFECT parameter, and REFUSES to call an unseeded run sealed.",
+      "inputs": ["seed", "circuit", "shots"],
+      "outputs": ["SEALED BIND/LINK/EFFECT chain"],
+      "gate": "No seed plumbed and recorded => no seal",
+      "gate_kind": "seal",
+      "failure_mode": "Sealing an unseeded run would produce a collapse receipt nobody can re-execute",
+      "elementary": true,
+      "evidence": "tools/collapse_ledger.py:2-22"
+    },
+    {
+      "part_id": "MicroMoth-quilt-P09",
+      "layer": 2,
+      "name": "Sibling-port gate",
+      "essence": "quilt-qcells (wave 49) claimed quantum-ops-as-cells for the engine itself; this lane coordinates rather than duplicates — the roadmap marks the quilt-native plugin as gated on that sibling.",
+      "inputs": ["sibling repo claims"],
+      "outputs": ["non-duplicative scope for this lane"],
+      "gate": "No quilt-native code lands in this repo until the sibling-port question is settled",
+      "gate_kind": "admission",
+      "failure_mode": "Duplicate implementations would fork the cell algebra",
+      "elementary": true,
+      "evidence": "README.md:77-79"
+    },
+    {
+      "part_id": "MicroMoth-quilt-P10",
+      "layer": 3,
+      "name": "Import manifest tool",
+      "essence": "tools/import_manifest.py computes fnv1a-64 + sha256 per tracked file (267 files sealed), excludes itself by name and records the exclusion; receipts/import-baseline.json is regenerable and pinned.",
+      "inputs": ["tracked files"],
+      "outputs": ["sealed digest manifest"],
+      "gate": "The tool must exclude itself by name — self-reference would make the manifest unverifiable",
+      "gate_kind": "seal",
+      "failure_mode": "Observed live: the manifest now lags the tree (exp012/exp013 receipts added post-seal) and the pin FAILS loudly",
+      "elementary": true,
+      "evidence": "README.md:47; tools/import_manifest.py:1-76"
+    },
+    {
+      "part_id": "MicroMoth-quilt-P11",
+      "layer": 3,
+      "name": "quantum-wow plugin with honest degrade",
+      "essence": "quantumSeed/quantumCoin/quantumField run simulated (default, no key) via a JS MicroMoth port; BYO-key real mode calls comet-qrng-v1 and DEGRADES gracefully back to simulated on any failure, always returning {mode, degraded, error}; CORS absence and zero-extractable-bytes NIST outcomes are receipted as honest limits.",
+      "inputs": ["visitor key (runtime only)", "nbits/field params"],
+      "outputs": ["seeds, coin flips, value fields + honesty metadata"],
+      "gate": "Every public method returns a usable result plus mode/degraded — the widget must say what actually happened",
+      "gate_kind": "postcondition",
+      "failure_mode": "A silent fallback would fake IBM-hardware randomness",
+      "elementary": true,
+      "evidence": "README.md:129-143"
+    },
+    {
+      "part_id": "MicroMoth-quilt-P12",
+      "layer": 4,
+      "name": "Pins that re-derive and re-execute",
+      "essence": "test_collapse_ledger re-derives every cell id, names tamper locations, and LIVE re-executes sealed receipts; test_cell_mapping pins the doc's op table == simulate() dispatch; test_import_baseline re-runs the Bell check on every invocation — the import can never silently rot.",
+      "inputs": ["sealed receipts", "docs", "simulator"],
+      "outputs": ["pass/fail with named tamper or drift"],
+      "gate": "Pins must fail loudly and name the fix (regenerate the manifest, never edit by hand)",
+      "gate_kind": "postcondition",
+      "failure_mode": "19/20 green today; the 1 failure is the manifest-drift pin doing exactly its job",
+      "elementary": true,
+      "evidence": "README.md:48-52; tests/test_collapse_ledger.py:1-60"
+    },
+    {
+      "part_id": "MicroMoth-quilt-P13",
+      "layer": 4,
+      "name": "Provenance honesty tags",
+      "essence": "The declared upstream moth-quantum/MicroMoth returned 404 at import time, so the fork is self-governing: AUDIT.md's sealed baseline is the authority and every claim is tagged VERIFIED (run, dated) or RECORDED (read from repo metadata).",
+      "inputs": ["import-time checks", "repo metadata"],
+      "outputs": ["tagged audit record"],
+      "gate": "Nothing may be tagged VERIFIED without a run and a date",
+      "gate_kind": "seal",
+      "failure_mode": "Unverified claims would masquerade as checked facts",
+      "elementary": true,
+      "evidence": "README.md:54-57; AUDIT.md:1-200"
+    }
+  ],
+  "sheet": {
+    "name": "MicroMoth-quilt-as-cells",
+    "cells": [
+      {"id": "qc.data", "kind": "value", "expr": "the gate list — identical object viewed as a cell chain", "deps": [], "maps_to_part": "MicroMoth-quilt-P02"},
+      {"id": "bind.chain", "kind": "program", "expr": "gate -> BIND cell, prev = fnv1a64(prev cell), genesis 0x0", "deps": ["qc.data"], "maps_to_part": "MicroMoth-quilt-P03"},
+      {"id": "sugar.guard", "kind": "router", "expr": "y/z/ry decomposed at append; SUGAR in chain => refuse", "deps": ["qc.data"], "maps_to_part": "MicroMoth-quilt-P04"},
+      {"id": "effect.collapse", "kind": "io", "expr": "per-shot {shot, outcome, seed} EFFECT cells", "deps": ["bind.chain"], "maps_to_part": "MicroMoth-quilt-P05"},
+      {"id": "view.receipt", "kind": "listener", "expr": "simulate(get=...) recorded as a VIEW cell", "deps": ["bind.chain"], "maps_to_part": "MicroMoth-quilt-P06"},
+      {"id": "tick.layers", "kind": "formula", "expr": "qubit-disjoint moment partition; depth = TICK count", "deps": ["bind.chain"], "maps_to_part": "MicroMoth-quilt-P07"},
+      {"id": "seal.gate", "kind": "router", "expr": "unseeded run => no SEALED status, ever", "deps": ["effect.collapse"], "maps_to_part": "MicroMoth-quilt-P08"},
+      {"id": "manifest", "kind": "io", "expr": "sha256 per tracked file, self-excluding tool", "deps": [], "maps_to_part": "MicroMoth-quilt-P10"},
+      {"id": "wow.backend", "kind": "api", "expr": "simulated default; BYO-key real comet-qrng-v1 with honest degrade", "deps": [], "maps_to_part": "MicroMoth-quilt-P11"},
+      {"id": "pins", "kind": "program", "expr": "pytest pins: id re-derivation, tamper naming, live re-execution, Bell check", "deps": ["manifest", "bind.chain"], "maps_to_part": "MicroMoth-quilt-P12"}
+    ]
+  },
+  "layer_logic": {
+    "0": "Substrate: a frozen stdlib statevector simulator whose ordered gate list is re-read as an append-only hash-chained ledger — nothing new inside the simulator, everything in the reading.",
+    "1": "Mechanisms: BIND/LINK chaining of gates, sugar decomposition at append, EFFECT collapse events, VIEW receipts, TICK moment layers — five opcodes cover the whole circuit lifecycle.",
+    "2": "Policy: no seal without a plumbed seed, no sugar in chains, and a sibling-port gate that refuses duplicate quantum-ops-as-cells work already claimed by quilt-qcells.",
+    "3": "Interfaces: the self-excluding manifest tool, the pytest pin suite, and the quantum-wow web plugin whose every answer carries mode/degraded honesty metadata.",
+    "4": "Evidence: sealed import baseline with VERIFIED/RECORDED tags, tamper-naming id re-derivation, live re-execution of collapse receipts — and today a loud, correct manifest-drift failure."
+  }
+}

@@ -1,0 +1,330 @@
+{
+  "work": "jev-quilt",
+  "family": "substrate",
+  "repo_path": "/home/z/my-project/jev-quilt",
+  "head": "30e431b",
+  "smoke": {
+    "cmd": "python3 -m unittest discover -s tests -q",
+    "verdict": "PASS 249 ran, 0 failures (6 skipped, 2 expected failures) in 38.5s",
+    "notes": "Full suite measured live (README's '81 passed, 3 skipped' is stale — the suite has grown; suite status is MEASURED not written, exactly as the README demands). ResourceWarnings from unclosed fixture files in tests/test_receipts_v2.py:245 are cosmetic (tests still OK). Rust cargo suite NOT_RUN here (no toolchain budget check made; README reports 13 Rust tests green on the metal as of 2026-09-25) — and mercury/Haskell polyforms are honestly labeled UNVERIFIED by the repo itself (no mmc/ghc)."
+  },
+  "essence": "Cellular-first decision substrate: typed decision-surface cells, delta hooks with deadband floors, per-cell append-only bookkeeper, exact Q16 rationals.",
+  "ideas": [
+    {
+      "id": "jev-quilt-I1",
+      "name": "Identity never floats",
+      "statement": "A cell is identified by integer quilt coordinates (k, s) plus declared type; values that are identities use the exact Q16 rational codec (num:int64, den:int64, always coprime) and floats are display-only projections — from_float refuses anything not representable rather than silently rounding.",
+      "parts": ["jev-quilt-P01", "jev-quilt-P05", "jev-quilt-P06"]
+    },
+    {
+      "id": "jev-quilt-I2",
+      "name": "Hooks eat deltas, not values",
+      "statement": "A cell subscribes to a sibling's CHANGE (never a polled value): deltas below the hook's deadband floor are silent, a when-predicate can decline deltas whose shape isn't the hook's, and a broken predicate must never silence the fabric — every wake or silence is logged as a WakeResult.",
+      "parts": ["jev-quilt-P02", "jev-quilt-P07", "jev-quilt-P08", "jev-quilt-P09", "jev-quilt-P10"]
+    },
+    {
+      "id": "jev-quilt-I3",
+      "name": "Decide in one pass, project elsewhere; viability is binary",
+      "statement": "The decider never renders and the renderer never decides (Law 3): a decision passes a binary confidence floor before it may project (Law 5); below the floor the outcome is booked as REJECTED, never projected, and a predictor pre-commits its feeling so the receipt binds feeling and fact in one hash.",
+      "parts": ["jev-quilt-P03", "jev-quilt-P04", "jev-quilt-P11", "jev-quilt-P12"]
+    },
+    {
+      "id": "jev-quilt-I4",
+      "name": "Every state change is booked (replay = live)",
+      "statement": "Each cell carries an append-only WAL of hash-chained receipts; wake = replay the book first, then decide; receipts are fnv1a-64 over UTF-8 bytes so a Rust receipt and a Python receipt for the same residue agree, decision-bearing fields are typed and uncapped (G20a), and book() raises rather than rounds what it cannot carry exactly.",
+      "parts": ["jev-quilt-P13", "jev-quilt-P14", "jev-quilt-P15", "jev-quilt-P16", "jev-quilt-P17", "jev-quilt-P18"]
+    },
+    {
+      "id": "jev-quilt-I5",
+      "name": "Exactness-first backend ladder",
+      "statement": "Backends resolve auto -> q16 (deterministic, always available) -> openjev-local -> typesafe-api (only if a key exists): cloud is last, exactness is first; cells without bookkeeping still decide but honestly forget (NullBookkeeper).",
+      "parts": ["jev-quilt-P13", "jev-quilt-P19", "jev-quilt-P20"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "jev-quilt-P01",
+      "layer": 0,
+      "name": "cell identity law",
+      "essence": "coord must be a tuple of two integers (k, s); anything else raises TypeError at construction — identity never floats (Law 1).",
+      "inputs": ["name", "coord"],
+      "outputs": ["Cell (or TypeError)"],
+      "gate": "non-integer or non-pair coord is refused at __post_init__",
+      "gate_kind": "admission",
+      "failure_mode": "a float coordinate would silently create an unfoundable identity",
+      "elementary": true,
+      "evidence": "jev_quilt/cell.py:37-54"
+    },
+    {
+      "part_id": "jev-quilt-P02",
+      "layer": 0,
+      "name": "Hook subscription primitive",
+      "essence": "A frozen Hook names a source cell, fires on delta, carries a DEADBAND token or a Q16 magnitude floor, and an optional when-predicate on the emitted state (the touch-shallow gate).",
+      "inputs": ["source", "floor", "when"],
+      "outputs": ["subscription object"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "jev_quilt/cell.py:16-26"
+    },
+    {
+      "part_id": "jev-quilt-P03",
+      "layer": 3,
+      "name": "Projection declaration",
+      "essence": "Outputs are declared edges (to, as_type): json | coefficient | choice | bytes — this cell renders, another cell decides; types are declared at the edge (Law 3).",
+      "inputs": ["decision"],
+      "outputs": ["typed payload on a named surface"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "jev_quilt/cell.py:29-35"
+    },
+    {
+      "part_id": "jev-quilt-P04",
+      "layer": 2,
+      "name": "binary viability floor",
+      "essence": "A decision may LINK/project only above the floor: default viability is confidence > 0.0; pure difference without viability collapses into dada noise (Law 5).",
+      "inputs": ["decision (with confidence)"],
+      "outputs": ["viable bool"],
+      "gate": "confidence is None -> viable; else confidence > 0.0 required",
+      "gate_kind": "admission",
+      "failure_mode": "below-floor decisions are booked as REJECTED, never projected",
+      "elementary": true,
+      "evidence": "jev_quilt/cell.py:56-62"
+    },
+    {
+      "part_id": "jev-quilt-P05",
+      "layer": 0,
+      "name": "Q16 exact rational",
+      "essence": "Identity arithmetic on (num, den): always reduced coprime, negative denominators normalized, zero denominator raises — the same codec as the fleet's lattice kernel.",
+      "inputs": ["num:int", "den:int"],
+      "outputs": ["exact Q16 with exact +, -, *"],
+      "gate": "den == 0 raises ZeroDivisionError; gcd reduction is an invariant",
+      "gate_kind": "invariant",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "jev_quilt/q16.py:14-45"
+    },
+    {
+      "part_id": "jev-quilt-P06",
+      "layer": 2,
+      "name": "from_float projection refusal",
+      "essence": "Projection INTO the lattice: a float becomes Q16 only if num/SCALE reproduces it within 1e-12; anything else is refused — never silently rounded identity.",
+      "inputs": ["float f"],
+      "outputs": ["Q16(num, 10^6) or ValueError"],
+      "gate": "|num/SCALE - f| > 1e-12 -> ValueError",
+      "gate_kind": "admission",
+      "failure_mode": "silent rounding would corrupt every downstream exact decision",
+      "elementary": true,
+      "evidence": "jev_quilt/q16.py:22-28"
+    },
+    {
+      "part_id": "jev-quilt-P07",
+      "layer": 2,
+      "name": "deadband floor check",
+      "essence": "A hook wakes only if |delta| >= floor; the DEADBAND token or None floor means no filtering; magnitudes are exact Q16.",
+      "inputs": ["hook.floor", "delta"],
+      "outputs": ["passes_floor bool"],
+      "gate": "mag >= floor else silent_deadband",
+      "gate_kind": "precondition",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "jev_quilt/engine.py:67-74"
+    },
+    {
+      "part_id": "jev-quilt-P08",
+      "layer": 2,
+      "name": "unmeasurable deltas wake (honest default)",
+      "essence": "A delta with no extractable Q16 magnitude always wakes the hook — fail-open for unmeasurable shapes, the opposite of silently dropping what you can't measure.",
+      "inputs": ["delta"],
+      "outputs": ["None magnitude -> wake"],
+      "gate": "mag is None -> return True",
+      "gate_kind": "precondition",
+      "failure_mode": "the named risk is noise amplification, accepted and receipted as the honest default",
+      "elementary": true,
+      "evidence": "jev_quilt/engine.py:70-72"
+    },
+    {
+      "part_id": "jev-quilt-P09",
+      "layer": 1,
+      "name": "emit fanout with logged silence",
+      "essence": "emit(source, delta, state) walks every hooked subscriber: below-floor/declining hooks are logged as WakeResult(woke=False, reason='silent_deadband'), others wake — silence is a recorded outcome, never an absence.",
+      "inputs": ["source delta", "state"],
+      "outputs": ["list[WakeResult]"],
+      "gate": "every hooked cell gets exactly one WakeResult per emit",
+      "gate_kind": "conservation",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "jev_quilt/engine.py:76-91"
+    },
+    {
+      "part_id": "jev-quilt-P10",
+      "layer": 2,
+      "name": "broken predicate fail-open",
+      "essence": "A when-predicate that raises must NOT silence the fabric: the exception is caught and the hook wakes — the failure direction is chosen explicitly.",
+      "inputs": ["hook.when(state)"],
+      "outputs": ["bool (True on exception)"],
+      "gate": "exception -> wake (never drop)",
+      "gate_kind": "invariant",
+      "failure_mode": "an exception inside a predicate silently starving cells is the named catastrophe",
+      "elementary": true,
+      "evidence": "jev_quilt/engine.py:93-100"
+    },
+    {
+      "part_id": "jev-quilt-P11",
+      "layer": 1,
+      "name": "wake = replay book, then decide",
+      "essence": "A cell woken by a delta first replays its bookkeeper (wake_state catch-up) before any decision — Law 4: replay equals live.",
+      "inputs": ["bookkeeper", "delta"],
+      "outputs": ["caught-up state, then decision"],
+      "gate": "wake_state() precedes backend resolution in _wake",
+      "gate_kind": "precondition",
+      "failure_mode": "deciding on a stale book would fork the cell from its own history",
+      "elementary": true,
+      "evidence": "jev_quilt/engine.py:102-104"
+    },
+    {
+      "part_id": "jev-quilt-P12",
+      "layer": 1,
+      "name": "predictor pre-commit (feeling under the ledger)",
+      "essence": "If the cell carries a predictor, it predicts BEFORE deciding, so the booked receipt binds feeling and fact in one hash — JEPA's slot, v0 the exact MeanPredictor.",
+      "inputs": ["cell.predictor"],
+      "outputs": ["pre-committed prediction in the receipt"],
+      "gate": "predictor exception -> pred=None (feeling is optional, never fatal)",
+      "gate_kind": "postcondition",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "jev_quilt/engine.py:106-115"
+    },
+    {
+      "part_id": "jev-quilt-P13",
+      "layer": 2,
+      "name": "backend resolution ladder",
+      "essence": "resolve_backend maps auto -> q16 (always available) -> openjev-local (if reachable) -> typesafe-api (if TYPESAFE_API_KEY): exactness first, cloud last.",
+      "inputs": ["cell.backend"],
+      "outputs": ["concrete BackendDecision source"],
+      "gate": "unknown backend refused at Cell construction",
+      "gate_kind": "admission",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "jev_quilt/engine.py:53-56; jev_quilt/cell.py:53-54"
+    },
+    {
+      "part_id": "jev-quilt-P14",
+      "layer": 4,
+      "name": "Bookkeeper append-only WAL",
+      "essence": "Per-cell append-only log of Receipt(tick, state_hash, delta_hash, decision_kind, payload_hash, payload) — the memory is the book; registration wires one per cell (or the honest NullBookkeeper).",
+      "inputs": ["tick", "state hash", "delta", "decision"],
+      "outputs": ["appended Receipt"],
+      "gate": "replay == live (suite test_replay_determinism)",
+      "gate_kind": "postcondition",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "jev_quilt/bookkeeper.py:46-53; jev_quilt/engine.py:48-51"
+    },
+    {
+      "part_id": "jev-quilt-P15",
+      "layer": 0,
+      "name": "fnv1a-64 over UTF-8 bytes",
+      "essence": "The shared hash: raw BYTES (never str iteration/ord()) so a Rust receipt and a Python receipt for the same residue agree, non-ASCII included — the same algorithm as the rate limiter, hermit WAL and Rust substrate.",
+      "inputs": ["bytes"],
+      "outputs": ["64-bit hash"],
+      "gate": "cross-language agreement on identical residues (fnv1a reference-vector suite)",
+      "gate_kind": "invariant",
+      "failure_mode": "hashing str directly would fork Python from Rust receipts",
+      "elementary": true,
+      "evidence": "jev_quilt/bookkeeper.py:33-43"
+    },
+    {
+      "part_id": "jev-quilt-P16",
+      "layer": 4,
+      "name": "receipt sha binds the residue text",
+      "essence": "sha() re-derives payload_hash from the retained payload when present, so editing the payload alone breaks replay; empty payload keeps the historical formula — back-compat pinned byte-for-byte.",
+      "inputs": ["Receipt fields", "payload"],
+      "outputs": ["chain hash over tick|state|delta|kind|payload_hash"],
+      "gate": "payload edit without hash edit -> replay mismatch (tamper is loud)",
+      "gate_kind": "seal",
+      "failure_mode": null,
+      "elementary": true,
+      "evidence": "jev_quilt/bookkeeper.py:86-100"
+    },
+    {
+      "part_id": "jev-quilt-P17",
+      "layer": 4,
+      "name": "typed uncapped decision fields (G20a)",
+      "essence": "Decision-bearing identity (dispatch_id, runner, key, correct, base_verdict, answer) rides as real dataclass fields, never JSON, never sliced by the 200-char payload render budget — identity never floats even in the book.",
+      "inputs": ["typed decision fields"],
+      "outputs": ["\\x1f-delimited canonical decision_bytes extending the sha preimage only when set"],
+      "gate": "all-None fields -> empty bytes -> historical preimage byte-identical (additive pin change only)",
+      "gate_kind": "invariant",
+      "failure_mode": "a render budget evicting a dispatch id would break routing accountability (the C9 fail-open class)",
+      "elementary": true,
+      "evidence": "jev_quilt/bookkeeper.py:55-84"
+    },
+    {
+      "part_id": "jev-quilt-P18",
+      "layer": 2,
+      "name": "book() refuses what it cannot carry exactly",
+      "essence": "A booking with a non-str/bool typed field, or a value containing the reserved \\x1f delimiter, raises rather than silently rounds (Law 6 clause iii: booked = foldable).",
+      "inputs": ["book() call"],
+      "outputs": ["Receipt or raise"],
+      "gate": "raise-on-unrepresentable beats round-and-continue",
+      "gate_kind": "admission",
+      "failure_mode": "silent rounding of a decision field is exactly the fail-open class G20a closed",
+      "elementary": true,
+      "evidence": "jev_quilt/bookkeeper.py:13-17"
+    },
+    {
+      "part_id": "jev-quilt-P19",
+      "layer": 1,
+      "name": "NullBookkeeper honesty",
+      "essence": "Cells with bookkeeper=False still decide — they just forget: book() no-ops, replay() returns None, verify() returns True, wake_state reports zero booked ticks; forgetting is a declared mode, not a silent omission.",
+      "inputs": ["cell.bookkeeper flag"],
+      "outputs": ["forgetting backend"],
+      "gate": "wake_state honestly reports booked_ticks: 0, chain: None",
+      "gate_kind": "invariant",
+      "failure_mode": "a pretending bookkeeper (fake verify) would be worse than an empty one",
+      "elementary": true,
+      "evidence": "jev_quilt/engine.py:21-26"
+    },
+    {
+      "part_id": "jev-quilt-P20",
+      "layer": 3,
+      "name": "polyformal ports with honest verification labels",
+      "essence": "The five laws re-exist in Rust (exact Q16 with no float constructor, overflow = None refusal, fnv1a-chained bookkeeper — 13 cargo tests green per README), Mercury (chain_valid/2, labeled UNVERIFIED — no mmc) and Haskell (phantom-typed Lattice/Proj, UNVERIFIED — no ghc): one substrate, several tongues, each labeled with its actual verification status.",
+      "inputs": ["kernel semantics"],
+      "outputs": ["Rust / Mercury / Haskell sources"],
+      "gate": "UNVERIFIED is printed where no toolchain ran — do not write counts, run the suites",
+      "gate_kind": "admission",
+      "failure_mode": "claiming unverified ports as tested would violate the house law",
+      "elementary": true,
+      "evidence": "README.md:194-203"
+    }
+  ],
+  "sheet": {
+    "name": "jev-quilt-as-cells",
+    "cells": [
+      {"id": "coord", "kind": "value", "expr": "(k, s) integers only — TypeError otherwise", "deps": [], "maps_to_part": "jev-quilt-P01"},
+      {"id": "q", "kind": "value", "expr": "Q16(num, den) coprime; from_float refuses unrepresentable", "deps": [], "maps_to_part": "jev-quilt-P05"},
+      {"id": "floor", "kind": "sensor", "expr": "|delta| >= hook.floor (Q16) else silent_deadband", "deps": ["delta"], "maps_to_part": "jev-quilt-P07"},
+      {"id": "when", "kind": "sensor", "expr": "hook.when(state); exception -> True (wake)", "deps": ["state"], "maps_to_part": "jev-quilt-P10"},
+      {"id": "backend", "kind": "router", "expr": "auto -> q16 -> openjev-local -> typesafe-api", "deps": ["cell.backend"], "maps_to_part": "jev-quilt-P13"},
+      {"id": "decision", "kind": "ai", "expr": "Choice | Score | Noul in one pass", "deps": ["backend", "state"], "maps_to_part": "jev-quilt-P12"},
+      {"id": "viable", "kind": "sensor", "expr": "confidence > 0.0 (Law 5 binary floor)", "deps": ["decision"], "maps_to_part": "jev-quilt-P04"},
+      {"id": "project", "kind": "io", "expr": "Projection(to, as_type) only if viable; else booked REJECTED", "deps": ["viable"], "maps_to_part": "jev-quilt-P03"},
+      {"id": "book", "kind": "program", "expr": "append Receipt(tick, state_hash, delta_hash, kind, payload_hash)", "deps": ["decision"], "maps_to_part": "jev-quilt-P14"},
+      {"id": "sha", "kind": "formula", "expr": "fnv1a64 over UTF-8 of tick|state|delta|kind|payload_hash[|decision]", "deps": ["book"], "maps_to_part": "jev-quilt-P16"},
+      {"id": "replay", "kind": "formula", "expr": "rebuild state from book on wake (replay == live)", "deps": ["sha"], "maps_to_part": "jev-quilt-P11"},
+      {"id": "wake_log", "kind": "listener", "expr": "every emit logs WakeResult(woke, reason)", "deps": ["floor", "when"], "maps_to_part": "jev-quilt-P09"}
+    ]
+  },
+  "layer_logic": {
+    "0": "The substrate is the typed cell: integer (k,s) identity plus declared semantics, with Q16 exact rationals as the only identity-carrying numbers.",
+    "1": "The mechanism is the delta runtime: emit fans out to hooks, wakes replay their books, predictors pre-commit, decisions are computed in one pass.",
+    "2": "The policy is the gates: deadband floors, the when-predicate, the binary viability floor, the exactness-first backend ladder, and raise-don't-round booking.",
+    "3": "The interface is the Cell v0 schema (registry names, hooks, projections as typed edges) and the polyform ports (Rust verified, Mercury/Haskell honestly labeled UNVERIFIED).",
+    "4": "The evidence is per-cell fnv1a-64 receipt chains whose sha binds the residue text and typed decision fields, replay-equals-live tests, a measured 249-test suite, and KNOWN_SKIPS as the registry of honest omissions."
+  }
+}

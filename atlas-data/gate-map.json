@@ -1,0 +1,817 @@
+{
+  "format": "atlas-gatesweep-v1",
+  "date": "2026-10-04T06:59:27Z",
+  "rules_pre_registered": {
+    "R1_OPEN": "gate non-empty AND gate_kind non-null -> emit(g=0.75,e=0.25,d=0.50)",
+    "R2_SOFT": "gate non-empty AND gate_kind null -> emit(g=0.50,e=0.50,d=0.50)",
+    "R3_HOLE": "gate empty/null -> observe(d=0.20) explicit local collapse",
+    "R4_SEAL": "gate_kind in {seal,conservation} -> extra emit(g=0.85,e=0.15,d=0.50)",
+    "R5_LAYERHOLE": "work missing any layer 0..4 -> observe at that layer cell",
+    "R6_THIN": "work with <5 gated parts -> warning emit(g=0.35,e=0.65,d=0.50)",
+    "geometry": "work i -> q=(i%7)-3 ; layer L -> r=L-2 ; radius 6 ; policy ledger",
+    "backend": "atlas-sweep (deterministic structural judgment; no LLM, no network)"
+  },
+  "field": {
+    "name": "atlas-gatesweep",
+    "policy": "ledger",
+    "radius": 6,
+    "genesis": "EXOJ-GENESIS"
+  },
+  "totals": {
+    "works": 29,
+    "parts": 528,
+    "gated": 401,
+    "OPEN": 401,
+    "SOFT": 0,
+    "HOLE": 127,
+    "gated_pct": 75.9,
+    "gate_kind_histogram": {
+      "invariant": 100,
+      "postcondition": 87,
+      "seal": 52,
+      "conservation": 20,
+      "admission": 67,
+      "precondition": 50,
+      "budget": 25
+    },
+    "layer_histogram": [
+      75,
+      170,
+      128,
+      69,
+      86
+    ],
+    "deformations": 474,
+    "observations": 130,
+    "prob_open": 0.14,
+    "zone": 0.0571,
+    "chain_tip": "13463fd02be3ac4fd18dce7c9c530d547fdda360b09d25999418b6b1301070b0",
+    "chain_verify": {
+      "ok": true,
+      "links": 606,
+      "tip": "13463fd02be3ac4fd18dce7c9c530d547fdda360b09d25999418b6b1301070b0"
+    }
+  },
+  "works": [
+    {
+      "work": "exoj",
+      "family": "garden",
+      "q": -3,
+      "verdicts": {
+        "OPEN": 24,
+        "SOFT": 0,
+        "HOLE": 2,
+        "seal_reinforce": 5
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 24,
+      "smoke": "PASS 3/3",
+      "sense_at_close": {
+        "prob_open": 0.631,
+        "zone": 0.6,
+        "active": 5
+      }
+    },
+    {
+      "work": "fleet-seeds",
+      "family": "garden",
+      "q": -2,
+      "verdicts": {
+        "OPEN": 15,
+        "SOFT": 0,
+        "HOLE": 1,
+        "seal_reinforce": 3
+      },
+      "layer_coverage": [
+        0,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [
+        0
+      ],
+      "failure_mode_parts": 16,
+      "smoke": "PASS (1 commit, SMOKE OK 3/3, tree clean after cleanup)",
+      "sense_at_close": {
+        "prob_open": 0.6883,
+        "zone": 0.6667,
+        "active": 9
+      }
+    },
+    {
+      "work": "jev-garden",
+      "family": "garden",
+      "q": -1,
+      "verdicts": {
+        "OPEN": 26,
+        "SOFT": 0,
+        "HOLE": 0,
+        "seal_reinforce": 2
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 26,
+      "smoke": "PASS 30/30",
+      "sense_at_close": {
+        "prob_open": 0.7996,
+        "zone": 0.7857,
+        "active": 14
+      }
+    },
+    {
+      "work": "jeviter",
+      "family": "garden",
+      "q": 0,
+      "verdicts": {
+        "OPEN": 24,
+        "SOFT": 0,
+        "HOLE": 0,
+        "seal_reinforce": 5
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 24,
+      "smoke": "PASS 85/85",
+      "sense_at_close": {
+        "prob_open": 0.8523,
+        "zone": 0.8421,
+        "active": 19
+      }
+    },
+    {
+      "work": "cot-quilt",
+      "family": "labs",
+      "q": 1,
+      "verdicts": {
+        "OPEN": 9,
+        "SOFT": 0,
+        "HOLE": 3,
+        "seal_reinforce": 2
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 12,
+      "smoke": "PASS (offline ritual: verdict CLEAN, exit 0) + live pipeline NOT_RUN",
+      "sense_at_close": {
+        "prob_open": 0.8006,
+        "zone": 0.7917,
+        "active": 24
+      }
+    },
+    {
+      "work": "MicroMoth-quilt",
+      "family": "labs",
+      "q": 2,
+      "verdicts": {
+        "OPEN": 10,
+        "SOFT": 0,
+        "HOLE": 3,
+        "seal_reinforce": 3
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 13,
+      "smoke": "PARTIAL (19 passed, 1 failed)",
+      "sense_at_close": {
+        "prob_open": 0.766,
+        "zone": 0.7586,
+        "active": 29
+      }
+    },
+    {
+      "work": "moth-research",
+      "family": "labs",
+      "q": 3,
+      "verdicts": {
+        "OPEN": 6,
+        "SOFT": 0,
+        "HOLE": 4,
+        "seal_reinforce": 1
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 10,
+      "smoke": "NOT_RUN (no executable entry point — docs-only research mooring)",
+      "sense_at_close": {
+        "prob_open": 0.7344,
+        "zone": 0.7273,
+        "active": 33
+      }
+    },
+    {
+      "work": "quilt-dba",
+      "family": "labs",
+      "q": -3,
+      "verdicts": {
+        "OPEN": 15,
+        "SOFT": 0,
+        "HOLE": 0,
+        "seal_reinforce": 3
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 15,
+      "smoke": "PASS (13/13 checks)",
+      "sense_at_close": {
+        "prob_open": 0.7387,
+        "zone": 0.7273,
+        "active": 33
+      }
+    },
+    {
+      "work": "quilt-quant",
+      "family": "labs",
+      "q": -2,
+      "verdicts": {
+        "OPEN": 13,
+        "SOFT": 0,
+        "HOLE": 1,
+        "seal_reinforce": 2
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 14,
+      "smoke": "PASS (17/17 checks green, 220ms, offline mode)",
+      "sense_at_close": {
+        "prob_open": 0.717,
+        "zone": 0.7059,
+        "active": 34
+      }
+    },
+    {
+      "work": "quilt-raw",
+      "family": "labs",
+      "q": -1,
+      "verdicts": {
+        "OPEN": 12,
+        "SOFT": 0,
+        "HOLE": 2,
+        "seal_reinforce": 2
+      },
+      "layer_coverage": [
+        1,
+        1,
+        0,
+        1,
+        1
+      ],
+      "missing_layers": [
+        2
+      ],
+      "failure_mode_parts": 14,
+      "smoke": "PASS (18/18 checks sealed)",
+      "sense_at_close": {
+        "prob_open": 0.661,
+        "zone": 0.6471,
+        "active": 34
+      }
+    },
+    {
+      "work": "breakthrough-prospector",
+      "family": "meta",
+      "q": 0,
+      "verdicts": {
+        "OPEN": 9,
+        "SOFT": 0,
+        "HOLE": 7,
+        "seal_reinforce": 2
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 16,
+      "smoke": "PASS",
+      "sense_at_close": {
+        "prob_open": 0.5179,
+        "zone": 0.5,
+        "active": 34
+      }
+    },
+    {
+      "work": "craftmind-study",
+      "family": "meta",
+      "q": 1,
+      "verdicts": {
+        "OPEN": 5,
+        "SOFT": 0,
+        "HOLE": 11,
+        "seal_reinforce": 0
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 16,
+      "smoke": "PASS",
+      "sense_at_close": {
+        "prob_open": 0.4297,
+        "zone": 0.4118,
+        "active": 34
+      }
+    },
+    {
+      "work": "external-scouts",
+      "family": "meta",
+      "q": 2,
+      "verdicts": {
+        "OPEN": 5,
+        "SOFT": 0,
+        "HOLE": 12,
+        "seal_reinforce": 2
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 17,
+      "smoke": "PASS",
+      "sense_at_close": {
+        "prob_open": 0.3726,
+        "zone": 0.3529,
+        "active": 34
+      }
+    },
+    {
+      "work": "quilt-atlas",
+      "family": "meta",
+      "q": 3,
+      "verdicts": {
+        "OPEN": 6,
+        "SOFT": 0,
+        "HOLE": 6,
+        "seal_reinforce": 0
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 12,
+      "smoke": "PASS",
+      "sense_at_close": {
+        "prob_open": 0.315,
+        "zone": 0.2941,
+        "active": 34
+      }
+    },
+    {
+      "work": "quilt-codespace",
+      "family": "meta",
+      "q": -3,
+      "verdicts": {
+        "OPEN": 3,
+        "SOFT": 0,
+        "HOLE": 11,
+        "seal_reinforce": 0
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 14,
+      "smoke": "PASS",
+      "sense_at_close": {
+        "prob_open": 0.2474,
+        "zone": 0.2353,
+        "active": 34
+      }
+    },
+    {
+      "work": "quilt-upstream",
+      "family": "meta",
+      "q": -2,
+      "verdicts": {
+        "OPEN": 9,
+        "SOFT": 0,
+        "HOLE": 15,
+        "seal_reinforce": 4
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      "missing_layers": [
+        3
+      ],
+      "failure_mode_parts": 24,
+      "smoke": "PASS",
+      "sense_at_close": {
+        "prob_open": 0.1609,
+        "zone": 0.1471,
+        "active": 34
+      }
+    },
+    {
+      "work": "si-fleet",
+      "family": "meta",
+      "q": -1,
+      "verdicts": {
+        "OPEN": 8,
+        "SOFT": 0,
+        "HOLE": 8,
+        "seal_reinforce": 0
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 16,
+      "smoke": "PASS",
+      "sense_at_close": {
+        "prob_open": 0.0698,
+        "zone": 0.0588,
+        "active": 34
+      }
+    },
+    {
+      "work": "superinstance-site",
+      "family": "meta",
+      "q": 0,
+      "verdicts": {
+        "OPEN": 10,
+        "SOFT": 0,
+        "HOLE": 9,
+        "seal_reinforce": 2
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 19,
+      "smoke": "PASS",
+      "sense_at_close": {
+        "prob_open": 0.067,
+        "zone": 0.0588,
+        "active": 34
+      }
+    },
+    {
+      "work": "quilt-jev-toolkit",
+      "family": "organ",
+      "q": 1,
+      "verdicts": {
+        "OPEN": 25,
+        "SOFT": 0,
+        "HOLE": 0,
+        "seal_reinforce": 10
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 23,
+      "smoke": "PASS 44/44 (145ms) + boot-demo PASS + rewind-demo 7/7 stages PASS (all offline)",
+      "sense_at_close": {
+        "prob_open": 0.086,
+        "zone": 0.0588,
+        "active": 34
+      }
+    },
+    {
+      "work": "quilt-mcp-receipts",
+      "family": "organ",
+      "q": 2,
+      "verdicts": {
+        "OPEN": 16,
+        "SOFT": 0,
+        "HOLE": 0,
+        "seal_reinforce": 2
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 11,
+      "smoke": "PASS 15/15 (5.6s, offline)",
+      "sense_at_close": {
+        "prob_open": 0.0949,
+        "zone": 0.0588,
+        "active": 34
+      }
+    },
+    {
+      "work": "quilt-organ-workers",
+      "family": "organ",
+      "q": 3,
+      "verdicts": {
+        "OPEN": 19,
+        "SOFT": 0,
+        "HOLE": 1,
+        "seal_reinforce": 1
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 14,
+      "smoke": "NOT_RUN",
+      "sense_at_close": {
+        "prob_open": 0.1025,
+        "zone": 0.0571,
+        "active": 35
+      }
+    },
+    {
+      "work": "quilt-research-canons",
+      "family": "organ",
+      "q": -3,
+      "verdicts": {
+        "OPEN": 9,
+        "SOFT": 0,
+        "HOLE": 5,
+        "seal_reinforce": 1
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 4,
+      "smoke": "PASS — 5/5 sprint scripts fully conform to the SPRINT-LINEAGE contract; 3/3 JSON artifacts parse",
+      "sense_at_close": {
+        "prob_open": 0.1031,
+        "zone": 0.0571,
+        "active": 35
+      }
+    },
+    {
+      "work": "jev-quilt",
+      "family": "substrate",
+      "q": -2,
+      "verdicts": {
+        "OPEN": 18,
+        "SOFT": 0,
+        "HOLE": 2,
+        "seal_reinforce": 2
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 11,
+      "smoke": "PASS 249 ran, 0 failures (6 skipped, 2 expected failures) in 38.5s",
+      "sense_at_close": {
+        "prob_open": 0.1132,
+        "zone": 0.0571,
+        "active": 35
+      }
+    },
+    {
+      "work": "qthe",
+      "family": "substrate",
+      "q": -1,
+      "verdicts": {
+        "OPEN": 21,
+        "SOFT": 0,
+        "HOLE": 1,
+        "seal_reinforce": 3
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 11,
+      "smoke": "PASS 54/54",
+      "sense_at_close": {
+        "prob_open": 0.1226,
+        "zone": 0.0571,
+        "active": 35
+      }
+    },
+    {
+      "work": "quilt-jepa",
+      "family": "substrate",
+      "q": 0,
+      "verdicts": {
+        "OPEN": 15,
+        "SOFT": 0,
+        "HOLE": 3,
+        "seal_reinforce": 2
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 11,
+      "smoke": "PASS (chain + seals)",
+      "sense_at_close": {
+        "prob_open": 0.1308,
+        "zone": 0.0571,
+        "active": 35
+      }
+    },
+    {
+      "work": "quilt-qcells",
+      "family": "substrate",
+      "q": 1,
+      "verdicts": {
+        "OPEN": 20,
+        "SOFT": 0,
+        "HOLE": 1,
+        "seal_reinforce": 6
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 13,
+      "smoke": "PASS — ALL GREEN, P1-P4 (16 circuits, 1418 rows, 4254/4254 tamper localized, 5/5 negatives, 6.4s)",
+      "sense_at_close": {
+        "prob_open": 0.137,
+        "zone": 0.0571,
+        "active": 35
+      }
+    },
+    {
+      "work": "crab-traps",
+      "family": "swarm",
+      "q": 2,
+      "verdicts": {
+        "OPEN": 16,
+        "SOFT": 0,
+        "HOLE": 6,
+        "seal_reinforce": 4
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 20,
+      "smoke": "12/12 controls PASS, fail-closed (0.18s, stdlib-only, zero network)",
+      "sense_at_close": {
+        "prob_open": 0.1329,
+        "zone": 0.0571,
+        "active": 35
+      }
+    },
+    {
+      "work": "quilt-murmur",
+      "family": "swarm",
+      "q": 3,
+      "verdicts": {
+        "OPEN": 23,
+        "SOFT": 0,
+        "HOLE": 5,
+        "seal_reinforce": 3
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 26,
+      "smoke": "SMOKE OK — 16/16 checks pass",
+      "sense_at_close": {
+        "prob_open": 0.1372,
+        "zone": 0.0571,
+        "active": 35
+      }
+    },
+    {
+      "work": "quilt-pincher",
+      "family": "swarm",
+      "q": -3,
+      "verdicts": {
+        "OPEN": 10,
+        "SOFT": 0,
+        "HOLE": 8,
+        "seal_reinforce": 0
+      },
+      "layer_coverage": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "missing_layers": [],
+      "failure_mode_parts": 13,
+      "smoke": "12/12 tests pass, 0 fail (5.2s, offline)",
+      "sense_at_close": {
+        "prob_open": 0.14,
+        "zone": 0.0571,
+        "active": 35
+      }
+    }
+  ]
+}

@@ -1,0 +1,252 @@
+{
+  "work": "quilt-quant",
+  "family": "labs",
+  "repo_path": "/home/z/my-project/download/quilt-quant",
+  "head": "c20c1c8",
+  "smoke": {
+    "cmd": "MOTH_OFFLINE=1 node lab/play.mjs",
+    "verdict": "PASS (17/17 checks green, 220ms, offline mode)",
+    "notes": "Offline skips the 2 live-channel checks (19 live). Two local fixes were needed, no network used: (1) missing 'yaml' dep satisfied by symlink download/node_modules/yaml -> quilt-dba/node_modules/yaml; (2) the run rewrites lab/outputs/*, so committed outputs were restored with git checkout -- lab/outputs afterwards. Harness includes independent reference stack agreement to 1e-9, no-lookahead probe, both veto paths, chain re-derivation + tamper break, analyst letter-fence vs adversarial digest."
+  },
+  "essence": "Trading desk as closed-loop cell sheet: simulate first, gated learning, receipts.",
+  "ideas": [
+    {
+      "id": "quilt-quant-I1",
+      "name": "The sheet is the agent, not a calculator",
+      "statement": "A reactive cell graph (vendored patched quilt engine) hosts perception, beliefs, world, gates and ledger as cells; the human only watches. One value push re-prices the whole desk.",
+      "parts": ["quilt-quant-P01", "quilt-quant-P02", "quilt-quant-P03", "quilt-quant-P12"]
+    },
+    {
+      "id": "quilt-quant-I2",
+      "name": "Simulate first, confirm before action",
+      "statement": "No proposal becomes an action without passing the world (full backtest receipt) and the M5 rails: dd-halt, overtrade brake, vol stress, resonance agreement, entanglement veto.",
+      "parts": ["quilt-quant-P04", "quilt-quant-P07", "quilt-quant-P08", "quilt-quant-P09"]
+    },
+    {
+      "id": "quilt-quant-I3",
+      "name": "Learn strictly, prune relentlessly",
+      "statement": "Quantum-entropy perturbation accepted only on strict score improvement; weights that never matter (7+ tries, <0.02 max delta) go dormant — the agent gets simpler over time.",
+      "parts": ["quilt-quant-P05", "quilt-quant-P06"]
+    },
+    {
+      "id": "quilt-quant-I4",
+      "name": "The LLM enters through a letter fence",
+      "statement": "The analyst sees a <=600-char digest and answers one letter A-E; the letter decodes to an action that still goes through the same gates. A bad pick costs a refuse receipt, not the desk.",
+      "parts": ["quilt-quant-P10", "quilt-quant-P11"]
+    },
+    {
+      "id": "quilt-quant-I5",
+      "name": "Independent evidence everywhere",
+      "statement": "A separately-written quant stack cross-checks the sheet to 1e-9; every learning step lands in an fnv1a64 witness chain that re-derives and breaks loudly on one flipped byte.",
+      "parts": ["quilt-quant-P13", "quilt-quant-P14"]
+    }
+  ],
+  "parts": [
+    {
+      "part_id": "quilt-quant-P01",
+      "layer": 0,
+      "name": "Vendored patched quilt engine",
+      "essence": "The reactive cell graph (arcade lineage, patches 1-12) with effectful invalidation and fresh-by-default program cells; zero further engine changes.",
+      "inputs": ["cell set declarations", "value pushes"],
+      "outputs": ["re-priced cell graph", "program-cell executions"],
+      "gate": "If a quant check fails it is the sheet's fault, not the engine's (engine frozen, verified against 36 upstream tests)",
+      "gate_kind": "invariant",
+      "failure_mode": "Engine drift would invalidate every cross-check; prevented by vendoring verbatim",
+      "elementary": true,
+      "evidence": "PROVENANCE.md:3-15"
+    },
+    {
+      "part_id": "quilt-quant-P02",
+      "layer": 0,
+      "name": "Belief cells and the one tape",
+      "essence": "10 visible w.* belief value cells + w.state (participation/dormancy/champion) and mkt.ohlcv, 240 seeded bars — the only input (M1); mkt.truth is hidden and policy never reads it.",
+      "inputs": ["seeded synthetic market (seed 20260925)"],
+      "outputs": ["belief state readable by proposal and learning cells"],
+      "gate": "Tape shorter than 60 bars or containing a non-finite positive bar halts everything (M1)",
+      "gate_kind": "precondition",
+      "failure_mode": "NaN bar poisons downstream — harness proves M1 halts on it",
+      "elementary": true,
+      "evidence": "lab/sheet.mjs:292-293,344-345"
+    },
+    {
+      "part_id": "quilt-quant-P03",
+      "layer": 1,
+      "name": "Waveform perception",
+      "essence": "Goertzel power at periods 8-64 over returns, dominant period P*, sin/cos resonance projection, trend R2; recovers the hidden 41/13-bar cycles exactly via greedy non-adjacent peak picking.",
+      "inputs": ["mkt.ohlcv closes"],
+      "outputs": ["wave.spectrum {p_star, ratio, amp, phase, slope, r2}", "wave.regime"],
+      "gate": "Indicators may be null while warming up — nulls mean FLAT, never a guess",
+      "gate_kind": "precondition",
+      "failure_mode": "Window leakage fakes neighbor peaks without non-adjacent picking",
+      "elementary": true,
+      "evidence": "lab/policy.src.mjs:48-101"
+    },
+    {
+      "part_id": "quilt-quant-P04",
+      "layer": 1,
+      "name": "The world: sim.run publishes a receipt",
+      "essence": "Full backtest of the CURRENT beliefs (entries at close, 6bps fees, no leverage, stops/targets/ATR, cycle expiry), publishing sim.last with a hash; analytics are formulas over the receipt.",
+      "inputs": ["w.* beliefs", "mkt.ohlcv", "sig.proposal config"],
+      "outputs": ["sim.last receipt {metrics, trades, halt, hash}"],
+      "gate": "No lookahead: bar i may only see bars <= i (truncated-tape policy replay probe)",
+      "gate_kind": "invariant",
+      "failure_mode": "Lookahead silently inflates Sharpe — probed by mutating bar 400",
+      "elementary": true,
+      "evidence": "lab/sheet.mjs:372,473"
+    },
+    {
+      "part_id": "quilt-quant-P05",
+      "layer": 1,
+      "name": "Moth-entropy learning step",
+      "essence": "learn.step perturbs two weights per round (least-tried non-meta + moth-random) using qpixl shot-noise floats via moth.pool/moth.cursor, re-runs the world, keeps only strict improvements.",
+      "inputs": ["moth.pool entropy floats", "w.state participation", "sim.last"],
+      "outputs": ["updated w.* or a refusal row in ledger.rows"],
+      "gate": "Accept iff score = sharpe - 2*maxdd - 0.5*[trades<3] strictly improves",
+      "gate_kind": "admission",
+      "failure_mode": "Noise-chasing would degrade the desk — refusals are receipts, not losses",
+      "elementary": true,
+      "evidence": "lab/sheet.mjs:523; lab/sheet.mjs:93-98"
+    },
+    {
+      "part_id": "quilt-quant-P06",
+      "layer": 1,
+      "name": "M8 dormancy (pruning)",
+      "essence": "A weight that across 7+ tries never moves the score by >= 0.02 goes DORMANT: frozen at value, removed from the search, receipted; meta-knob w.step_scale exempt.",
+      "inputs": ["w.state tries/wins/maxd per weight"],
+      "outputs": ["dormant set", "smaller active search space"],
+      "gate": "Dormancy requires >= 7 tries AND max delta < 0.02 — decided from data, not luck",
+      "gate_kind": "admission",
+      "failure_mode": "Premature freezing would lose latent weights; the try-count floor guards",
+      "elementary": true,
+      "evidence": "lab/sheet.mjs:100-104"
+    },
+    {
+      "part_id": "quilt-quant-P07",
+      "layer": 2,
+      "name": "Two-block edge-triggered proposal",
+      "essence": "TREND block (sma-gap x momentum-z) and CYCLE block (rsi extreme aligned with price-wave phase at P*) vote only on FRESH crossings; disagreement yields a CONFLICT block at strength 0.5; every proposal carries its reason.",
+      "inputs": ["ind.smaf/smas/rsi/momz", "wave.spectrum", "w.* thresholds"],
+      "outputs": ["sig.proposal {side, strength, block, reason}"],
+      "gate": "Edge-trigger: the vote must be absent on the previous bar (a signal is an event, not a state)",
+      "gate_kind": "precondition",
+      "failure_mode": "Held-state voting would overtrade — the harness audits proposal structure",
+      "elementary": true,
+      "evidence": "lab/policy.src.mjs:103-151"
+    },
+    {
+      "part_id": "quilt-quant-P08",
+      "layer": 2,
+      "name": "M5 confirmation rails",
+      "essence": "gateLite vetoes inside the simulation loop: dd-halt 12%, overtrade brake 8 changes/20 bars, vol-z cap, cycle entries need the price-wave behind them, trend SHORT against TREND_UP at strength < 0.8.",
+      "inputs": ["sig.proposal", "state (ddNow, changes)", "volz", "wave"],
+      "outputs": ["null (allowed) or veto note"],
+      "gate": "A proposal acts only if every rail returns null — verdict lists its checks",
+      "gate_kind": "admission",
+      "failure_mode": "Each rail is individually falsifiable; harness fires dd-halt and veto paths explicitly",
+      "elementary": true,
+      "evidence": "lab/policy.src.mjs:153-172"
+    },
+    {
+      "part_id": "quilt-quant-P09",
+      "layer": 2,
+      "name": "Entanglement veto",
+      "essence": "When the quantum graph read (graph-v1 tomography, 4 feature qubits, ZZ couplings) reports |ZZ| >= 0.82 between momentum and mean-reversion, a CONFLICT proposal is refused: the signals are locked, not independent.",
+      "inputs": ["moth.entangle ZZ read", "sig.proposal block == conflict"],
+      "outputs": ["veto or pass"],
+      "gate": "|ZZ(mom,rev)| < 0.82 required for CONFLICT proposals",
+      "gate_kind": "admission",
+      "failure_mode": "Live run measured ZZ -0.937 naive vs -0.028 learned; threshold is a demo constant (honest limit)",
+      "elementary": true,
+      "evidence": "lab/sheet.mjs:83-85; lab/sheet.mjs:519"
+    },
+    {
+      "part_id": "quilt-quant-P10",
+      "layer": 2,
+      "name": "Analyst letter fence",
+      "essence": "ai.digest compresses distributed state to <=600 chars; ai.analyst (typed ai cell) must answer ONE letter A-E (keep/explore/exploit/prune/re-tune); the fence lives between model and sheet, mock is state-reactive and labeled.",
+      "inputs": ["regime, scores, dormant set, ZZ read, weights"],
+      "outputs": ["letter -> bounded action (e.g. step_scale scaling, force-prune)"],
+      "gate": "Reply must decode to exactly one of A-E — anything else is REFUSED with a reason",
+      "gate_kind": "admission",
+      "failure_mode": "An adversarial digest cannot push the analyst outside the fence (harness check)",
+      "elementary": true,
+      "evidence": "lab/play.mjs:29-80; lab/sheet.mjs:611,640"
+    },
+    {
+      "part_id": "quilt-quant-P11",
+      "layer": 3,
+      "name": "Moth-quantum client with cell-level honesty",
+      "essence": "submit -> poll -> result client for coin-toss-v1, qpixl-v1, graph-v1; every call receipted in moth.journal; offline mode swaps synthetic data flagged mock:true at the cell level — the sheet never knows, the audience always does.",
+      "inputs": ["return waveform / feature encoding", "MOTH key (env only)"],
+      "outputs": ["entropy floats, waveform drift, ZZ tomography"],
+      "gate": "Every API call must land in moth.journal; offline substitutions must be labeled mock:true",
+      "gate_kind": "seal",
+      "failure_mode": "Unlabeled mock data would fake quantum provenance",
+      "elementary": true,
+      "evidence": "lab/README.md:137-139; lab/sheet.mjs:516-520"
+    },
+    {
+      "part_id": "quilt-quant-P12",
+      "layer": 3,
+      "name": "Glass: lamp, listener and sparkline",
+      "essence": "sig.lamp shows the gate verdict, lamp.gate listener announces confirmations, art.equity renders the equity curve as a unicode sparkline — the cells themselves rendered for the audience.",
+      "inputs": ["sig.confirm verdict", "met.* metrics"],
+      "outputs": ["human-visible verdict lamp + equity glass"],
+      "gate": null,
+      "gate_kind": null,
+      "failure_mode": "A silent gate would hide refusals; the lamp makes every verdict watchable",
+      "elementary": true,
+      "evidence": "lab/sheet.mjs:494-504,647"
+    },
+    {
+      "part_id": "quilt-quant-P13",
+      "layer": 4,
+      "name": "Independent reference stack",
+      "essence": "The harness carries its own quant stack (prefix-sum SMAs, delta-array Wilder RSI, settlement accounting, independent DFT) written separately from the sheet kernel, cross-checked to 1e-9 including the full trade sequence.",
+      "inputs": ["same tape and beliefs"],
+      "outputs": ["agreement verdicts per bar/metric"],
+      "gate": "Return/Sharpe/maxdd/exposure and trade sequence must match the reference to 1e-9",
+      "gate_kind": "postcondition",
+      "failure_mode": "Any kernel drift between sheet and reference fails the harness loudly",
+      "elementary": true,
+      "evidence": "lab/play.mjs:7-13,89-190,592-602"
+    },
+    {
+      "part_id": "quilt-quant-P14",
+      "layer": 4,
+      "name": "Witness chain over learning rounds",
+      "essence": "ledger.rows is an fnv1a64 chain (one row per round, GENESIS-rooted); the harness re-derives it and proves one flipped byte breaks it at the flipped position.",
+      "inputs": ["learning/analyst round rows"],
+      "outputs": ["tamper-evident ledger"],
+      "gate": "Chain re-derivation must succeed; tampering must break it visibly",
+      "gate_kind": "seal",
+      "failure_mode": "Silent history edits — caught by hash mismatch at the flipped byte",
+      "elementary": true,
+      "evidence": "lab/sheet.mjs:608; lab/play.mjs:16,584-614"
+    }
+  ],
+  "sheet": {
+    "name": "quilt-quant-as-cells",
+    "cells": [
+      {"id": "mkt.ohlcv", "kind": "value", "expr": "buildMarket(240, seed 20260925) — the ONLY input (M1)", "deps": [], "maps_to_part": "quilt-quant-P02"},
+      {"id": "w.state", "kind": "value", "expr": "{tries, wins, maxd per weight, dormant, champion, best_score}", "deps": ["learn.step"], "maps_to_part": "quilt-quant-P02"},
+      {"id": "wave.spectrum", "kind": "program", "expr": "readWave(c) — Goertzel 8..64 + resonance + trend R2 (SRC_WAVE)", "deps": ["mkt.ohlcv"], "maps_to_part": "quilt-quant-P03"},
+      {"id": "sig.proposal", "kind": "program", "expr": "policyAt(i,...) — trend + cycle blocks, edge-triggered, conflict at 0.5 (SRC_POLICY)", "deps": ["wave.spectrum", "w.state"], "maps_to_part": "quilt-quant-P07"},
+      {"id": "sim.run", "kind": "program", "expr": "full backtest of current beliefs, M1-M6, publishes receipt", "deps": ["sig.proposal", "mkt.ohlcv"], "maps_to_part": "quilt-quant-P04"},
+      {"id": "sim.last", "kind": "value", "expr": "published world receipt {metrics, trades, halt, hash}", "deps": ["sim.run"], "maps_to_part": "quilt-quant-P04"},
+      {"id": "sig.confirm", "kind": "program", "expr": "M5 rails incl. gateLite vetoes + entanglement veto", "deps": ["sim.last", "moth.entangle"], "maps_to_part": "quilt-quant-P08"},
+      {"id": "met.score", "kind": "formula", "expr": "sim.last.metrics.sharpe - 2*maxdd - (n_trades<3 ? 0.5 : 0)", "deps": ["sim.last"], "maps_to_part": "quilt-quant-P13"},
+      {"id": "moth.entangle", "kind": "io", "expr": "graph-v1 tomography read, journaled, mock-labeled", "deps": ["ai.digest"], "maps_to_part": "quilt-quant-P09"},
+      {"id": "learn.step", "kind": "program", "expr": "perturb 2 weights from moth.pool, accept iff strictly better (M7/M8)", "deps": ["met.score", "w.state", "moth.pool"], "maps_to_part": "quilt-quant-P05"},
+      {"id": "ledger.rows", "kind": "value", "expr": "fnv1a64 chain, one row per round, GENESIS-rooted", "deps": ["learn.step"], "maps_to_part": "quilt-quant-P14"},
+      {"id": "ai.analyst", "kind": "ai", "expr": "typed ai.llm cell fenced to ONE letter A-E", "deps": ["ai.digest"], "maps_to_part": "quilt-quant-P10"}
+    ]
+  },
+  "layer_logic": {
+    "0": "The substrate is a frozen reactive cell graph (patches 1-12) plus visible belief/value cells — understanding is distributed across the graph, never in one cell.",
+    "1": "Mechanisms transform tape -> waveform -> proposal -> world receipt -> accepted weight deltas; the simulation itself is the architecture's central transformation.",
+    "2": "Policy is a stack of named refusals: edge-trigger precondition, five M5 rails, the |ZZ| entanglement admission, strict-improvement admission, dormancy admission, and the letter fence for the LLM.",
+    "3": "Interfaces are the moth-quantum client (mock-labeled at cell level), the lamp/announcer/glass for the audience, and the ai cell typed through patch-8 schema passthrough.",
+    "4": "Evidence is a second, independently-written quant stack agreeing to 1e-9, plus an fnv1a64 witness chain that re-derives and breaks loudly — every refusal is a receipt, not a loss."
+  }
+}
