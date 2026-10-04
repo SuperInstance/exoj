@@ -564,3 +564,32 @@ Bundled under `atlas-data/`: `corpus.json`, the 29 decomposition files
 (`parts/<family>/<work>.json`), `gate-map.json` + `sweep_field.json` (the
 judgment field, dunnable), and the wave's receipt ledgers. The rules are
 pre-registered in `atlas.mjs` itself — decision rules before the run, forever.
+
+---------------
+
+## Documentation (wave-69 doc package)
+
+Route by audience — all seven files live in `docs/` and were written against
+this tree (every command verified by execution during wave-69):
+
+- **New agent, zero context** → [docs/ONBOARDING.md](docs/ONBOARDING.md) —
+  identity, verified commands, reading order, gotchas, open frontier.
+- **End user of the capability** → [docs/USER-GUIDE.md](docs/USER-GUIDE.md) —
+  install, first success, everyday tasks, troubleshooting table, FAQ.
+- **Developer extending the code** →
+  [docs/DEVELOPER-GUIDE.md](docs/DEVELOPER-GUIDE.md) — code layout, core
+  concepts, how to extend (experiment / sweep rule / test / invariant),
+  testing, conventions, editor gotchas.
+- **Engineer operating/reviewing** →
+  [docs/ENGINEERING-NOTES.md](docs/ENGINEERING-NOTES.md) — architecture
+  diagram, invariants and where they are enforced, failure modes, cost
+  envelope, operations, design decisions.
+- **Executive deciding investment** → [docs/CTO-BRIEF.md](docs/CTO-BRIEF.md) —
+  value, maturity with evidence, risks/mitigations, cost, strategic options.
+- **Index of all deeper knowledge** →
+  [docs/KNOWLEDGE-MAP.md](docs/KNOWLEDGE-MAP.md) — in-repo clusters,
+  pre-existing docs, fleet relationships, journal Task IDs (24-a, 66-b, 66-g,
+  66-i, 66-j, 67-c1/p, 68-a), receipts of record, search recipes.
+- Pre-existing: [docs/COG-THESIS.md](docs/COG-THESIS.md) (the determinacy /
+  transfer-gap hypothesis), `LEGIBILITY.md` (external audit layer),
+  `ANTI-ENTROPY-LOG.md` (fault/fix receipts).
