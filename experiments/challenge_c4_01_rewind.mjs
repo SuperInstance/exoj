@@ -1,3 +1,7 @@
+// REQUIRES sibling clone: git clone https://github.com/SuperInstance/quilt-dba.git ../quilt-dba
+// (same parent dir as this repo) — wave-69 drill finding. Without it the
+// imports below crash with ERR_MODULE_NOT_FOUND on a fresh clone.
+//
 // experiments/challenge_c4_01_rewind.mjs — TAVERN ROUND FOUR challenge probe
 // C4-field-singer-01 -> time-smith (dba lane).
 //

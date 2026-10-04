@@ -102,8 +102,10 @@ node atlas.mjs csv /tmp/atlas-csv          # parts.csv, gates.csv, ideas.csv, ce
 node atlas.mjs protocol                    # the 7-move runbook, if you want to decompose your own corpus
 ```
 
-Open `/tmp/atlas-csv/gates.csv` (401 rows) or `atlas-out/sweep/gate-map.json`;
-rows with verdict `HOLE` (127 of 528 parts) are the unguarded-logic work queue.
+Open `/tmp/atlas-csv/gates.csv` (the 401 gated parts only) or
+`atlas-out/sweep/gate-map.json`; holes live at `works[].verdicts.HOLE` in the
+gate map (127 of 528 parts) — that map, not the CSV, is the unguarded-logic
+work queue.
 
 ### 3. Check a spec-sealed run before trusting it
 

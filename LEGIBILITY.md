@@ -1,3 +1,5 @@
+> STALE (wave-69): this audit predates smoke.yml CI, the test suite (28 passing), and the LICENSE file. Kept for the record; see docs/ENGINEERING-NOTES.md for current posture.
+
 ## What this is
 
 A read-only legibility pass. **No existing file is modified** — this PR only adds

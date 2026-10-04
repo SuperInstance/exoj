@@ -131,7 +131,7 @@
 ## How to search further
 
 ```bash
-grep -rn "exoj" /home/z/my-project/worklog.md            # every journal mention (Task IDs above)
+grep -rn "exoj" /home/z/my-project/worklog.md            # every journal mention (Task IDs above); the journal is public — clone https://github.com/SuperInstance/superinstance-lab and read worklog.md there (this /home/z path is the fleet checkout's copy)
 grep -rln "gate_kind" atlas-data/parts/                   # decompositions carrying gate vocabulary
 grep -rn "E_SXC" gan/ lab/                                # every fail-closed envelope code + its tests
 grep -rn "policy" core.mjs | head                         # the four conservation policies

@@ -52,6 +52,11 @@ Live-oracle modes are OPTIONAL and need credentials you will not have:
 EXOJ_LIVE=1 node experiments/e_x4_livejev.mjs
 ```
 
+Two more env vars exist, both optional — keyless runs degrade gracefully
+(wave-69 drill finding): `EXOJ_JEV_URL` (JEV oracle endpoint override, read by
+`live.mjs` and `selflocal.mjs`) and `MOTH_KEY` (read by
+`experiments/moth_bits.mjs`).
+
 ## Reading order (paths, not vibes)
 
 1. `README.md` — the immutable seed charter (category theory), the POC tables,
@@ -101,11 +106,18 @@ EXOJ_LIVE=1 node experiments/e_x4_livejev.mjs
 - **`observe()` is the ONLY collapse.** Nothing else may zero a `prob_mass`.
   If your code collapses anything else, it violates the one law the repo
   exists to demonstrate.
+- **The C4 challenge probes are cross-repo**: `challenge_c4_01_rewind.mjs` and
+  `challenge_c4_02_chains.mjs` hard-import `../../quilt-dba/dba/…`. A fresh
+  clone needs the sibling checkout — `git clone
+  https://github.com/SuperInstance/quilt-dba.git ../quilt-dba` (same parent
+  dir as this repo) — or they crash with `ERR_MODULE_NOT_FOUND` (wave-69
+  drill finding).
 
 ## Where deeper knowledge lives
 
 - Knowledge map: [docs/KNOWLEDGE-MAP.md](./KNOWLEDGE-MAP.md)
-- Fleet journal: SuperInstance/superinstance-lab → worklog.md (grep 'exoj';
+- Fleet journal (public): clone https://github.com/SuperInstance/superinstance-lab
+  and read worklog.md there (grep 'exoj';
   Task IDs 24-a, 66-b, 66-g, 66-i, 66-j, 67-c1, 67-p, 68-a touch this repo).
 - `atlas-data/receipts/` — 7 wave-66 receipt ledgers (106 rows: decompositions,
   smokes, honest negatives, the gate sweep).
@@ -127,7 +139,8 @@ EXOJ_LIVE=1 node experiments/e_x4_livejev.mjs
 - **Meta family holes**: the wave-66 gate map leaves 127 holes across the
   corpus (79 of them in the meta family) — the principal's next decomposition
   queue, not defects to hide. Read `atlas-data/gate-map.json` → `works[]` rows
-  with `HOLE` verdicts.
+  with `HOLE` verdicts (`gates.csv` holds the 401 gated parts only — no
+  verdict column, no holes there).
 - **Cognitive heterogeneity in the GAN** (SPEC §4): Cell 01/Cell 02 are
   currently deterministic modules; wiring them to genuinely different model
   backends is unstarted.

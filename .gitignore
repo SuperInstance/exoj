@@ -1,3 +1,4 @@
 node_modules/
 outputs/.cache/
+atlas-out/sweep/
 .DS_Store
